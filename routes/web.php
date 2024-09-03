@@ -19,14 +19,14 @@ Route::get('/organization/{id}',  [App\Http\Controllers\OrganizationController::
 Route::delete('/organization/destroy/{id}', [App\Http\Controllers\OrganizationController::class, 'destroy'])->name('organization.destroy');
 
 
-
-Route::get('/users', [App\Http\Controllers\UserController::class, 'index'])->name('user.index');
-Route::get('/users/{id}/edit', [App\Http\Controllers\UserController::class, 'edit'])->name('user.edit');
-Route::patch('/users/{id}', [App\Http\Controllers\UserController::class, 'update'])->name('user.update');
-Route::delete('/users/{id}', [App\Http\Controllers\UserController::class, 'destroy'])->name('user.destroy');
-Route::get('/users/create', [App\Http\Controllers\UserController::class, 'create'])->name('user.create');
-Route::post('/users/store', [App\Http\Controllers\UserController::class, 'store'])->name('user.store');
-
+Route::middleware('auth')->group(function () {
+    Route::get('/users', [App\Http\Controllers\UserController::class, 'index'])->name('user.index');
+    Route::get('/users/{id}/edit', [App\Http\Controllers\UserController::class, 'edit'])->name('user.edit');
+    Route::patch('/users/{id}', [App\Http\Controllers\UserController::class, 'update'])->name('user.update');
+    Route::delete('/users/{id}', [App\Http\Controllers\UserController::class, 'destroy'])->name('user.destroy');
+    Route::get('/users/create', [App\Http\Controllers\UserController::class, 'create'])->name('user.create');
+    Route::post('/users/store', [App\Http\Controllers\UserController::class, 'store'])->name('user.store');
+});
 
 
 Route::middleware('auth')->group(function () {
