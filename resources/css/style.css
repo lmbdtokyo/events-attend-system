@@ -1,0 +1,123 @@
+body {
+    font-family: "Zen Kaku Gothic New", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+}
+
+.nav-item {
+    font-size: 14px;
+}
+
+.nav-header {
+    font-size: 18px;
+    font-weight: 700;
+    font-style: normal;
+}
+
+.content-header h1 {
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+.content-header {
+    padding: 20px;
+}
+
+.organization-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.organization-table th {
+    background-color: #f2f2f2;
+    color: #333;
+    font-weight: bold;
+    padding: 10px;
+    text-align: left;
+}
+
+.organization-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.organization-id-td {
+    width: 5%;
+    text-align: center !important;
+}
+
+.organization-name-td {
+    width: 65%;
+}
+
+.organization-create-td {
+    width: 15%;
+    text-align: center !important;
+}
+
+.organization-edit-td {
+    width: 15%;
+    text-align: center !important;
+}
+
+
+label:not(.form-check-label):not(.custom-file-label){
+    width: 150px;
+}
+
+#users-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#users-table th {
+    background-color: #f2f2f2;
+    color: #333;
+    font-weight: bold;
+    padding: 10px;
+    text-align: left;
+    border-right: 0;
+  border-left: 0;
+}
+
+#users-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    border-right: 0;
+  border-left: 0;
+}
+
+#users-table .user-id-td {
+    width: 5%;
+    text-align: center !important;
+}
+
+#users-table .user-name-td {
+    width: 20%;
+}
+
+#users-table .user-email-td {
+    width: 25%;
+}
+
+#users-table .user-auth-td {
+    width: 10%;
+    text-align: center !important;
+}
+
+#users-table .user-type-td {
+    width: 10%;
+    text-align: center !important;
+}
+
+#users-table .user-created-at-td {
+    width: 15%;
+    text-align: center !important;
+}
+
+#users-table .user-action-td {
+    width: 15%;
+    text-align: center !important;
+}
