@@ -34,6 +34,9 @@
                 <div class="form-group">
                     <label for="password">パスワード</label>
                     <input type="password" name="password" class="form-control" id="password" placeholder="パスワードを入力">
+                    <p class="text-danger small">
+                        ご注意: セキュリティ上、ここで設定したパスワードは一時的な利用に留めていただき、ユーザー様には初回ログイン後、速やかにパスワードを変更していただくようお伝えください。
+                    </p>
                 </div>
 
                 <div class="form-group">

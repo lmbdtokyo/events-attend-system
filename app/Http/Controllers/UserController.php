@@ -6,23 +6,46 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Usersorganization;
 use App\Models\Usersauthmaster;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\UserCreated;
 
 class UserController extends Controller
 {
 
     public function index()
     {
-        $users = User::all();
-        $auths = \DB::table('usersauthmaster')->get();
-        $organizations = \DB::table('usersorganization')->get();
-        return view('user.index', compact('users', 'auths', 'organizations'));
+        $user = Auth::user();
+
+        if ($user->type == 'master') {
+            $users = User::all();
+            $auths = \DB::table('usersauthmaster')->get();
+            $organizations = \DB::table('usersorganization')->get();
+            return view('user.index', compact('users', 'auths', 'organizations'));
+        }else{
+            $userOrganization = $user->organization;
+            $users = User::where('organization', $userOrganization)->get();
+            $auths = \DB::table('usersauthmaster')->get();
+            $organizations = \DB::table('usersorganization')->where('id', $userOrganization)->get();
+            return view('user.index', compact('users', 'auths', 'organizations'));
+        }
+
+        
     }
 
     public function edit($id)
     {
+
+        $authUser = Auth::user();
         $user = User::find($id);
         $auths = \DB::table('usersauthmaster')->get();
-        $organizations = \DB::table('usersorganization')->get();
+        
+        if ($authUser->type == 'master') {
+            $organizations = \DB::table('usersorganization')->get();
+        } else {
+            $organizations = \DB::table('usersorganization')->where('id', $authUser->organization)->get();
+        }
+        
         return view('user.edit', compact('user', 'auths', 'organizations'));
     }
 
@@ -39,8 +62,19 @@ class UserController extends Controller
 
     public function create()
     {
+
+        $user = Auth::user();
         $auths = \DB::table('usersauthmaster')->get();
-        $organizations = \DB::table('usersorganization')->get();
+        if ($user->type == 'master') {
+            
+            $organizations = \DB::table('usersorganization')->get();
+            
+        }else{
+            $userOrganization = $user->organization;
+            $organizations = \DB::table('usersorganization')->where('id', $userOrganization)->get();
+            
+        }
+
         return view('user.create', compact('auths', 'organizations'));
     }
 
@@ -71,8 +105,16 @@ class UserController extends Controller
         $data = $request->only(['name', 'email', 'password', 'auth', 'type', 'organization']);
         $data['password'] = bcrypt($data['password']);
 
+        $temporaryPassword = $request->password;
+
+        // $dataをUserモデルのインスタンスに変換
+        $new_user = new User($data);
+
         // データベースに新しいユーザーを作成
         User::create($data);
+
+        // メール送信
+        Mail::to($request->email)->send(new UserCreated($new_user, $temporaryPassword));
 
         // リダイレクト
         return redirect()->route('user.index');
