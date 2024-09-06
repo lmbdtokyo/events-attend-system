@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'ユーザー作成 | イベント来場管理システム')
+@section('title', '管理ユーザー作成 | イベント来場管理システム')
 
 @section('content_header')
     <h1>管理ユーザー作成</h1>
@@ -25,15 +25,16 @@
                 @csrf
                 <div class="form-group">
                     <label for="name">名前</label>
-                    <input type="text" name="name" class="form-control" id="name" placeholder="名前を入力">
+                    <input type="text" name="name" class="form-control" id="name" value="{{ old('name') }}" placeholder="名前を入力">
                 </div>
                 <div class="form-group">
                     <label for="email">メールアドレス</label>
-                    <input type="email" name="email" class="form-control" id="email" placeholder="メールアドレスを入力">
+                    <input type="email" name="email" class="form-control" id="email" value="{{ old('email') }}" placeholder="メールアドレスを入力">
                 </div>
                 <div class="form-group">
                     <label for="password">パスワード</label>
-                    <input type="password" name="password" class="form-control" id="password" placeholder="パスワードを入力">
+                    <p class="small">※大文字小文字を含む英数字で設定してください。</p>
+                    <input type="password" name="password" class="form-control" value="{{ old('password') }}" id="password" placeholder="パスワードを入力">
                     <p class="text-danger small">
                         ご注意: セキュリティ上、ここで設定したパスワードは一時的な利用に留めていただき、ユーザー様には初回ログイン後、速やかにパスワードを変更していただくようお伝えください。
                     </p>

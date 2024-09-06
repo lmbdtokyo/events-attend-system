@@ -1,27 +1,78 @@
-<aside class="main-sidebar {{ config('adminlte.classes_sidebar', 'sidebar-dark-primary elevation-4') }}">
-
-    {{-- Sidebar brand logo --}}
-    @if(config('adminlte.logo_img_xl'))
-        @include('adminlte::partials.common.brand-logo-xl')
-    @else
-        @include('adminlte::partials.common.brand-logo-xs')
-    @endif
-
-    {{-- Sidebar menu --}}
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <a href="{{ url('/home') }}" class="brand-link">
+        <img src="{{ asset('vendor/adminlte/dist/img/AdminLTELogo.png') }}" alt="Admin Logo" class="brand-image img-circle elevation-3" style="opacity:.8">
+        <span class="brand-text font-weight-light"><b>Admin</b>LTE</span>
+    </a>
     <div class="sidebar">
         <nav class="pt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column {{ config('adminlte.classes_sidebar_nav', '') }}"
-                data-widget="treeview" role="menu"
-                @if(config('adminlte.sidebar_nav_animation_speed') != 300)
-                    data-animation-speed="{{ config('adminlte.sidebar_nav_animation_speed') }}"
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+
+                
+                @if(Auth::user() && Auth::user()->auth == 1)
+                <li class="nav-header">管理者メニュー</li>
+                <li class="nav-item has-treeview menu-open">
+                    <a class="nav-link active" href="#">
+                        <i class="fas fa-fw fa-user"></i>
+                        <p>管理アカウント <i class="fas fa-angle-left right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{{ url('/users') }}">
+                                <i class="fas fa-fw fa-list"></i>
+                                <p>一覧</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/users/create') }}">
+                                <i class="fas fa-fw fa-plus"></i>
+                                <p>作成</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 @endif
-                @if(!config('adminlte.sidebar_nav_accordion'))
-                    data-accordion="false"
-                @endif>
-                {{-- Configured sidebar links --}}
-                @each('adminlte::partials.sidebar.menu-item', $adminlte->menu('sidebar'), 'item')
+
+
+                @if(Auth::user() && Auth::user()->type == 'master')
+                <li class="nav-item has-treeview">
+                    <a class="nav-link" href="#">
+                        <i class="fas fa-fw fa-building"></i>
+                        <p>所属組織 <i class="fas fa-angle-left right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/organization') }}">
+                                <i class="fas fa-fw fa-list"></i>
+                                <p>一覧</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/organization/create') }}">
+                                <i class="fas fa-fw fa-plus"></i>
+                                <p>作成</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                @endif
+
+
+                
+                <li class="nav-header">イベント</li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url('/admin/settings') }}">
+                        <i class="fas fa-fw fa-user"></i>
+                        <p>イベント一覧</p>
+                    </a>
+                </li>
+                <li class="nav-header">アカウント設定</li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url('/profile') }}">
+                        <i class="fas fa-fw fa-user"></i>
+                        <p>アカウント編集</p>
+                    </a>
+                </li>
             </ul>
         </nav>
     </div>
-
 </aside>

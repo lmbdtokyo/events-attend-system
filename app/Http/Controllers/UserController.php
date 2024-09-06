@@ -18,16 +18,27 @@ class UserController extends Controller
         $user = Auth::user();
 
         if ($user->type == 'master') {
-            $users = User::all();
+            $users = User::paginate(15);
             $auths = \DB::table('usersauthmaster')->get();
             $organizations = \DB::table('usersorganization')->get();
             return view('user.index', compact('users', 'auths', 'organizations'));
         }else{
-            $userOrganization = $user->organization;
-            $users = User::where('organization', $userOrganization)->get();
-            $auths = \DB::table('usersauthmaster')->get();
-            $organizations = \DB::table('usersorganization')->where('id', $userOrganization)->get();
-            return view('user.index', compact('users', 'auths', 'organizations'));
+
+
+            $userAuthMaster = \DB::table('usersauthmaster')->find($user->auth);
+            if ($userAuthMaster->id == 1) {
+
+                $userOrganization = $user->organization;
+                $users = User::where('organization', $userOrganization)->paginate(15);
+                $auths = \DB::table('usersauthmaster')->get();
+                $organizations = \DB::table('usersorganization')->where('id', $userOrganization)->get();
+                return view('user.index', compact('users', 'auths', 'organizations'));
+                
+            }else{
+
+                return redirect('dashboard');
+
+            }
         }
 
         
@@ -70,8 +81,20 @@ class UserController extends Controller
             $organizations = \DB::table('usersorganization')->get();
             
         }else{
-            $userOrganization = $user->organization;
-            $organizations = \DB::table('usersorganization')->where('id', $userOrganization)->get();
+
+            $userAuthMaster = \DB::table('usersauthmaster')->find($user->auth);
+            if ($userAuthMaster->id == 1) {
+
+                $userOrganization = $user->organization;
+                $organizations = \DB::table('usersorganization')->where('id', $userOrganization)->get();
+                
+            }else{
+
+                return redirect('dashboard');
+
+            }
+
+            
             
         }
 
@@ -82,9 +105,9 @@ class UserController extends Controller
     {
         // バリデーション
         $request->validate([
-            'name' => 'required|unique:users,name',
+            'name' => 'required',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:8',
+            'password' => 'required|min:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
             'auth' => 'required',
             'type' => 'required',
             'organization' => 'required',
@@ -96,6 +119,7 @@ class UserController extends Controller
             'email.unique' => 'このメールアドレスは既に存在します。',
             'password.required' => 'パスワードは必須です。',
             'password.min' => 'パスワードは8文字以上で入力してください。',
+            'password.regex' => 'パスワードは大文字小文字英数字を含む必要があります。',
             'auth.required' => '権限は必須です。',
             'type.required' => '種別は必須です。',
             'organization.required' => '所属組織は必須です。',

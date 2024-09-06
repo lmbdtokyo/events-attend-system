@@ -13,7 +13,7 @@ class OrganizationController extends Controller
     {
 
         if (Gate::allows('admin', Auth::user())) {
-            $Usersorganizations = Usersorganization::all();
+            $Usersorganizations = Usersorganization::paginate(10);
             return view('organization.index', compact('Usersorganizations'));
         }else{
             return redirect('dashboard');

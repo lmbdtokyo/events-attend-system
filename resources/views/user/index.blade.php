@@ -60,6 +60,11 @@
                 </tbody>
             </table>
         </div>
+
+        <div class="pagination justify-content-center">
+            {{ $users->links() }}
+        </div>
+
         <!-- /.card-body -->
     </div>
     <!-- /.card -->

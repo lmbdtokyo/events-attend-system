@@ -61,8 +61,7 @@ body {
     text-align: center !important;
 }
 
-
-label:not(.form-check-label):not(.custom-file-label){
+label:not(.form-check-label):not(.custom-file-label) {
     width: 150px;
 }
 
@@ -78,7 +77,7 @@ label:not(.form-check-label):not(.custom-file-label){
     padding: 10px;
     text-align: left;
     border-right: 0;
-  border-left: 0;
+    border-left: 0;
 }
 
 #users-table td {
@@ -86,7 +85,7 @@ label:not(.form-check-label):not(.custom-file-label){
     text-align: left;
     border-bottom: 1px solid #ddd;
     border-right: 0;
-  border-left: 0;
+    border-left: 0;
 }
 
 #users-table .user-id-td {
@@ -120,4 +119,16 @@ label:not(.form-check-label):not(.custom-file-label){
 #users-table .user-action-td {
     width: 15%;
     text-align: center !important;
+}
+
+.text-green-600 {
+    color: rgb(22 163 74);
+}
+
+.bg-sky-600 {
+    background-color: rgb(2 132 199);
+}
+
+.bg-sky-800 {
+    background-color: rgb(7 89 133);
 }

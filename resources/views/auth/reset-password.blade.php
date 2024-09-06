@@ -1,4 +1,9 @@
-<x-guest-layout>
+@extends('adminlte::auth.auth-page', ['auth_type' => 'login'])
+@section('adminlte_css_pre')
+    <link rel="stylesheet" href="{{ asset('vendor/icheck-bootstrap/icheck-bootstrap.min.css') }}">
+@stop
+
+@section('auth_body')
     <form method="POST" action="{{ route('password.store') }}">
         @csrf
 
@@ -31,9 +36,12 @@
         </div>
 
         <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Reset Password') }}
-            </x-primary-button>
+            <div class="flex items-center justify-end mt-4">
+                <button type="submit" class="inline-flex items-center px-4 py-2 bg-sky-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-sky-700 focus:bg-sky-700 active:bg-sky-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+        パスワードのリセット
+    </button>
         </div>
     </form>
-</x-guest-layout>
+
+    @stop
+

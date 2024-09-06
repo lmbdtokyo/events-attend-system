@@ -31,7 +31,7 @@
                             @csrf
                             <div class="form-group">
                                 <label for="name">組織名</label>
-                                <input type="text" id="name" name="name" class="form-control" placeholder="組織名を入力してください">
+                                <input type="text" id="name" name="name" class="form-control" value="{{ old('name') }}" placeholder="組織名を入力してください">
                             </div>
                             <button type="submit" class="btn btn-primary">作成</button>
                         </form>

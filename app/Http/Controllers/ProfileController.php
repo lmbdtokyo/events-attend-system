@@ -16,8 +16,13 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+        $authUser = Auth::user();
+        $organizations = \DB::table('usersorganization')->where('id', $authUser->organization)->get();
+        $auths = \DB::table('usersauthmaster')->where('id', $authUser->auth)->get();
         return view('profile.edit', [
             'user' => $request->user(),
+            'auths' => $auths,
+            'organizations' => $organizations,
         ]);
     }
 
