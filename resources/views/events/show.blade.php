@@ -22,19 +22,22 @@
                     <table class="event-progress-table table table-bordered">
                         <tbody>
                             <tr>
-                                <td style="width: 80%; vertical-align: middle;">申込フォーム基本設定</th>
+                                <td style="width: 15%; vertical-align: middle; text-align:center;"><b class="greenText">設定済</b></td>
+                                <td style="width: 65%; vertical-align: middle;">申込フォーム基本設定</th>
                                 <td style="width: 20%; text-align: center;">
                                     <a href="" class="btn btn-primary">編集</a>
                                 </td>
                             </tr>
                             <tr>
-                                <td style="width: 80%; vertical-align: middle;">申込フォーム項目設定</th>
+                                <td style="width: 15%; vertical-align: middle; text-align:center;"><b class="greenText">設定済</b></td>
+                                <td style="width: 65%; vertical-align: middle;">申込フォーム項目設定</th>
                                 <td style="width: 20%; text-align: center;">
                                     <a href="" class="btn btn-primary">編集</a>
                                 </td>
                             </tr>
                             <tr>
-                                <td style="width: 80%; vertical-align: middle;">マイページ基本設定</th>
+                                <td style="width: 15%; vertical-align: middle; text-align:center;"><b class="greenText">設定済</b></td>
+                                <td style="width: 65%; vertical-align: middle;">マイページ基本設定</th>
                                 <td style="width: 20%; text-align: center;">
                                     <a href="" class="btn btn-primary">編集</a>
                                 </td>
@@ -46,19 +49,22 @@
                     <table class="event-progress-table table table-bordered">
                         <tbody>
                             <tr>
-                                <td style="width: 80%; vertical-align: middle;">申込完了メール</th>
+                                <td style="width: 15%; vertical-align: middle; text-align:center;"><b class="greenText">設定済</b></td>
+                                <td style="width: 65%; vertical-align: middle;">申込完了メール</th>
                                 <td style="width: 20%; text-align: center;">
                                     <a href="" class="btn btn-primary">編集</a>
                                 </td>
                             </tr>
                             <tr>
-                                <td style="width: 80%; vertical-align: middle;">入場時本人メール設定</th>
+                                <td style="width: 15%; vertical-align: middle; text-align:center;"><b class="redText">未設定</b></td>
+                                <td style="width: 65%; vertical-align: middle;">入場時本人メール設定</th>
                                 <td style="width: 20%; text-align: center;">
                                     <a href="" class="btn btn-primary">編集</a>
                                 </td>
                             </tr>
                             <tr>
-                                <td style="width: 80%; vertical-align: middle;">退場時本人メール設定</th>
+                                <td style="width: 15%; vertical-align: middle; text-align:center;"><b class="redText">未設定</b></td>
+                                <td style="width: 65%; vertical-align: middle;">退場時本人メール設定</th>
                                 <td style="width: 20%; text-align: center;">
                                     <a href="" class="btn btn-primary">編集</a>
                                 </td>
@@ -70,7 +76,7 @@
 
 
 
-            <h2 class="text-lg font-medium text-gray-900" style="margin-top: 50px;">イベント基本情報</h2>
+            <h2 class="text-lg font-medium text-gray-900" style="margin-top: 30px;">イベント基本情報</h2>
 
             <table class="event-detail-table table table-bordered">
                 <tbody>

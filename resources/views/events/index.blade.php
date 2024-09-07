@@ -65,8 +65,8 @@
                                 </td>
                                 <td>{{ $event->approval == 0 ? 'なし' : 'あり' }}</td>
                                 <td>
-                                    <a href="{{ route('events.edit', $event->id) }}" class="btn btn-primary btn-sm event-btn">　　編集　　</a><br>
-                                    <a href="{{ route('events.show', $event->id) }}" class="btn btn-info btn-sm event-btn">事前設定進捗</a>
+                                    <a href="{{ route('events.edit', $event->id) }}" class="btn btn-primary btn-sm event-btn">基本情報編集</a><br>
+                                    <a href="{{ route('events.show', $event->id) }}" class="btn btn-info btn-sm event-btn">　全体設定　</a>
                                 </td>
                             </tr>
                         </tbody>

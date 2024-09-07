@@ -133,7 +133,8 @@ label:not(.form-check-label):not(.custom-file-label) {
     background-color: rgb(7 89 133);
 }
 
-ul.eventdate-ul, ul.event-info-ul {
+ul.eventdate-ul,
+ul.event-info-ul {
     list-style: none;
     padding: 0px;
 }
@@ -143,11 +144,13 @@ ul.eventdate-ul, ul.event-info-ul {
     justify-content: space-between;
 }
 
-.event-info-div, .eventdate-div {
-    width: 30%; /* 両方のdivに少し余裕を持たせる */
+.event-info-div,
+.eventdate-div {
+    width: 30%;
+    /* 両方のdivに少し余裕を持たせる */
 }
 
-.event-btn{
+.event-btn {
     margin-bottom: 5px;
 }
 
@@ -172,8 +175,8 @@ ul.eventdate-ul, ul.event-info-ul {
     text-decoration: underline;
 }
 
-
-.event-table th, .event-table td {
+.event-table th,
+.event-table td {
     padding: 8px;
     text-align: left;
 }
@@ -217,40 +220,38 @@ ul.eventdate-ul, ul.event-info-ul {
         display: block;
         width: 100%;
     }
-
     .event-detail-table th {
         text-align: left;
         border-bottom: none;
     }
-
     .event-detail-table td {
         text-align: left;
         border-top: none;
     }
 }
 
-
 @media (max-width: 768px) {
-    .event-table, .event-table thead, .event-table tbody, .event-table th, .event-table td, .event-table tr {
+    .event-table,
+    .event-table thead,
+    .event-table tbody,
+    .event-table th,
+    .event-table td,
+    .event-table tr {
         display: block;
     }
-    
     .event-table thead tr {
         position: absolute;
         top: -9999px;
         left: -9999px;
     }
-    
     .event-table tr {
         margin-bottom: 15px;
     }
-    
     .event-table td {
         border: none;
         position: relative;
         padding-left: 50%;
     }
-    
     .event-table td:before {
         position: absolute;
         top: 6px;
@@ -263,13 +264,12 @@ ul.eventdate-ul, ul.event-info-ul {
     }
 }
 
-
 @media (max-width: 768px) {
     .event-details-container {
         flex-direction: column;
     }
-
-    .event-info-div, .eventdate-div {
+    .event-info-div,
+    .eventdate-div {
         width: 100%;
         margin-bottom: 20px;
     }
@@ -298,27 +298,28 @@ ul.eventdate-ul, ul.event-info-ul {
 }
 
 @media (max-width: 768px) {
-    .event-progress-table, .event-progress-table thead, .event-progress-table tbody, .event-progress-table th, .event-progress-table td, .event-progress-table tr {
+    .event-progress-table,
+    .event-progress-table thead,
+    .event-progress-table tbody,
+    .event-progress-table th,
+    .event-progress-table td,
+    .event-progress-table tr {
         display: block;
     }
-    
     .event-progress-table thead tr {
         position: absolute;
         top: -9999px;
         left: -9999px;
     }
-    
     .event-progress-table tr {
         margin-bottom: 15px;
         border: 1px solid #ccc;
     }
-    
     .event-progress-table td {
         border: none;
         position: relative;
         padding-left: 50%;
     }
-    
     .event-progress-table td:before {
         position: absolute;
         top: 6px;
@@ -331,3 +332,10 @@ ul.eventdate-ul, ul.event-info-ul {
     }
 }
 
+.greenText {
+    color: #008080;
+}
+
+.redText {
+    color: #8b0000;
+}

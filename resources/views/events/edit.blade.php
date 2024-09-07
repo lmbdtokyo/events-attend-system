@@ -117,4 +117,16 @@
             </form>
         </div>
     </div>
+
+
+    <div class="card">
+        <div class="card-body">
+            <form method="POST" action="{{ route('events.destroy', $event->id) }}" onsubmit="return confirm('ご注意：削除すると、申込・来場状況や設定した情報がすべて削除され、元に戻せません。本当に削除しますか？');">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-danger">削除</button>
+            </form>
+        </div>
+    </div>
+
 @endsection

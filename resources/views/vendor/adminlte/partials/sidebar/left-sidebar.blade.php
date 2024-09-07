@@ -7,7 +7,7 @@
         <nav class="pt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
 
-                
+                @if (!request()->is('events/*')  || request()->is('events/create'))
                 @if(Auth::user() && Auth::user()->auth == 1)
                 <li class="nav-header">管理者メニュー</li>
                 <li class="nav-item has-treeview">
@@ -67,7 +67,31 @@
                 </li>
 
 
-                <li class="nav-header">イベント名</li>
+                <li class="nav-header">アカウント設定</li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url('/profile') }}">
+                        <i class="fas fa-fw fa-user"></i>
+                        <p>アカウント編集</p>
+                    </a>
+                </li>
+
+                @endif
+
+                @if (request()->is('events/*') && !request()->is('events/create'))
+                <li class="nav-header">{{ $event->name }} 基本情報</li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url('/events/' . $event->id) }}">
+                        <i class="fas fa-fw fa-user"></i>
+                        <p>イベント詳細</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url('/events/' . $event->id . '/edit') }}">
+                        <i class="fas fa-fw fa-user"></i>
+                        <p>イベント情報修正</p>
+                    </a>
+                </li>
+                <li class="nav-header">イベントメニュー</li>
                 <li class="nav-item has-treeview">
                     <a class="nav-link" href="#">
                         <i class="fas fa-fw fa-user"></i>
@@ -110,20 +134,50 @@
                                 <p>空QRコード発行</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/') }}">
+                                <p>アンケート項目設定</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item has-treeview">
+                    <a class="nav-link" href="#">
+                        <i class="fas fa-fw fa-user"></i>
+                        <p>各種機能 <i class="fas fa-angle-left right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/') }}">
+                                <p>申込・来場者一覧</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/') }}">
+                                <p>アンケート集計</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/') }}">
+                                <p>ユーザー承認</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
 
-
-
-
-
-                <li class="nav-header">アカウント設定</li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url('/profile') }}">
-                        <i class="fas fa-fw fa-user"></i>
-                        <p>アカウント編集</p>
+                <li class="nav-item has-treeview">
+                    <a class="nav-link" href="{{ url('/dashboard') }}">
+                        <i class="fas fa-fw fa-arrow-left"></i>
+                        <p>全体ダッシュボードへ戻る</p>
                     </a>
                 </li>
+
+                @endif
+
+
+
+
+
             </ul>
         </nav>
     </div>

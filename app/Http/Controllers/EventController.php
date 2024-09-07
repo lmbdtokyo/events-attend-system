@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Event;
 use App\Models\Usersorganization;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class EventController extends Controller
 {
@@ -55,14 +56,29 @@ class EventController extends Controller
 
         $eventData = $request->all();
         $eventData['event_date'] = json_encode($request->event_date);
-    
+
         Event::create($eventData);
+
+        $lastInsertedId = Event::latest()->first()->id;
+
+        
+
         return redirect()->route('events.index')->with('success', 'イベントを作成しました。');
     }
 
     public function show(Event $event)
     {
-        return view('events.show', compact('event'));
+
+        if (Auth::user()->type === 'master') {
+            return view('events.show', compact('event'));
+        } else {
+            $user = Auth::user();
+            if ($user->organization == $event->organization) {
+                return view('events.show', compact('event'));
+            } else {
+                return redirect()->route('events.index')->with('error', '権限がありません。');
+            }
+        }
     }
 
     public function edit(Event $event)
@@ -72,10 +88,8 @@ class EventController extends Controller
         } else {
             $user = Auth::user();
             if ($user->organization == $event->organization) {
-                \Log::info('条件が一致しました');
                 return view('events.edit', compact('event'));
             } else {
-                \Log::info('条件が一致しませんでした');
                 return redirect()->route('events.index')->with('error', '権限がありません。');
             }
         }
@@ -121,6 +135,7 @@ class EventController extends Controller
 
     public function destroy(Event $event)
     {
+
         $event->delete();
         return redirect()->route('events.index')->with('success', 'イベントを削除しました。');
     }
