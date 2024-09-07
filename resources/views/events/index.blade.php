@@ -14,27 +14,49 @@
 
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">{{ $event->name }}</h3>
+                    <h3 class="card-title"><b>{{ $event->name }}</b></h3>
                 </div>
                 <div class="card-body">
+
+                    <h2 class="text-lg font-medium text-gray-900">
+                        開催日
+                    </h2>
+                    
+                    <ul class="eventdate-ul">
+                        @php
+                            $eventDates = json_decode($event->event_date, true); // JSONをデコード
+                        @endphp
+                        @foreach ($eventDates as $date)
+                            <li>
+                                {{ $date['date'] }} {{ $date['starttime'] }}～{{ $date['endtime'] }}
+                            </li>
+                        @endforeach
+                    </ul>
+
+
                     <table class="table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>タイトル</th>
-                                <th>所属組織</th>
-                                <th>開催場所</th>
-                                <th>開催日</th>
-                                <th>承認制</th>
-                            </tr>
-                        </thead>
                         <tbody>
                             <tr>
                                 <td>{{ $event->id }}</td>
                                 <td>{{ $event->name }}</td>
                                 <td>{{ $event->organization }}</td>
                                 <td>{{ $event->place }}</td>
-                                <td>{{ $event->event_date }}</td>
+                                <td>
+                                    <ul>
+                                        @php
+                                            $eventDates = json_decode($event->event_date, true); // JSONをデコード
+                                        @endphp
+                                        @foreach ($eventDates as $date)
+                                            <li>
+                                                日付: {{ $date['date'] }}<br>
+                                                開始: {{ $date['starttime'] }}<br>
+                                                終了: {{ $date['endtime'] }}
+                                            </li>
+                                        @endforeach
+                                    </ul>
+
+
+                                </td>
                                 <td>{{ $event->approval }}</td>
                             </tr>
                         </tbody>

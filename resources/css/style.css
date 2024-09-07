@@ -132,3 +132,7 @@ label:not(.form-check-label):not(.custom-file-label) {
 .bg-sky-800 {
     background-color: rgb(7 89 133);
 }
+
+ul.eventdate-ul {
+    list-style: none;
+}
