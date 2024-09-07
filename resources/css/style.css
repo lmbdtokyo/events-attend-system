@@ -133,6 +133,201 @@ label:not(.form-check-label):not(.custom-file-label) {
     background-color: rgb(7 89 133);
 }
 
-ul.eventdate-ul {
+ul.eventdate-ul, ul.event-info-ul {
     list-style: none;
+    padding: 0px;
 }
+
+.event-details-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.event-info-div, .eventdate-div {
+    width: 30%; /* 両方のdivに少し余裕を持たせる */
+}
+
+.event-btn{
+    margin-bottom: 5px;
+}
+
+.event-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.event-title {
+    font-size: 1.5em;
+    margin: 5px;
+}
+
+.event-title a {
+    color: #333;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.event-title a:hover {
+    color: #333;
+    text-decoration: underline;
+}
+
+
+.event-table th, .event-table td {
+    padding: 8px;
+    text-align: left;
+}
+
+.event-table th {
+    font-weight: bold;
+}
+
+.event-table tr:hover {
+    background-color: transparent;
+}
+
+.event-detail-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.event-detail-table th,
+.event-detail-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+.event-detail-table th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+    width: 30%;
+}
+
+.event-detail-table td {
+    width: 70%;
+}
+
+@media (max-width: 768px) {
+    .event-detail-table,
+    .event-detail-table tbody,
+    .event-detail-table tr,
+    .event-detail-table th,
+    .event-detail-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .event-detail-table th {
+        text-align: left;
+        border-bottom: none;
+    }
+
+    .event-detail-table td {
+        text-align: left;
+        border-top: none;
+    }
+}
+
+
+@media (max-width: 768px) {
+    .event-table, .event-table thead, .event-table tbody, .event-table th, .event-table td, .event-table tr {
+        display: block;
+    }
+    
+    .event-table thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+    
+    .event-table tr {
+        margin-bottom: 15px;
+    }
+    
+    .event-table td {
+        border: none;
+        position: relative;
+        padding-left: 50%;
+    }
+    
+    .event-table td:before {
+        position: absolute;
+        top: 6px;
+        left: 6px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        content: attr(data-label);
+        font-weight: bold;
+    }
+}
+
+
+@media (max-width: 768px) {
+    .event-details-container {
+        flex-direction: column;
+    }
+
+    .event-info-div, .eventdate-div {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+}
+
+.event-progress-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.event-progress-table th,
+.event-progress-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+.event-progress-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.event-progress-table tr:hover {
+    background-color: #f5f5f5;
+}
+
+@media (max-width: 768px) {
+    .event-progress-table, .event-progress-table thead, .event-progress-table tbody, .event-progress-table th, .event-progress-table td, .event-progress-table tr {
+        display: block;
+    }
+    
+    .event-progress-table thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+    
+    .event-progress-table tr {
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+    }
+    
+    .event-progress-table td {
+        border: none;
+        position: relative;
+        padding-left: 50%;
+    }
+    
+    .event-progress-table td:before {
+        position: absolute;
+        top: 6px;
+        left: 6px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        content: attr(data-label);
+        font-weight: bold;
+    }
+}
+

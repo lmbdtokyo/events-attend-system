@@ -7,6 +7,23 @@
 @endsection
 
 @section('content')
+
+<div class="text-right">
+    <a href="{{ route('events.create') }}" class="btn btn-success mb-3">イベント新規作成</a>
+</div>
+
+            @if(session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if(session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
+
     
             @if(count($events) > 0)
 
@@ -14,50 +31,43 @@
 
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title"><b>{{ $event->name }}</b></h3>
+                    <h2 class="card-title event-title"><b><a href="{{ route('events.show', $event->id) }}">{{ $event->name }}</a></b></h2>
                 </div>
                 <div class="card-body">
 
-                    <h2 class="text-lg font-medium text-gray-900">
-                        開催日
-                    </h2>
-                    
-                    <ul class="eventdate-ul">
-                        @php
-                            $eventDates = json_decode($event->event_date, true); // JSONをデコード
-                        @endphp
-                        @foreach ($eventDates as $date)
-                            <li>
-                                {{ $date['date'] }} {{ $date['starttime'] }}～{{ $date['endtime'] }}
-                            </li>
-                        @endforeach
-                    </ul>
-
-
-                    <table class="table">
+                    <table class="event-table">
                         <tbody>
                             <tr>
-                                <td>{{ $event->id }}</td>
-                                <td>{{ $event->name }}</td>
-                                <td>{{ $event->organization }}</td>
-                                <td>{{ $event->place }}</td>
+                                <th>イベント情報</th>
+                                <th>開催日</th>
+                                <th>承認</th>
+                                <th>アクション</th>
+                                
+                            </tr>
+                            <tr>
                                 <td>
-                                    <ul>
-                                        @php
-                                            $eventDates = json_decode($event->event_date, true); // JSONをデコード
-                                        @endphp
-                                        @foreach ($eventDates as $date)
-                                            <li>
-                                                日付: {{ $date['date'] }}<br>
-                                                開始: {{ $date['starttime'] }}<br>
-                                                終了: {{ $date['endtime'] }}
-                                            </li>
-                                        @endforeach
+                                    <ul class="event-info-ul">
+                                        <li>開催組織: {{ \App\Models\Usersorganization::find($event->organization)->name }}</li>
+                                        <li>開催場所: {{ $event->place }}</li>
                                     </ul>
-
-
                                 </td>
-                                <td>{{ $event->approval }}</td>
+                                <td>
+                                    <ul class="eventdate-ul">
+                                    @php
+                                        $eventDates = json_decode($event->event_date, true); // JSONをデコード
+                                    @endphp
+                                    @foreach ($eventDates as $date)
+                                        <li>
+                                            {{ $date['date'] }} {{ \Carbon\Carbon::parse($date['starttime'])->format('H:i') }}～{{ \Carbon\Carbon::parse($date['endtime'])->format('H:i') }}
+                                        </li>
+                                    @endforeach
+                                    </ul>
+                                </td>
+                                <td>{{ $event->approval == 0 ? 'なし' : 'あり' }}</td>
+                                <td>
+                                    <a href="{{ route('events.edit', $event->id) }}" class="btn btn-primary btn-sm event-btn">　　編集　　</a><br>
+                                    <a href="{{ route('events.show', $event->id) }}" class="btn btn-info btn-sm event-btn">事前設定進捗</a>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -71,6 +81,8 @@
                 <p>イベントがありません。</p>
 
             @endif
+
+            {{ $events->links() }}
 
 @endsection
 
