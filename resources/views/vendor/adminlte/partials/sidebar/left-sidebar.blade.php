@@ -10,14 +10,14 @@
                 
                 @if(Auth::user() && Auth::user()->auth == 1)
                 <li class="nav-header">管理者メニュー</li>
-                <li class="nav-item has-treeview menu-open">
-                    <a class="nav-link active" href="#">
+                <li class="nav-item has-treeview">
+                    <a class="nav-link" href="#">
                         <i class="fas fa-fw fa-user"></i>
                         <p>管理アカウント <i class="fas fa-angle-left right"></i></p>
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a class="nav-link active" href="{{ url('/users') }}">
+                            <a class="nav-link" href="{{ url('/users') }}">
                                 <i class="fas fa-fw fa-list"></i>
                                 <p>一覧</p>
                             </a>
@@ -60,11 +60,63 @@
                 
                 <li class="nav-header">イベント</li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url('/admin/settings') }}">
-                        <i class="fas fa-fw fa-user"></i>
-                        <p>イベント一覧</p>
+                    <a class="nav-link" href="{{ url('/events') }}">
+                        <i class="fas fa-fw fa-star"></i>
+                        <p>一覧</p>
                     </a>
                 </li>
+
+
+                <li class="nav-header">イベント名</li>
+                <li class="nav-item has-treeview">
+                    <a class="nav-link" href="#">
+                        <i class="fas fa-fw fa-user"></i>
+                        <p>事前設定 <i class="fas fa-angle-left right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/') }}">
+                                <i class="fas fa-fw fa-list"></i>
+                                <p>申込フォーム基本設定</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/') }}">
+                                <p>申込フォーム項目</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/') }}">
+                                <p>マイページ基本設定</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/') }}">
+                                <p>申込完了メール設定</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/') }}">
+                                <p>受付時本人メール（入場）</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/') }}">
+                                <p>受付時本人メール（退場）</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/') }}">
+                                <p>空QRコード発行</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+
+
+
+
                 <li class="nav-header">アカウント設定</li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url('/profile') }}">
