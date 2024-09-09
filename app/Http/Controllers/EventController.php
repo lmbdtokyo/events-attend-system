@@ -7,6 +7,19 @@ use App\Models\Event;
 use App\Models\Usersorganization;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Models\Eventgenerateqr;
+use App\Models\Eventpdfimage;
+use App\Models\Eventfinish;
+use App\Models\Eventfinishmail;
+use App\Models\Evententrymail;
+use App\Models\Eventexitmail;
+use App\Models\Eventprogress;
+use App\Models\Eventsurvey;
+use App\Models\Eventsection;
+use App\Models\Eventmypagebasic;
+use App\Models\Eventsetting;
+use App\Models\Eventqr;
+use App\Models\Eventbasic;
 
 class EventController extends Controller
 {
@@ -61,7 +74,8 @@ class EventController extends Controller
 
         $lastInsertedId = Event::latest()->first()->id;
 
-        
+        //ここでイベントの初期データをインポート
+        //seederもついでに追加
 
         return redirect()->route('events.index')->with('success', 'イベントを作成しました。');
     }

@@ -78,7 +78,7 @@
                 @endif
 
                 @if (request()->is('events/*') && !request()->is('events/create'))
-                <li class="nav-header">{{ $event->name }} 基本情報</li>
+                <li class="nav-header">{{ Str::limit($event->name, 30) }}</li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url('/events/' . $event->id) }}">
                         <i class="fas fa-fw fa-user"></i>
@@ -132,6 +132,11 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/') }}">
                                 <p>空QRコード発行</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/') }}">
+                                <p>来場証PDF</p>
                             </a>
                         </li>
                         <li class="nav-item">
