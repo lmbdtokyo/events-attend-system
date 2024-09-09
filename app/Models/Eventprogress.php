@@ -9,6 +9,8 @@ class Eventprogress extends Model
 {
     use HasFactory;
 
+    protected $table = 'eventprogress';
+
     protected $fillable = [
         'event_id',
         'form_basic_flg',

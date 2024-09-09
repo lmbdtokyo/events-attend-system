@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             initUsersauthmasterSeeder::class,
             initUsersorganizationSeeder::class,
             EventTableSeeder::class,
+            initEventDataSeeder::class,
         ]);
     }
 }

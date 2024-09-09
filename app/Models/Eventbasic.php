@@ -9,6 +9,8 @@ class Eventbasic extends Model
 {
     use HasFactory;
 
+    protected $table = 'eventbasic';
+
     protected $fillable = [
         'event_id',
         'title',

@@ -36,6 +36,10 @@ Route::get('/events/{event}/edit', [App\Http\Controllers\EventController::class,
 Route::patch('/events/{event}', [App\Http\Controllers\EventController::class, 'update'])->name('events.update');
 Route::delete('/events/{event}', [App\Http\Controllers\EventController::class, 'destroy'])->name('events.destroy');
 
+//イベント詳細の設定ルーティング
+Route::get('/events/{event}/basic', [App\Http\Controllers\EventBasicContoller::class, 'edit'])->name('eventbasic.edit');
+Route::patch('/events/{event}/basic', [App\Http\Controllers\EventBasicContoller::class, 'update'])->name('eventbasic.update');
+
 
 
 Route::middleware('auth')->group(function () {
