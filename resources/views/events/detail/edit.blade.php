@@ -1,10 +1,10 @@
 
 @extends('adminlte::page')
 
-@section('title', 'イベント基本情報編集 | イベント来場管理システム')
+@section('title', '申込フォーム基本情報編集 | イベント来場管理システム')
 
 @section('content_header')
-    <h1>イベント基本情報編集</h1>
+    <h1>申込フォーム基本情報編集</h1>
 @endsection
 
 @section('content')
@@ -33,15 +33,21 @@
                     <th><label for="title">フォームのタイトル</label></th>
                     <td><input type="text" id="title" name="title" class="form-control" value="{{ $eventbasic->title ?? '' }}"></td>
                 </tr>
-                @if ($eventbasic->image)
                 <tr>
                     <th><label for="image">画像</label></th>
                     <td>
-                        <img src="{{ asset('storage/images/' . basename($eventbasic->image)) }}" alt="Event Image" style="max-width: 350px;">
+                        @if ($eventbasic->image)
+                            <img src="{{ asset('storage/images/' . basename($eventbasic->image)) }}" alt="Event Image" style="max-width: 500px; margin:0px 0px 20px 0px;">
+                        @else
+                            <img src="{{ asset('images/no-image.png') }}" style="max-width: 500px; margin:0px 0px 20px 0px;" alt="Logo">
+                        @endif
                         <input type="file" id="image" name="image" class="form-control">
+                        @if ($errors->has('image'))
+                            <span class="text-danger">{{ $errors->first('image') }}</span>
+                        @endif
+                        <p class="small" style="margin-top:10px;">推奨サイズ : 1280px x 400px 最大容量 : 5MB</p>
                     </td>
                 </tr>
-                @endif
                 <tr>
                     <th><label for="limit">受付人数制限</label></th>
                     <td>
@@ -78,10 +84,15 @@
                     <td><textarea id="privacy" name="privacy" class="form-control">{{ $eventbasic->privacy ?? '' }}</textarea></td>
                 </tr>
             </table>
+
+            <input type="hidden" name="event_id" value="{{ $eventbasic->event_id }}">
+            <div style="margin-top: 20px;">
+                <button type="submit" class="btn btn-primary">編集完了</button>
+            </div>
+
         </div>
     </div>
-    <input type="hidden" name="event_id" value="{{ $eventbasic->event_id }}">
-    <button type="submit" class="btn btn-primary">編集完了</button>
+    
 </form>
 
 <script>

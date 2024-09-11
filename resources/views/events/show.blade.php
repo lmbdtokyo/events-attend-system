@@ -29,7 +29,7 @@
                                 </td>
                                 <td style="width: 65%; vertical-align: middle;">申込フォーム基本設定</th>
                                 <td style="width: 20%; text-align: center;">
-                                    <a href="" class="btn btn-primary">編集</a>
+                                    <a href="{{ route('eventbasic.edit', $event->id) }}" class="btn btn-primary">編集</a>
                                 </td>
                             </tr>
                             <tr>

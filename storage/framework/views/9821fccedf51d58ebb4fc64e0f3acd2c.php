@@ -1,10 +1,10 @@
 
 
 
-<?php $__env->startSection('title', 'イベント基本情報編集 | イベント来場管理システム'); ?>
+<?php $__env->startSection('title', '申込フォーム基本情報編集 | イベント来場管理システム'); ?>
 
 <?php $__env->startSection('content_header'); ?>
-    <h1>イベント基本情報編集</h1>
+    <h1>申込フォーム基本情報編集</h1>
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('content'); ?>
@@ -33,15 +33,21 @@
                     <th><label for="title">フォームのタイトル</label></th>
                     <td><input type="text" id="title" name="title" class="form-control" value="<?php echo e($eventbasic->title ?? ''); ?>"></td>
                 </tr>
-                <?php if($eventbasic->image): ?>
                 <tr>
                     <th><label for="image">画像</label></th>
                     <td>
-                        <img src="<?php echo e(asset('storage/images/' . basename($eventbasic->image))); ?>" alt="Event Image" style="max-width: 350px;">
+                        <?php if($eventbasic->image): ?>
+                            <img src="<?php echo e(asset('storage/images/' . basename($eventbasic->image))); ?>" alt="Event Image" style="max-width: 500px; margin:0px 0px 20px 0px;">
+                        <?php else: ?>
+                            <img src="<?php echo e(asset('images/no-image.png')); ?>" style="max-width: 500px; margin:0px 0px 20px 0px;" alt="Logo">
+                        <?php endif; ?>
                         <input type="file" id="image" name="image" class="form-control">
+                        <?php if($errors->has('image')): ?>
+                            <span class="text-danger"><?php echo e($errors->first('image')); ?></span>
+                        <?php endif; ?>
+                        <p class="small" style="margin-top:10px;">推奨サイズ : 1280px x 400px 最大容量 : 5MB</p>
                     </td>
                 </tr>
-                <?php endif; ?>
                 <tr>
                     <th><label for="limit">受付人数制限</label></th>
                     <td>
@@ -78,10 +84,15 @@
                     <td><textarea id="privacy" name="privacy" class="form-control"><?php echo e($eventbasic->privacy ?? ''); ?></textarea></td>
                 </tr>
             </table>
+
+            <input type="hidden" name="event_id" value="<?php echo e($eventbasic->event_id); ?>">
+            <div style="margin-top: 20px;">
+                <button type="submit" class="btn btn-primary">編集完了</button>
+            </div>
+
         </div>
     </div>
-    <input type="hidden" name="event_id" value="<?php echo e($eventbasic->event_id); ?>">
-    <button type="submit" class="btn btn-primary">編集完了</button>
+    
 </form>
 
 <script>

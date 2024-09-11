@@ -26,9 +26,9 @@ class EventController extends Controller
     public function index()
     {
         if (Auth::user()->type === 'master') {
-            $events = Event::paginate(10);
+            $events = Event::orderBy('created_at', 'desc')->paginate(10);
         } else {
-            $events = Event::where('organization', Auth::user()->organization)->paginate(10);
+            $events = Event::where('organization', Auth::user()->organization)->orderBy('created_at', 'desc')->paginate(10);
         }
         return view('events.index', compact('events'));
     }

@@ -28,6 +28,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/users/store', [App\Http\Controllers\UserController::class, 'store'])->name('user.store');
 });
 
+//イベント管理
 Route::get('/events', [App\Http\Controllers\EventController::class, 'index'])->name('events.index');
 Route::get('/events/create', [App\Http\Controllers\EventController::class, 'create'])->name('events.create');
 Route::post('/events/store', [App\Http\Controllers\EventController::class, 'store'])->name('events.store');
@@ -36,10 +37,13 @@ Route::get('/events/{event}/edit', [App\Http\Controllers\EventController::class,
 Route::patch('/events/{event}', [App\Http\Controllers\EventController::class, 'update'])->name('events.update');
 Route::delete('/events/{event}', [App\Http\Controllers\EventController::class, 'destroy'])->name('events.destroy');
 
-//イベント詳細の設定ルーティング
+//申込フォーム基本設定の設定ルーティング
 Route::get('/events/{event}/basic', [App\Http\Controllers\EventBasicContoller::class, 'edit'])->name('eventbasic.edit');
 Route::patch('/events/{event}/basic', [App\Http\Controllers\EventBasicContoller::class, 'update'])->name('eventbasic.update');
 
+//フォーム設定のルーティング
+Route::get('/events/{event}/form', [App\Http\Controllers\EventFormController::class, 'edit'])->name('eventform.edit');
+Route::patch('/events/{event}/form', [App\Http\Controllers\EventFormController::class, 'update'])->name('eventform.update');
 
 
 Route::middleware('auth')->group(function () {

@@ -18,7 +18,7 @@ class UserController extends Controller
         $user = Auth::user();
 
         if ($user->type == 'master') {
-            $users = User::paginate(15);
+            $users = User::orderBy('created_at', 'desc')->paginate(15);
             $auths = \DB::table('usersauthmaster')->get();
             $organizations = \DB::table('usersorganization')->get();
             return view('user.index', compact('users', 'auths', 'organizations'));

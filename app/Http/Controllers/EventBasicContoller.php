@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Eventbasic;
 use App\Models\Event;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Eventprogress;
 
 class EventBasicContoller extends Controller
 {
@@ -19,6 +20,12 @@ class EventBasicContoller extends Controller
 
     public function update(Request $request, $event)
     {
+
+        //一度更新したらprogressのフラグも変更する
+        $eventProgress = Eventprogress::where('event_id', $event)->first();
+        $eventProgress->form_basic_flg = 1;
+        $eventProgress->save();
+
         $rules = [
             'title' => 'required|string|max:255',
             'overview_title' => 'required|string',
