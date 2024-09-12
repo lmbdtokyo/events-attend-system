@@ -117,22 +117,27 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/') }}">
+                            <a class="nav-link" href="{{ url('/events/' . $event->id . '/mypagebasic') }}">
                                 <p>マイページ基本設定</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/') }}">
+                            <a class="nav-link" href="{{ url('/events/' . $event->id . '/finish') }}">
+                                <p>申込完了画面設定</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/events/' . $event->id . '/finishmail') }}">
                                 <p>申込完了メール設定</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/') }}">
+                            <a class="nav-link" href="{{ url('/events/' . $event->id . '/entrymail') }}">
                                 <p>受付時本人メール（入場）</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/') }}">
+                            <a class="nav-link" href="{{ url('/events/' . $event->id . '/exitmail') }}">
                                 <p>受付時本人メール（退場）</p>
                             </a>
                         </li>

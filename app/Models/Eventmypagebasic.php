@@ -9,6 +9,8 @@ class Eventmypagebasic extends Model
 {
     use HasFactory;
 
+    protected $table = 'eventmypagebasic';
+
     protected $fillable = [
         'event_id',
         'endtime',

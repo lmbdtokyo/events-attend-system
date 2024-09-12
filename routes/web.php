@@ -49,7 +49,25 @@ Route::patch('/events/{event}/form', [App\Http\Controllers\EventFormController::
 Route::get('/events/{event}/section', [App\Http\Controllers\EventSectionController::class, 'edit'])->name('eventsection.edit');
 Route::patch('/events/{event}/section', [App\Http\Controllers\EventSectionController::class, 'update'])->name('eventsection.update');
 
+//マイページ基本設定のルーティング
+Route::get('/events/{event}/mypagebasic', [App\Http\Controllers\EventMypageBasicController::class, 'edit'])->name('eventmypagebasic.edit');
+Route::patch('/events/{event}/mypagebasic', [App\Http\Controllers\EventMypageBasicController::class, 'update'])->name('eventmypagebasic.update');
 
+//申込完了画面設定のルーティング
+Route::get('/events/{event}/finish', [App\Http\Controllers\EventFinishController::class, 'edit'])->name('eventfinish.edit');
+Route::patch('/events/{event}/finish', [App\Http\Controllers\EventFinishController::class, 'update'])->name('eventfinish.update');
+
+//申込完了メール設定のルーティング
+Route::get('/events/{event}/finishmail', [App\Http\Controllers\EventFinishMailController::class, 'edit'])->name('eventfinishmail.edit');
+Route::patch('/events/{event}/finishmail', [App\Http\Controllers\EventFinishMailController::class, 'update'])->name('eventfinishmail.update');
+
+//受付時本人メール（入場）のルーティング
+Route::get('/events/{event}/entrymail', [App\Http\Controllers\EventEntryMailController::class, 'edit'])->name('evententrymail.edit');
+Route::patch('/events/{event}/entrymail', [App\Http\Controllers\EventEntryMailController::class, 'update'])->name('evententrymail.update');
+
+//受付時本人メール（退場）のルーティング
+Route::get('/events/{event}/exitmail', [App\Http\Controllers\EventExitMailController::class, 'edit'])->name('eventexitmail.edit');
+Route::patch('/events/{event}/exitmail', [App\Http\Controllers\EventExitMailController::class, 'update'])->name('eventexitmail.update');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

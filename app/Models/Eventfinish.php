@@ -9,6 +9,8 @@ class Eventfinish extends Model
 {
     use HasFactory;
 
+    protected $table = 'eventfinish';
+
     protected $fillable = [
         'event_id',
         'draft_text',

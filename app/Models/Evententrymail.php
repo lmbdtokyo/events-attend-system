@@ -9,6 +9,8 @@ class Evententrymail extends Model
 {
     use HasFactory;
 
+    protected $table = 'evententrymail';
+
     protected $fillable = [
         'event_id',
         'bcc',
