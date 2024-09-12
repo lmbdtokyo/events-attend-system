@@ -105,8 +105,15 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/') }}">
-                                <p>申込フォーム項目</p>
+                            <a class="nav-link" href="{{ url('/events/' . $event->id . '/form') }}">
+                                <i class="fas fa-fw fa-list"></i>
+                                <p>申込フォーム表示設定</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/events/' . $event->id . '/section') }}">
+                                <i class="fas fa-fw fa-list"></i>
+                                <p>受付区分設定</p>
                             </a>
                         </li>
                         <li class="nav-item">

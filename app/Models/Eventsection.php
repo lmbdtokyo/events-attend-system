@@ -11,10 +11,7 @@ class Eventsection extends Model
 
     protected $fillable = [
         'event_id',
-        'section',
-    ];
-
-    protected $casts = [
-        'section' => 'json',
+        'name',
+        'color',
     ];
 }

@@ -45,6 +45,11 @@ Route::patch('/events/{event}/basic', [App\Http\Controllers\EventBasicContoller:
 Route::get('/events/{event}/form', [App\Http\Controllers\EventFormController::class, 'edit'])->name('eventform.edit');
 Route::patch('/events/{event}/form', [App\Http\Controllers\EventFormController::class, 'update'])->name('eventform.update');
 
+//フォーム設定のルーティング
+Route::get('/events/{event}/section', [App\Http\Controllers\EventSectionController::class, 'edit'])->name('eventsection.edit');
+Route::patch('/events/{event}/section', [App\Http\Controllers\EventSectionController::class, 'update'])->name('eventsection.update');
+
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

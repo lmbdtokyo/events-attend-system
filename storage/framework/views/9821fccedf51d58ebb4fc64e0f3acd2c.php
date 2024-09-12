@@ -1,6 +1,3 @@
-
-
-
 <?php $__env->startSection('title', '申込フォーム基本情報編集 | イベント来場管理システム'); ?>
 
 <?php $__env->startSection('content_header'); ?>
@@ -24,6 +21,12 @@
                                 <li><?php echo e($error); ?></li>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </ul>
+                    </div>
+                <?php endif; ?>
+
+                <?php if(session('success')): ?>
+                    <div class="alert alert-success">
+                        <p><?php echo e(session('success')); ?></p>
                     </div>
                 <?php endif; ?>
             </div>

@@ -54,4 +54,28 @@ class Eventsetting extends Model
         'section_required_flg',
         'section_placeholder'
     ];
+
+protected $casts = [
+    'company_flg' => 'boolean',
+    'company_required_flg' => 'boolean',
+    'division_flg' => 'boolean',
+    'division_required_flg' => 'boolean',
+    'post_flg' => 'boolean',
+    'post_required_flg' => 'boolean',
+    'postal_code_flg' => 'boolean',
+    'postal_code_required_flg' => 'boolean',
+    'address1_flg' => 'boolean',
+    'address1_required_flg' => 'boolean',
+    'address2_flg' => 'boolean',
+    'address2_required_flg' => 'boolean',
+    'address3_flg' => 'boolean',
+    'address3_required_flg' => 'boolean',
+    'tel_flg' => 'boolean',
+    'tel_required_flg' => 'boolean',
+    'birth_flg' => 'boolean',
+    'birth_required_flg' => 'boolean',
+    'section_flg' => 'boolean',
+    'section_required_flg' => 'boolean',
+];
+
 }
