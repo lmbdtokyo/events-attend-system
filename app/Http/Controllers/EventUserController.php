@@ -68,7 +68,7 @@ class EventUserController extends Controller
         $eventuser->approval = $request->input('approval');
         $eventuser->save();
 
-        //メールを送る
+        //登録完了メールを送る（e-mail認証までやりたい）
 
         //QRコードのUUIDを生成して保存
         //QRを作成してPDFに埋め込みつつできたPDFをstorageに保存する
