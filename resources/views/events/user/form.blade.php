@@ -57,6 +57,8 @@
     </style>
 </head>
 <body>
+
+
     <div class="container">
 
         @if ($eventbasic->image)
@@ -71,109 +73,154 @@
             {{ $eventbasic->overview_text }} 
         </p>
 
+        <h2>開催情報</h2>
 
-        <h2>お申込みフォーム</h2>
-            
-        <form action="{{ route('eventform.store', $event->id) }}" method="POST">
-            @csrf
-            @method('PATCH')
+        <p>場所: {{ $event->place }}</p>
+        <p>開催日</p>
+        <ul>
+            @php
+                $eventDates = json_decode($event->event_date);
+            @endphp
 
-            @if ($eventsetting->company_flg)
+            @foreach ($eventDates as $eventDate)
+                <li>
+                    {{ $eventDate->date }}: {{ $eventDate->starttime }} - {{ $eventDate->endtime }}
+                </li>
+            @endforeach
+        </ul>
+
+
+        @php
+            $currentDate = \Carbon\Carbon::now();
+        @endphp
+
+        @if ($currentDate->between($eventbasic->start, $eventbasic->end))
+            <h2>お申込みフォーム</h2>
+                
+            <form action="{{ route('eventform.store', $event->id) }}" method="POST">
+                @csrf
+                @method('PATCH')
+
+                @if ($eventsetting->name_flg)
+                    <div class="form-group">
+                        <label for="name">{{ $eventsetting->name_display_name }} @if($eventsetting->name_required_flg) <span style="color: red;">*</span> @endif</label>
+                        <input type="text" id="name" name="name" class="form-control" placeholder="{{ $eventsetting->name_placeholder }}" @if($eventsetting->name_required_flg) required @endif>
+                    </div>
+                @endif
+
+                @if ($eventsetting->furigana_flg)
+                    <div class="form-group">
+                        <label for="furigana">{{ $eventsetting->furigana_display_name }} @if($eventsetting->furigana_required_flg) <span style="color: red;">*</span> @endif</label>
+                        <input type="text" id="furigana" name="furigana" class="form-control" placeholder="{{ $eventsetting->furigana_placeholder }}" @if($eventsetting->furigana_required_flg) required @endif>
+                    </div>
+                @endif
+
+                @if ($eventsetting->company_flg)
+                    <div class="form-group">
+                        <label for="company">{{ $eventsetting->company_display_name }} @if($eventsetting->company_required_flg) <span style="color: red;">*</span> @endif</label>
+                        <input type="text" id="company" name="company" class="form-control" placeholder="{{ $eventsetting->company_placeholder }}" @if($eventsetting->company_required_flg) required @endif>
+                    </div>
+                @endif
+
+                @if ($eventsetting->division_flg)
+                    <div class="form-group">
+                        <label for="division">{{ $eventsetting->division_display_name }} @if($eventsetting->division_required_flg) <span style="color: red;">*</span> @endif</label>
+                        <input type="text" id="division" name="division" class="form-control" placeholder="{{ $eventsetting->division_placeholder }}" @if($eventsetting->division_required_flg) required @endif>
+                    </div>
+                @endif
+
+                @if ($eventsetting->post_flg)
+                    <div class="form-group">
+                        <label for="post">{{ $eventsetting->post_display_name }} @if($eventsetting->post_required_flg) <span style="color: red;">*</span> @endif</label>
+                        <input type="text" id="post" name="post" class="form-control" placeholder="{{ $eventsetting->post_placeholder }}" @if($eventsetting->post_required_flg) required @endif>
+                    </div>
+                @endif
+
+                @if ($eventsetting->postal_code_flg)
+                    <div class="form-group">
+                        <label for="postal_code">{{ $eventsetting->postal_code_display_name }} @if($eventsetting->postal_code_required_flg) <span style="color: red;">*</span> @endif</label>
+                        <input type="text" id="postal_code" name="postal_code" class="form-control" placeholder="{{ $eventsetting->postal_code_placeholder }}" @if($eventsetting->postal_code_required_flg) required @endif>
+                    </div>
+                @endif
+
+                @if ($eventsetting->address1_flg)
+                    <div class="form-group">
+                        <label for="address1">{{ $eventsetting->address1_display_name }} @if($eventsetting->address1_required_flg) <span style="color: red;">*</span> @endif</label>
+                        <input type="text" id="address1" name="address1" class="form-control" placeholder="{{ $eventsetting->address1_placeholder }}" @if($eventsetting->address1_required_flg) required @endif>
+                    </div>
+                @endif
+
+                @if ($eventsetting->address2_flg)
+                    <div class="form-group">
+                        <label for="address2">{{ $eventsetting->address2_display_name }} @if($eventsetting->address2_required_flg) <span style="color: red;">*</span> @endif</label>
+                        <input type="text" id="address2" name="address2" class="form-control" placeholder="{{ $eventsetting->address2_placeholder }}" @if($eventsetting->address2_required_flg) required @endif>
+                    </div>
+                @endif
+
+                @if ($eventsetting->address3_flg)
+                    <div class="form-group">
+                        <label for="address3">{{ $eventsetting->address3_display_name }} @if($eventsetting->address3_required_flg) <span style="color: red;">*</span> @endif</label>
+                        <input type="text" id="address3" name="address3" class="form-control" placeholder="{{ $eventsetting->address3_placeholder }}" @if($eventsetting->address3_required_flg) required @endif>
+                    </div>
+                @endif
+
+                @if ($eventsetting->tel_flg)
+                    <div class="form-group">
+                        <label for="tel">{{ $eventsetting->tel_display_name }} @if($eventsetting->tel_required_flg) <span style="color: red;">*</span> @endif</label>
+                        <input type="text" id="tel" name="tel" class="form-control" placeholder="{{ $eventsetting->tel_placeholder }}" @if($eventsetting->tel_required_flg) required @endif>
+                    </div>
+                @endif
+
+                @if ($eventsetting->birth_flg)
+                    <div class="form-group">
+                        <label for="birth">{{ $eventsetting->birth_display_name }} @if($eventsetting->birth_required_flg) <span style="color: red;">*</span> @endif</label>
+                        <input type="date" id="birth" name="birth" class="form-control" placeholder="{{ $eventsetting->birth_placeholder }}" @if($eventsetting->birth_required_flg) required @endif>
+                    </div>
+                @endif
+
+                @if ($eventsetting->section_flg)
+                    <div class="form-group">
+                        <label for="section">{{ $eventsetting->section_display_name }} @if($eventsetting->section_required_flg) <span style="color: red;">*</span> @endif</label>
+                        <select id="section" name="section" class="form-control" @if($eventsetting->section_required_flg) required @endif>
+                            @foreach ($eventsections as $section)
+                                <option value="{{ $section->id }}">{{ $section->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                @endif
+
+                <h2>ログイン情報設定</h2>
+
                 <div class="form-group">
-                    <label for="company">{{ $eventsetting->company_display_name }} @if($eventsetting->company_required_flg) <span style="color: red;">*</span> @endif</label>
-                    <input type="text" id="company" name="company" class="form-control" placeholder="{{ $eventsetting->company_placeholder }}" @if($eventsetting->company_required_flg) required @endif>
+                    <label for="mail">メールアドレス <span style="color: red;">*</span></label>
+                    <input type="email" id="mail" name="mail" class="form-control" placeholder="メールアドレスを入力してください" required>
                 </div>
-            @endif
 
-            @if ($eventsetting->division_flg)
                 <div class="form-group">
-                    <label for="division">{{ $eventsetting->division_display_name }} @if($eventsetting->division_required_flg) <span style="color: red;">*</span> @endif</label>
-                    <input type="text" id="division" name="division" class="form-control" placeholder="{{ $eventsetting->division_placeholder }}" @if($eventsetting->division_required_flg) required @endif>
+                    <label for="login_id">ログインID（英数字） <span style="color: red;">*</span></label>
+                    <input type="text" id="login_id" name="login_id" class="form-control" placeholder="ログインIDを入力してください" required>
                 </div>
-            @endif
 
-            @if ($eventsetting->post_flg)
                 <div class="form-group">
-                    <label for="post">{{ $eventsetting->post_display_name }} @if($eventsetting->post_required_flg) <span style="color: red;">*</span> @endif</label>
-                    <input type="text" id="post" name="post" class="form-control" placeholder="{{ $eventsetting->post_placeholder }}" @if($eventsetting->post_required_flg) required @endif>
+                    <label for="password">パスワード <span style="color: red;">*</span></label>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="パスワードを入力してください" required>
                 </div>
-            @endif
 
-            @if ($eventsetting->postal_code_flg)
-                <div class="form-group">
-                    <label for="postal_code">{{ $eventsetting->postal_code_display_name }} @if($eventsetting->postal_code_required_flg) <span style="color: red;">*</span> @endif</label>
-                    <input type="text" id="postal_code" name="postal_code" class="form-control" placeholder="{{ $eventsetting->postal_code_placeholder }}" @if($eventsetting->postal_code_required_flg) required @endif>
-                </div>
-            @endif
 
-            @if ($eventsetting->address1_flg)
-                <div class="form-group">
-                    <label for="address1">{{ $eventsetting->address1_display_name }} @if($eventsetting->address1_required_flg) <span style="color: red;">*</span> @endif</label>
-                    <input type="text" id="address1" name="address1" class="form-control" placeholder="{{ $eventsetting->address1_placeholder }}" @if($eventsetting->address1_required_flg) required @endif>
-                </div>
-            @endif
+                @if ($event->approval == 1)
+                    <input type="hidden" name="approval" value="0">
+                @else
+                    <input type="hidden" name="approval" value="1">
+                @endif
 
-            @if ($eventsetting->address2_flg)
-                <div class="form-group">
-                    <label for="address2">{{ $eventsetting->address2_display_name }} @if($eventsetting->address2_required_flg) <span style="color: red;">*</span> @endif</label>
-                    <input type="text" id="address2" name="address2" class="form-control" placeholder="{{ $eventsetting->address2_placeholder }}" @if($eventsetting->address2_required_flg) required @endif>
-                </div>
-            @endif
 
-            @if ($eventsetting->address3_flg)
-                <div class="form-group">
-                    <label for="address3">{{ $eventsetting->address3_display_name }} @if($eventsetting->address3_required_flg) <span style="color: red;">*</span> @endif</label>
-                    <input type="text" id="address3" name="address3" class="form-control" placeholder="{{ $eventsetting->address3_placeholder }}" @if($eventsetting->address3_required_flg) required @endif>
-                </div>
-            @endif
-
-            @if ($eventsetting->tel_flg)
-                <div class="form-group">
-                    <label for="tel">{{ $eventsetting->tel_display_name }} @if($eventsetting->tel_required_flg) <span style="color: red;">*</span> @endif</label>
-                    <input type="text" id="tel" name="tel" class="form-control" placeholder="{{ $eventsetting->tel_placeholder }}" @if($eventsetting->tel_required_flg) required @endif>
-                </div>
-            @endif
-
-            @if ($eventsetting->birth_flg)
-                <div class="form-group">
-                    <label for="birth">{{ $eventsetting->birth_display_name }} @if($eventsetting->birth_required_flg) <span style="color: red;">*</span> @endif</label>
-                    <input type="date" id="birth" name="birth" class="form-control" placeholder="{{ $eventsetting->birth_placeholder }}" @if($eventsetting->birth_required_flg) required @endif>
-                </div>
-            @endif
-
-            @if ($eventsetting->section_flg)
-                <div class="form-group">
-                    <label for="section">{{ $eventsetting->section_display_name }} @if($eventsetting->section_required_flg) <span style="color: red;">*</span> @endif</label>
-                    <select id="section" name="section" class="form-control" @if($eventsetting->section_required_flg) required @endif>
-                        @foreach ($eventsections as $section)
-                            <option value="{{ $section->id }}">{{ $section->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-            @endif
-
-            <h2>ログイン情報設定</h2>
-
-            <div class="form-group">
-                <label for="login_id">ログインID <span style="color: red;">*</span></label>
-                <input type="text" id="login_id" name="login_id" class="form-control" placeholder="ログインIDを入力してください" required>
+                <button type="submit" class="btn">申込</button>
+            </form>
+        @else
+            <div class="alert alert-danger">
+                <p>現在、申込期間外です。申込期間は{{ $eventbasic->start }}から{{ $eventbasic->end }}までです。</p>
             </div>
-
-            <div class="form-group">
-                <label for="password">パスワード <span style="color: red;">*</span></label>
-                <input type="password" id="password" name="password" class="form-control" placeholder="パスワードを入力してください" required>
-            </div>
-
-
-            @if ($event->approval == 1)
-                <input type="hidden" name="approval" value="0">
-            @else
-                <input type="hidden" name="approval" value="1">
-            @endif
-
-
-            <button type="submit" class="btn">申込</button>
-        </form>
+        @endif
     </div>
 </body>
 </html>

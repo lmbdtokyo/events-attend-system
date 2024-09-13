@@ -8,6 +8,10 @@ use App\Models\Eventbasic;
 use App\Models\Eventuser;
 use App\Models\Event;
 use App\Models\Eventsection;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Validator;
 
 
 class EventUserController extends Controller
@@ -16,20 +20,22 @@ class EventUserController extends Controller
     public function form(Event $event)
     {
 
-        //フォームの基本設定、表示期間
-
         $eventsetting = Eventsetting::where('event_id', $event->id)->first();
         $eventbasic = Eventbasic::where('event_id', $event->id)->first();
 
         $eventsections = Eventsection::where('event_id', $event->id)->get();
-            
+        
         return view('events.user.form', compact('eventsetting','eventbasic','event','eventsections'));
+
+        
     }
 
-    public function store(Request $request)
+    public function store(Request $request,Eventsetting $eventsetting ,Event $event)
     {
 
         $rules = [
+            'name' => $eventsetting->name_required_flg ? 'required|string|max:255' : 'nullable|string|max:255',
+            'furigana' => $eventsetting->furigana_required_flg ? 'required|string|max:255' : 'nullable|string|max:255',
             'company' => $eventsetting->company_required_flg ? 'required|string|max:255' : 'nullable|string|max:255',
             'division' => $eventsetting->division_required_flg ? 'required|string|max:255' : 'nullable|string|max:255',
             'post' => $eventsetting->post_required_flg ? 'required|string|max:255' : 'nullable|string|max:255',
@@ -40,6 +46,7 @@ class EventUserController extends Controller
             'tel' => $eventsetting->tel_required_flg ? 'required|string|max:255' : 'nullable|string|max:255',
             'birth' => $eventsetting->birth_required_flg ? 'required|date' : 'nullable|date',
             'section' => $eventsetting->section_required_flg ? 'required|exists:eventsections,id' : 'nullable|exists:eventsections,id',
+            'mail' => 'required|email|max:255',
             'login_id' => 'required|string|max:255',
             'password' => 'required|string|min:8',
             'approval' => 'required|boolean',
@@ -51,8 +58,12 @@ class EventUserController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
+        $uuid = (string) Str::uuid();
+
         $eventuser = new Eventuser();
-        $eventuser->event_id = $eventsetting->event_id;
+        $eventuser->name = $request->input('name');
+        $eventuser->furigana = $request->input('furigana');
+        $eventuser->event_id = $event->id;
         $eventuser->company = $request->input('company');
         $eventuser->division = $request->input('division');
         $eventuser->post = $request->input('post');
@@ -62,17 +73,28 @@ class EventUserController extends Controller
         $eventuser->address3 = $request->input('address3');
         $eventuser->tel = $request->input('tel');
         $eventuser->birth = $request->input('birth');
-        $eventuser->section_id = $request->input('section');
+        $eventuser->section = $request->input('section');
         $eventuser->login_id = $request->input('login_id');
         $eventuser->password = bcrypt($request->input('password'));
         $eventuser->approval = $request->input('approval');
+        $eventuser->mail = $request->input('mail');
+        $eventuser->qr = $uuid;
         $eventuser->save();
 
         //登録完了メールを送る（e-mail認証までやりたい）
 
-        //QRコードのUUIDを生成して保存
         //QRを作成してPDFに埋め込みつつできたPDFをstorageに保存する
-        
+        $appUrl = config('app.url');
+        $qrCodeUrl = $appUrl . '/qr/user/' . $uuid;
+
+        $qrCode = \SimpleSoftwareIO\QrCode\Facades\QrCode::format('png')->size(200)->generate($qrCodeUrl);
+        $pdf = PDF::loadView('pdf.qr', ['qrCode' => $qrCode]);
+        $pdfPath = 'public/pdfs/' . $uuid . '.pdf';
+        Storage::put($pdfPath, $pdf->output());
+
+        $eventuser->pdf_name = $pdfPath;
+        $eventuser->save();
+
         return redirect()->route('eventform.edit', $eventsetting->event_id)->with('success', 'フォーム設定を保存しました。');
     }
 

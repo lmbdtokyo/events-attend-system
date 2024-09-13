@@ -6,11 +6,13 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "barryvdh/laravel-dompdf": "^3.0",
         "jeroennoten/laravel-adminlte": "^3.13",
         "laravel/breeze": "^2.1",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
-        "laravel/ui": "^4.5"
+        "laravel/ui": "^4.5",
+        "simplesoftwareio/simple-qrcode": "^4.2"
     },
     "require-dev": {
         "askdkc/breezejp": "^1.8",
