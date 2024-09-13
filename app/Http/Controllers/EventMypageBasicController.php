@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Event;
 use App\Models\Eventmypagebasic;
+use App\Models\Eventprogress;
+
 
 class EventMypageBasicController extends Controller
 {
@@ -54,6 +56,12 @@ class EventMypageBasicController extends Controller
                 $path = $request->file('image')->store('public/images');
                 $eventmypagebasic->image = $path;
             }
+
+            //一度更新したらprogressのフラグも変更する
+            $eventProgress = Eventprogress::where('event_id', $event)->first();
+            $eventProgress->mypage_basic_flg = 1;
+            $eventProgress->save();
+
 
             $eventmypagebasic->title = $request->input('title');
             $eventmypagebasic->text = $request->input('text');

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Eventsetting;
+use App\Models\Eventbasic;
 use App\Models\Event;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Eventsection;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 
 class EventFormController extends Controller
 {
+
     public function edit(Event $event)
     {
 
@@ -103,7 +105,7 @@ class EventFormController extends Controller
 
             //一度更新したらprogressのフラグも変更する
             $eventProgress = Eventprogress::where('event_id', $event)->first();
-            $eventProgress->form_basic_flg = 1;
+            $eventProgress->form_setting_flg = 1;
             $eventProgress->save();
 
             return redirect()->route('eventform.edit', $event)->with('success', '申込フォームの表示設定を更新しました。');

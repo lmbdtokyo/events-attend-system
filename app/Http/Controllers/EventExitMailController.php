@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Event;
 use App\Models\Eventexitmail;
+use App\Models\Eventprogress;
+
 
 
 
@@ -52,6 +54,10 @@ public function update(Request $request, $event)
         $eventexitmail->text = $request->input('text');
 
         $eventexitmail->save();
+
+        $eventProgress = Eventprogress::where('event_id', $event)->first();
+        $eventProgress->exit_mail_flg = 1;
+        $eventProgress->save();
 
         return redirect()->route('eventexitmail.edit', $eventexitmail->event_id)->with('success', '退場メール情報を更新しました。');
     } else {

@@ -42,8 +42,8 @@ Route::get('/events/{event}/basic', [App\Http\Controllers\EventBasicContoller::c
 Route::patch('/events/{event}/basic', [App\Http\Controllers\EventBasicContoller::class, 'update'])->name('eventbasic.update');
 
 //フォーム設定のルーティング
-Route::get('/events/{event}/form', [App\Http\Controllers\EventFormController::class, 'edit'])->name('eventform.edit');
-Route::patch('/events/{event}/form', [App\Http\Controllers\EventFormController::class, 'update'])->name('eventform.update');
+Route::get('/events/{event}/formsetting', [App\Http\Controllers\EventFormController::class, 'edit'])->name('eventform.edit');
+Route::patch('/events/{event}/formsetting', [App\Http\Controllers\EventFormController::class, 'update'])->name('eventform.update');
 
 //フォーム設定のルーティング
 Route::get('/events/{event}/section', [App\Http\Controllers\EventSectionController::class, 'edit'])->name('eventsection.edit');
@@ -68,6 +68,10 @@ Route::patch('/events/{event}/entrymail', [App\Http\Controllers\EventEntryMailCo
 //受付時本人メール（退場）のルーティング
 Route::get('/events/{event}/exitmail', [App\Http\Controllers\EventExitMailController::class, 'edit'])->name('eventexitmail.edit');
 Route::patch('/events/{event}/exitmail', [App\Http\Controllers\EventExitMailController::class, 'update'])->name('eventexitmail.update');
+
+//ユーザー申込画面
+Route::get('/events/{event}/form', [App\Http\Controllers\EventUserController::class, 'form'])->name('eventform.form');
+Route::patch('/events/{event}/form', [App\Http\Controllers\EventUserController::class, 'store'])->name('eventform.store');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

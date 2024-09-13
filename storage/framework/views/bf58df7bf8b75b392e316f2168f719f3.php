@@ -105,7 +105,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?php echo e(url('/events/' . $event->id . '/form')); ?>">
+                            <a class="nav-link" href="<?php echo e(url('/events/' . $event->id . '/formsetting')); ?>">
                                 <i class="fas fa-fw fa-list"></i>
                                 <p>申込フォーム表示設定</p>
                             </a>

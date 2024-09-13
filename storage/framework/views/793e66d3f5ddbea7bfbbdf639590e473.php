@@ -1,1 +1,0 @@
-<?php /**PATH /data/resources/views/auth/register.blade.php ENDPATH**/ ?>

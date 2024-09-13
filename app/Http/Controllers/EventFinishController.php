@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Event;
 use App\Models\Eventfinish;
+use App\Models\Eventprogress;
+
 
 class EventFinishController extends Controller
 {
@@ -47,6 +49,12 @@ class EventFinishController extends Controller
             $eventfinish->finish_text = $request->input('finish_text');
 
             $eventfinish->save();
+
+
+            //一度更新したらprogressのフラグも変更する
+            $eventProgress = Eventprogress::where('event_id', $event)->first();
+            $eventProgress->finish_flg = 1;
+            $eventProgress->save();
 
             return redirect()->route('eventfinish.edit', $eventfinish->event_id)->with('success', '申込完了画面情報を更新しました。');
         } else {

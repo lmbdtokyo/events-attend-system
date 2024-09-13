@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Event;
 use App\Models\Evententrymail;
+use App\Models\Eventprogress;
+
     
 
 class EventEntryMailController extends Controller
@@ -50,6 +52,10 @@ class EventEntryMailController extends Controller
             $evententrymail->text = $request->input('text');
 
             $evententrymail->save();
+
+            $eventProgress = Eventprogress::where('event_id', $event)->first();
+            $eventProgress->entry_mail_flg = 1;
+            $eventProgress->save();
 
             return redirect()->route('evententrymail.edit', $evententrymail->event_id)->with('success', '申込完了メール情報を更新しました。');
         } else {

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->boolean('form_basic_flg')->default(false);
             $table->boolean('form_setting_flg')->default(false);
             $table->boolean('mypage_basic_flg')->default(false);
+            $table->boolean('finish_flg')->default(false);
             $table->boolean('finish_mail_flg')->default(false);
             $table->boolean('entry_mail_flg')->default(false);
             $table->boolean('exit_mail_flg')->default(false);
