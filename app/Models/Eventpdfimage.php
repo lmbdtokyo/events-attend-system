@@ -9,6 +9,8 @@ class Eventpdfimage extends Model
 {
     use HasFactory;
 
+    protected $table = 'eventpdfimage';
+
     protected $fillable = [
         'event_id',
         'image',

@@ -8,6 +8,12 @@ use App\Models\Eventbasic;
 use App\Models\Eventuser;
 use App\Models\Event;
 use App\Models\Eventsection;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Validator;
+use App\Models\Eventpdfimage;
+
 
 
 class EventUserController extends Controller
@@ -16,20 +22,29 @@ class EventUserController extends Controller
     public function form(Event $event)
     {
 
-        //フォームの基本設定、表示期間
+        $eventsetting = Eventsetting::where('event_id', $event->id)->first();
+        $eventbasic = Eventbasic::where('event_id', $event->id)->first();
+
+        $eventsections = Eventsection::where('event_id', $event->id)->get();
+        
+        return view('events.user.form', compact('eventsetting','eventbasic','event','eventsections'));
+
+        
+    }
+
+    public function store(Request $request,Eventsetting $eventsetting , Event $event , Eventpdfimage $Eventpdfimage)
+    {
+
+        $eventpdfimage = Eventpdfimage::where('event_id', $event->id)->first();
 
         $eventsetting = Eventsetting::where('event_id', $event->id)->first();
         $eventbasic = Eventbasic::where('event_id', $event->id)->first();
 
         $eventsections = Eventsection::where('event_id', $event->id)->get();
-            
-        return view('events.user.form', compact('eventsetting','eventbasic','event','eventsections'));
-    }
-
-    public function store(Request $request)
-    {
 
         $rules = [
+            'name' => $eventsetting->name_required_flg ? 'required|string|max:255' : 'nullable|string|max:255',
+            'furigana' => $eventsetting->furigana_required_flg ? 'required|string|max:255' : 'nullable|string|max:255',
             'company' => $eventsetting->company_required_flg ? 'required|string|max:255' : 'nullable|string|max:255',
             'division' => $eventsetting->division_required_flg ? 'required|string|max:255' : 'nullable|string|max:255',
             'post' => $eventsetting->post_required_flg ? 'required|string|max:255' : 'nullable|string|max:255',
@@ -40,7 +55,26 @@ class EventUserController extends Controller
             'tel' => $eventsetting->tel_required_flg ? 'required|string|max:255' : 'nullable|string|max:255',
             'birth' => $eventsetting->birth_required_flg ? 'required|date' : 'nullable|date',
             'section' => $eventsetting->section_required_flg ? 'required|exists:eventsections,id' : 'nullable|exists:eventsections,id',
-            'login_id' => 'required|string|max:255',
+            'mail' => [
+                'required', 
+                'email', 
+                'max:255', 
+                function ($attribute, $value, $fail) use ($event) {
+                    if (Eventuser::where('event_id', $event->id)->where('mail', $value)->exists()) {
+                        $fail('このメールアドレスは既に使用されています。');
+                    }
+                }
+            ],
+            'login_id' => [
+                'required', 
+                'string', 
+                'max:255', 
+                function ($attribute, $value, $fail) use ($event) {
+                    if (Eventuser::where('event_id', $event->id)->where('login_id', $value)->exists()) {
+                        $fail('このログインIDは既に使用されています。');
+                    }
+                }
+            ],
             'password' => 'required|string|min:8',
             'approval' => 'required|boolean',
         ];
@@ -51,8 +85,12 @@ class EventUserController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
+        $uuid = (string) Str::uuid();
+
         $eventuser = new Eventuser();
-        $eventuser->event_id = $eventsetting->event_id;
+        $eventuser->name = $request->input('name');
+        $eventuser->furigana = $request->input('furigana');
+        $eventuser->event_id = $event->id;
         $eventuser->company = $request->input('company');
         $eventuser->division = $request->input('division');
         $eventuser->post = $request->input('post');
@@ -62,18 +100,34 @@ class EventUserController extends Controller
         $eventuser->address3 = $request->input('address3');
         $eventuser->tel = $request->input('tel');
         $eventuser->birth = $request->input('birth');
-        $eventuser->section_id = $request->input('section');
+        $eventuser->section = $request->input('section');
         $eventuser->login_id = $request->input('login_id');
         $eventuser->password = bcrypt($request->input('password'));
         $eventuser->approval = $request->input('approval');
-        $eventuser->save();
+        $eventuser->mail = $request->input('mail');
+        $eventuser->qr = $uuid;
 
         //登録完了メールを送る（e-mail認証までやりたい）
 
-        //QRコードのUUIDを生成して保存
         //QRを作成してPDFに埋め込みつつできたPDFをstorageに保存する
-        
-        return redirect()->route('eventform.edit', $eventsetting->event_id)->with('success', 'フォーム設定を保存しました。');
+        $appUrl = config('app.url');
+        $qrCodeUrl = $appUrl . '/qr/user/' . $uuid;
+
+        $eventpdfimage_data = null;
+
+        if ($eventpdfimage->image) {
+            $eventpdfimage_data = base64_encode(Storage::get($eventpdfimage->image));
+        }
+
+        $qrCode = \SimpleSoftwareIO\QrCode\Facades\QrCode::format('png')->size(200)->generate($qrCodeUrl);
+        $pdf = PDF::loadView('pdf.pdf', ['qrCode' => $qrCode, 'eventuser' => $eventuser , 'eventpdfimage' => $eventpdfimage_data])->setPaper('a4');
+        $pdfPath = 'public/pdfs/' . $uuid . '.pdf';
+        Storage::put($pdfPath, $pdf->output());
+
+        $eventuser->pdf_name = $pdfPath;
+        $eventuser->save();
+
+        return redirect()->route('eventform.form', ['event' => $event->id])->with('success', '登録が完了しました。');
     }
 
 }

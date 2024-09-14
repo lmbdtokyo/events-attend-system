@@ -37,6 +37,14 @@ Route::get('/events/{event}/edit', [App\Http\Controllers\EventController::class,
 Route::patch('/events/{event}', [App\Http\Controllers\EventController::class, 'update'])->name('events.update');
 Route::delete('/events/{event}', [App\Http\Controllers\EventController::class, 'destroy'])->name('events.destroy');
 
+//空QRコード生成
+Route::get('/events/{event}/generateqr', [App\Http\Controllers\EventGenerateQRController::class, 'index'])->name('eventsgenerateqr.index');
+Route::get('/event/{event}/generateqr/create', [App\Http\Controllers\EventGenerateQRController::class, 'create'])->name('eventsgenerateqr.create');
+Route::post('/events/{event}/generateqr/store', [App\Http\Controllers\EventGenerateQRController::class, 'store'])->name('eventsgenerateqr.store');
+Route::get('/events/{event}/generateqr/{id}', [App\Http\Controllers\EventGenerateQRController::class, 'show'])->name('eventsgenerateqr.show');
+
+
+
 //申込フォーム基本設定の設定ルーティング
 Route::get('/events/{event}/basic', [App\Http\Controllers\EventBasicContoller::class, 'edit'])->name('eventbasic.edit');
 Route::patch('/events/{event}/basic', [App\Http\Controllers\EventBasicContoller::class, 'update'])->name('eventbasic.update');
@@ -45,7 +53,7 @@ Route::patch('/events/{event}/basic', [App\Http\Controllers\EventBasicContoller:
 Route::get('/events/{event}/formsetting', [App\Http\Controllers\EventFormController::class, 'edit'])->name('eventform.edit');
 Route::patch('/events/{event}/formsetting', [App\Http\Controllers\EventFormController::class, 'update'])->name('eventform.update');
 
-//フォーム設定のルーティング
+//受付区分のルーティング
 Route::get('/events/{event}/section', [App\Http\Controllers\EventSectionController::class, 'edit'])->name('eventsection.edit');
 Route::patch('/events/{event}/section', [App\Http\Controllers\EventSectionController::class, 'update'])->name('eventsection.update');
 
@@ -72,6 +80,16 @@ Route::patch('/events/{event}/exitmail', [App\Http\Controllers\EventExitMailCont
 //ユーザー申込画面
 Route::get('/events/{event}/form', [App\Http\Controllers\EventUserController::class, 'form'])->name('eventform.form');
 Route::patch('/events/{event}/form', [App\Http\Controllers\EventUserController::class, 'store'])->name('eventform.store');
+
+//ユーザー申込画面
+Route::get('/events/{event}/pdf', [App\Http\Controllers\EventPDFViewController::class, 'edit'])->name('eventpdf.edit');
+Route::patch('/events/{event}/pdf', [App\Http\Controllers\EventPDFViewController::class, 'update'])->name('eventpdf.update');
+
+Route::get('/events/{event}/survey', [App\Http\Controllers\EventSurveyController::class, 'edit'])->name('eventsurvey.edit');
+Route::patch('/events/{event}/survey', [App\Http\Controllers\EventSurveyController::class, 'update'])->name('eventsurvey.update');
+
+
+Route::get('/pdf', [App\Http\Controllers\PdfController::class, 'show'])->name('pdf.index');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

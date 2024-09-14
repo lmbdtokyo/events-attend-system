@@ -433,8 +433,10 @@ ul.event-info-ul {
 .toggle-switch {
     position: relative;
     display: inline-block;
-    width: 40px; /* サイズを小さく */
-    height: 24px; /* サイズを小さく */
+    width: 40px;
+    /* サイズを小さく */
+    height: 24px;
+    /* サイズを小さく */
 }
 
 .toggle-switch input {
@@ -452,30 +454,36 @@ ul.event-info-ul {
     bottom: 0;
     background-color: #ccc;
     transition: .4s;
-    border-radius: 24px; /* サイズを小さく */
+    border-radius: 24px;
+    /* サイズを小さく */
 }
 
 .toggle-slider:before {
     position: absolute;
     content: "";
-    height: 18px; /* サイズを小さく */
-    width: 18px; /* サイズを小さく */
-    left: 2px; /* サイズを小さく */
-    bottom: 3px; /* サイズを小さく */
+    height: 18px;
+    /* サイズを小さく */
+    width: 18px;
+    /* サイズを小さく */
+    left: 2px;
+    /* サイズを小さく */
+    bottom: 3px;
+    /* サイズを小さく */
     background-color: white;
     transition: .4s;
     border-radius: 50%;
 }
 
-.toggle-switch input:checked + .toggle-slider {
+.toggle-switch input:checked+.toggle-slider {
     background-color: #007bff;
 }
 
-.toggle-switch input:checked + .toggle-slider:before {
-    transform: translateX(18px); /* サイズを小さく */
+.toggle-switch input:checked+.toggle-slider:before {
+    transform: translateX(18px);
+    /* サイズを小さく */
 }
 
-.toggle-switch input:focus + .toggle-slider {
+.toggle-switch input:focus+.toggle-slider {
     box-shadow: 0 0 1px #007bff;
 }
 
@@ -485,4 +493,33 @@ ul.event-info-ul {
 
 .redText {
     color: #8b0000;
+}
+
+.alert {
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.alert-danger {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
+
+.alert-success {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+}
+
+.alert ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+.alert p {
+    margin: 0;
 }

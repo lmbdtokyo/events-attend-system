@@ -9,6 +9,8 @@ class Eventsurvey extends Model
 {
     use HasFactory;
 
+    protected $table = 'eventsurvey';
+
     protected $fillable = [
         'event_id',
         'qa'

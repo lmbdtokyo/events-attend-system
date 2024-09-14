@@ -81,38 +81,41 @@
                 <li class="nav-header">{{ Str::limit($event->name, 30) }}</li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url('/events/' . $event->id) }}">
-                        <i class="fas fa-fw fa-user"></i>
+                        <i class="fas fa-fw fa-bars"></i>
                         <p>イベント詳細</p>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url('/events/' . $event->id . '/edit') }}">
-                        <i class="fas fa-fw fa-user"></i>
+                        <i class="fas fa-fw fa-check"></i>
                         <p>イベント情報修正</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url('/events/' . $event->id . '/form') }}" target="_blank">
+                        <i class="fas fa-fw fa-arrow-right"></i>
+                        <p>イベント申込フォーム表示</p>
                     </a>
                 </li>
                 <li class="nav-header">イベントメニュー</li>
                 <li class="nav-item has-treeview">
                     <a class="nav-link" href="#">
-                        <i class="fas fa-fw fa-user"></i>
+                        <i class="fas fa-fw fa-caret-right"></i>
                         <p>事前設定 <i class="fas fa-angle-left right"></i></p>
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/events/' . $event->id . '/basic') }}">
-                                <i class="fas fa-fw fa-list"></i>
                                 <p>申込フォーム基本設定</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/events/' . $event->id . '/formsetting') }}">
-                                <i class="fas fa-fw fa-list"></i>
                                 <p>申込フォーム表示設定</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/events/' . $event->id . '/section') }}">
-                                <i class="fas fa-fw fa-list"></i>
                                 <p>受付区分設定</p>
                             </a>
                         </li>
@@ -142,17 +145,17 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/') }}">
+                            <a class="nav-link" href="{{ url('/events/' . $event->id . '/generateqr') }}">
                                 <p>空QRコード発行</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/') }}">
+                            <a class="nav-link" href="{{ url('/events/' . $event->id . '/pdf') }}">
                                 <p>来場証PDF</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/') }}">
+                            <a class="nav-link" href="{{ url('/events/' . $event->id . '/survey') }}">
                                 <p>アンケート項目設定</p>
                             </a>
                         </li>
@@ -160,7 +163,7 @@
                 </li>
                 <li class="nav-item has-treeview">
                     <a class="nav-link" href="#">
-                        <i class="fas fa-fw fa-user"></i>
+                        <i class="fas fa-fw fa-caret-right"></i>
                         <p>各種機能 <i class="fas fa-angle-left right"></i></p>
                     </a>
                     <ul class="nav nav-treeview">
