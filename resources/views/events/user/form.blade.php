@@ -155,6 +155,11 @@
             <h2>ログイン情報設定</h2>
 
             <div class="form-group">
+                <label for="mail">メールアドレス <span style="color: red;">*</span></label>
+                <input type="email" id="mail" name="mail" class="form-control" placeholder="メールアドレスを入力してください" required>
+            </div>
+
+            <div class="form-group">
                 <label for="login_id">ログインID <span style="color: red;">*</span></label>
                 <input type="text" id="login_id" name="login_id" class="form-control" placeholder="ログインIDを入力してください" required>
             </div>

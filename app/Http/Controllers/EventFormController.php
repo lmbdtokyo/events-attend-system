@@ -101,6 +101,21 @@ class EventFormController extends Controller
 
             $eventsetting = Eventsetting::where('event_id', $event)->first();
 
+            // トグルボタンがオフになっている場合にデフォルト値0を設定
+            $fields = [
+                'company_flg', 'company_required_flg', 'division_flg', 'division_required_flg', 
+                'post_flg', 'post_required_flg', 'postal_code_flg', 'postal_code_required_flg', 
+                'address1_flg', 'address1_required_flg', 'address2_flg', 'address2_required_flg', 
+                'address3_flg', 'address3_required_flg', 'tel_flg', 'tel_required_flg', 
+                'birth_flg', 'birth_required_flg', 'section_flg', 'section_required_flg'
+            ];
+
+            foreach ($fields as $field) {
+                if (!$request->has($field)) {
+                    $request->merge([$field => 0]);
+                }
+            }
+
             $eventsetting->update($request->all());
 
             //一度更新したらprogressのフラグも変更する
