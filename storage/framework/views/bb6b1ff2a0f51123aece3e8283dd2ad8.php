@@ -1,5 +1,3 @@
-
-
 <?php $__env->startSection('title', '来場証PDF用画像アップロード'); ?>
 
 <?php $__env->startSection('content_header'); ?>

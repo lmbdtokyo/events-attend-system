@@ -1,5 +1,3 @@
-
-
 <?php $__env->startSection('title', 'アンケート項目設定'); ?>
 
 <?php $__env->startSection('content_header'); ?>

@@ -1,5 +1,3 @@
-
-
 <?php $__env->startSection('title', 'QRコード生成イベント一覧'); ?>
 
 <?php $__env->startSection('content_header'); ?>
