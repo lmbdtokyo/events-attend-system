@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>イベントユーザーログイン</title>
+    <title>{{ $event->name }} ログイン</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     @vite('resources/css/style.css')
     <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@300;400;500;700;900&display=swap" rel="stylesheet">
@@ -14,10 +14,14 @@
             color: #333;
             margin: 0;
             padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
         .container {
+            width: 100%;
             max-width: 500px;
-            margin: 50px auto;
             padding: 20px;
             background-color: #fff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -25,7 +29,7 @@
         }
         h2 {
             text-align: center;
-            color: #007bff;
+            color: #000;
             margin-bottom: 20px;
         }
         .form-group {
@@ -41,6 +45,7 @@
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
+            box-sizing: border-box;
         }
         .btn {
             display: inline-block;
@@ -64,7 +69,7 @@
 </head>
 <body>
     <div class="container">
-        <h2>イベントユーザーログイン</h2>
+        <h2>{{ $event->name }}<br>ログイン</h2>
         <form method="POST" action="{{ route('eventuser.login', ['event' => $event]) }}">
             @csrf
             <div class="form-group">

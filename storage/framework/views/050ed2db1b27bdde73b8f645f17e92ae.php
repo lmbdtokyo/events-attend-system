@@ -24,9 +24,20 @@
             border-radius: 8px;
         }
         h1, h2 {
-            text-align: center;
-            color: #007bff;
+            color: #000;
         }
+
+        h1{
+            text-align: center;
+        }
+
+        h2{
+            padding: 0.5em;/*文字周りの余白*/
+            color: #010101;/*文字色*/
+            background: #eaf3ff;/*背景色*/
+            border-bottom: solid 3px #516ab6;/*下線*/
+        }
+
         p {
             line-height: 1.6;
         }
@@ -35,51 +46,134 @@
             padding: 0;
         }
         ul li {
-            background-color: #e9ecef;
-            margin: 5px 0;
-            padding: 10px;
-            border-radius: 5px;
+            
         }
         .qr-code img {
             display: block;
             margin: 0 auto;
         }
+        .logout-button {
+            display: block;
+            width: 100px;
+            margin: 20px auto;
+            padding: 10px;
+            text-align: center;
+            background-color: #dc3545;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            width: 30%;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>マイページ</h1>
+
+        <?php if($eventmypagebasic->image): ?>
+            <div class="event-image">
+                <img src="<?php echo e(Storage::url($eventmypagebasic->image)); ?>" alt="イベント画像" style="width: 100%; height: auto;">
+            </div>
+        <?php endif; ?>
+
+        <h1><?php echo e($event->name); ?>マイページ</h1>
         <p>ようこそ、<?php echo e($user->name); ?>さん</p>
+
+        <h2><?php echo e($eventmypagebasic->title); ?></h2>
+
+        <p><?php echo e($eventmypagebasic->text); ?></p>
+
+
         <h2>イベント情報</h2>
-        <p>イベント名: <?php echo e($event->name); ?></p>
-        <p>開催場所: <?php echo e($event->place); ?></p>
-        <p>開催日</p>
-        <ul>
-            <?php
-                $eventDates = json_decode($event->event_date);
-            ?>
+        <table>
+            <tr>
+                <th>イベント名</th>
+                <td><?php echo e($event->name); ?></td>
+            </tr>
+            <tr>
+                <th>開催場所</th>
+                <td><?php echo e($event->place); ?></td>
+            </tr>
+            <tr>
+                <th>開催日</th>
+                <td>
+                    <ul>
+                        <?php
+                            $eventDates = json_decode($event->event_date);
+                        ?>
+            
+                        <?php $__currentLoopData = $eventDates; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $eventDate): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <li>
+                                <?php echo e($eventDate->date); ?>: <?php echo e(\Carbon\Carbon::parse($eventDate->starttime)->format('H:i')); ?> - <?php echo e(\Carbon\Carbon::parse($eventDate->endtime)->format('H:i')); ?>
 
-            <?php $__currentLoopData = $eventDates; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $eventDate): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                <li>
-                    <?php echo e($eventDate->date); ?>: <?php echo e($eventDate->starttime); ?> - <?php echo e($eventDate->endtime); ?>
-
-                </li>
-            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-        </ul>
+                            </li>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    </ul>
+                </td>
+            </tr>
+        </table>
         <h2>登録情報</h2>
-        <p>名前: <?php echo e($user->name); ?></p>
-        <p>ふりがな: <?php echo e($user->furigana); ?></p>
-        <p>会社名: <?php echo e($user->company); ?></p>
-        <p>部署: <?php echo e($user->division); ?></p>
-        <p>役職: <?php echo e($user->post); ?></p>
-        <p>メールアドレス: <?php echo e($user->mail); ?></p>
-        <p>電話番号: <?php echo e($user->tel); ?></p>
-        <p>住所: <?php echo e($user->address1); ?> <?php echo e($user->address2); ?> <?php echo e($user->address3); ?></p>
-        <p>生年月日: <?php echo e($user->birth); ?></p>
+        <table>
+            <tr>
+                <th>名前</th>
+                <td><?php echo e($user->name); ?></td>
+            </tr>
+            <tr>
+                <th>ふりがな</th>
+                <td><?php echo e($user->furigana); ?></td>
+            </tr>
+            <tr>
+                <th>会社名</th>
+                <td><?php echo e($user->company); ?></td>
+            </tr>
+            <tr>
+                <th>部署</th>
+                <td><?php echo e($user->division); ?></td>
+            </tr>
+            <tr>
+                <th>役職</th>
+                <td><?php echo e($user->post); ?></td>
+            </tr>
+            <tr>
+                <th>メールアドレス</th>
+                <td><?php echo e($user->mail); ?></td>
+            </tr>
+            <tr>
+                <th>電話番号</th>
+                <td><?php echo e($user->tel); ?></td>
+            </tr>
+            <tr>
+                <th>住所</th>
+                <td><?php echo e($user->address1); ?> <?php echo e($user->address2); ?> <?php echo e($user->address3); ?></td>
+            </tr>
+            <tr>
+                <th>生年月日</th>
+                <td><?php echo e($user->birth); ?></td>
+            </tr>
+            <tr>
+                <th>PDF</th>
+                <td><a href="<?php echo e(Storage::url($user->pdf_name)); ?>" target="_blank" class="btn btn-primary">PDFを表示</a></td>
+            </tr>
+        </table>
+
+        <h2>来場用QRコード</h2>
         <div class="qr-code">
-            <p>QRコード:</p>
+            
             <img src="data:image/png;base64,<?php echo e(base64_encode(QrCode::format('png')->size(200)->generate($user->qr))); ?>" alt="QRコード">
         </div>
+        <a href="<?php echo e(route('logout')); ?>" class="logout-button">ログアウト</a>
     </div>
 </body>
 </html>

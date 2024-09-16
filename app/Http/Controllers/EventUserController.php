@@ -14,19 +14,21 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Eventpdfimage;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Eventmypagebasic;
+
 
 
 
 class EventUserController extends Controller
 {
 
-    public function showLoginForm($event)
+    public function showLoginForm(Event $event)
     {
 
         if (auth()->guard('eventuser')->check()) {
             $eventuser = auth()->guard('eventuser')->user();
-            if ($eventuser->event_id == $event) {
-                return redirect()->intended("/events/{$event}/mypage");
+            if ($eventuser->event_id == $event->id) {
+                return redirect()->intended("/events/{$event->id}/mypage");
             }
         }
 
@@ -165,8 +167,10 @@ class EventUserController extends Controller
     }
 
 
-    public function showMypage(Request $request, $eventId)
+    public function showMypage(Request $request, $eventId, Eventmypagebasic $eventmypagebasic)
     {
+
+        $eventmypagebasic = Eventmypagebasic::where('event_id', $eventId)->first();
 
         if (!auth()->guard('eventuser')->check() || Auth::guard('eventuser')->user()->event_id != $eventId) {
             return redirect()->route('eventuser.login', ['event' => $eventId]);
@@ -175,7 +179,7 @@ class EventUserController extends Controller
         $user = Auth::guard('eventuser')->user();
         $event = Event::findOrFail($eventId);
 
-        return view('events.user.mypage', compact('user', 'event'));
+        return view('events.user.mypage', compact('user', 'event', 'eventmypagebasic'));
     }
 
 
