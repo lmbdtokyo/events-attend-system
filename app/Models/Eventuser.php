@@ -4,8 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Eventuser extends Model
+
+class Eventuser extends Authenticatable
 {
     use HasFactory;
 
@@ -29,5 +31,9 @@ class Eventuser extends Model
         'approval',
         'qr',
         'pdf_name'
+    ];
+
+    protected $hidden = [
+        'password', 'remember_token',
     ];
 }

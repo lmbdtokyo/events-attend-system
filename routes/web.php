@@ -85,8 +85,16 @@ Route::patch('/events/{event}/form', [App\Http\Controllers\EventUserController::
 Route::get('/events/{event}/pdf', [App\Http\Controllers\EventPDFViewController::class, 'edit'])->name('eventpdf.edit');
 Route::patch('/events/{event}/pdf', [App\Http\Controllers\EventPDFViewController::class, 'update'])->name('eventpdf.update');
 
+//アンケート追加画面
 Route::get('/events/{event}/survey', [App\Http\Controllers\EventSurveyController::class, 'edit'])->name('eventsurvey.edit');
 Route::patch('/events/{event}/survey', [App\Http\Controllers\EventSurveyController::class, 'update'])->name('eventsurvey.update');
+
+
+//イベントユーザーログイン画面
+Route::get('/events/{event}/login', [App\Http\Controllers\EventUserController::class, 'showLoginForm'])->name('eventuser.login');
+Route::post('/events/{event}/login', [App\Http\Controllers\EventUserController::class, 'login']);
+
+Route::get('/events/{event}/mypage', [App\Http\Controllers\EventUserController::class, 'showMypage'])->name('eventuser.mypage');
 
 
 Route::get('/pdf', [App\Http\Controllers\PdfController::class, 'show'])->name('pdf.index');

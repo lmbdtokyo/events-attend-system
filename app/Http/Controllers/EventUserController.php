@@ -13,11 +13,45 @@ use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Eventpdfimage;
+use Illuminate\Support\Facades\Auth;
 
 
 
 class EventUserController extends Controller
 {
+
+    public function showLoginForm($event)
+    {
+
+        if (auth()->guard('eventuser')->check()) {
+            $eventuser = auth()->guard('eventuser')->user();
+            if ($eventuser->event_id == $event) {
+                return redirect()->intended("/events/{$event}/mypage");
+            }
+        }
+
+        return view('events.user.login', compact('event'));
+    }
+
+    public function login(Request $request , $event)
+    {
+
+        $credentials = $request->only('login_id', 'password');
+        $event_id = $event;
+
+        $eventuser = Eventuser::where('login_id', $credentials['login_id'])
+                              ->where('event_id', $event_id)
+                              ->first();
+
+        if ($eventuser && auth()->guard('eventuser')->attempt($credentials)) {
+            return redirect()->intended("/events/{$event_id}/mypage");
+        }
+
+        return back()->withErrors([
+            'login_id' => 'ログインIDまたはパスワードが正しくありません。',
+        ]);
+
+    }
     
     public function form(Event $event)
     {
@@ -129,5 +163,20 @@ class EventUserController extends Controller
 
         return redirect()->route('eventform.form', ['event' => $event->id])->with('success', '登録が完了しました。');
     }
+
+
+    public function showMypage(Request $request, $eventId)
+    {
+
+        if (!auth()->guard('eventuser')->check() || Auth::guard('eventuser')->user()->event_id != $eventId) {
+            return redirect()->route('eventuser.login', ['event' => $eventId]);
+        }
+
+        $user = Auth::guard('eventuser')->user();
+        $event = Event::findOrFail($eventId);
+
+        return view('events.user.mypage', compact('user', 'event'));
+    }
+
 
 }
