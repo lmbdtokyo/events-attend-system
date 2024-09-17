@@ -10,6 +10,7 @@ class Eventqr extends Model
     use HasFactory;
     protected $fillable = [
         'event_id',
-        'qr_id'
+        'qr_id',
+        'entry_flg'
     ];
 }

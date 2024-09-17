@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('event_id');
             $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
             $table->string('qr_id')->unique();
+            $table->boolean('entry_flg')->default(0);
             $table->timestamps();
         });
     }

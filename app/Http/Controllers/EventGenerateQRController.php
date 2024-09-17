@@ -75,7 +75,7 @@ class EventGenerateQRController extends Controller
             $uuid = (string) Str::uuid();
 
             $appUrl = config('app.url');
-            $qrCodeUrl = $appUrl . '/qr/nonuser/' . $uuid;
+            $qrCodeUrl = $appUrl . '/events/'.$event->id.'/qr/nonuser/' . $uuid;
             $qrCode = \SimpleSoftwareIO\QrCode\Facades\QrCode::format('png')->size(200)->generate($qrCodeUrl);
             $qrCodes[] = $qrCode;
 

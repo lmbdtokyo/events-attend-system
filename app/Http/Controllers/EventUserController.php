@@ -147,7 +147,7 @@ class EventUserController extends Controller
 
         //QRを作成してPDFに埋め込みつつできたPDFをstorageに保存する
         $appUrl = config('app.url');
-        $qrCodeUrl = $appUrl . '/qr/user/' . $uuid;
+        $qrCodeUrl = $appUrl . '/events/'.$event->id.'/qr/user/' . $uuid;
 
         $eventpdfimage_data = null;
 
@@ -180,6 +180,15 @@ class EventUserController extends Controller
         $event = Event::findOrFail($eventId);
 
         return view('events.user.mypage', compact('user', 'event', 'eventmypagebasic'));
+    }
+
+    public function logout(Request $request,Event $event)
+    {
+        Auth::guard('eventuser')->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('eventuser.login', ['event' => $request->event]);
     }
 
 

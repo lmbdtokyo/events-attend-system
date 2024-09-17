@@ -1,0 +1,1 @@
+<?php /**PATH /data/resources/views/events/user/nonuser.blade.php ENDPATH**/ ?>

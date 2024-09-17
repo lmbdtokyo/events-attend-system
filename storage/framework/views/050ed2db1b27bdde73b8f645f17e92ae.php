@@ -171,9 +171,12 @@
         <h2>来場用QRコード</h2>
         <div class="qr-code">
             
-            <img src="data:image/png;base64,<?php echo e(base64_encode(QrCode::format('png')->size(200)->generate($user->qr))); ?>" alt="QRコード">
+            <img src="data:image/png;base64,<?php echo e(base64_encode(QrCode::format('png')->size(200)->generate(config('app.url') . '/events/' . $event->id . '/qr/user/' . $user->qr))); ?>" alt="QRコード">
         </div>
-        <a href="<?php echo e(route('logout')); ?>" class="logout-button">ログアウト</a>
+        <a href="<?php echo e(route('eventuser.logout', ['event' => $event->id])); ?>" class="logout-button" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">ログアウト</a>
+        <form id="logout-form" action="<?php echo e(route('eventuser.logout',['event' => $event->id])); ?>" method="POST" style="display: none;">
+            <?php echo csrf_field(); ?>
+        </form>
     </div>
 </body>
 </html>

@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('event_id');
             $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
-            $table->unsignedBigInteger('applicant_id');
+            $table->unsignedBigInteger('applicant_id')->nullable();
             $table->foreign('applicant_id')->references('id')->on('eventusers')->onDelete('cascade');
-            $table->unsignedBigInteger('nonuser_id');
+            $table->unsignedBigInteger('nonuser_id')->nullable();
             $table->integer('entry_exit');
             $table->unsignedBigInteger('user_id');
             $table->timestamps();

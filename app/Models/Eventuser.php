@@ -29,6 +29,7 @@ class Eventuser extends Authenticatable
         'login_id',
         'password',
         'approval',
+        'entry_flg',
         'qr',
         'pdf_name'
     ];

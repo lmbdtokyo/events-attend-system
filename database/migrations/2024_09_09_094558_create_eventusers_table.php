@@ -33,6 +33,7 @@ return new class extends Migration
             $table->boolean('approval')->default(false);
             $table->string('qr')->nullable();
             $table->string('pdf_name')->nullable();
+            $table->boolean('entry_flg')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });

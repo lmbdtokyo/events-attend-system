@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @vite('resources/css/style.css')
     <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-    <title>イベント申込フォーム</title>
+    <title>{{ $eventbasic->title }}</title>
     <style>
         .container {
             max-width: 1300px;
@@ -20,6 +20,14 @@
             text-align: center;
             color: #333;
         }
+
+        h2{
+            padding: 0.5em;/*文字周りの余白*/
+            color: #010101;/*文字色*/
+            background: #eaf3ff;/*背景色*/
+            border-bottom: solid 3px #516ab6;/*下線*/
+        }
+
         .form-group {
             margin-bottom: 15px;
         }
@@ -50,6 +58,11 @@
         .btn:hover {
             background-color: #0056b3;
         }
+
+        ul{
+            list-style: none;
+            padding: 0px;            
+        }
     </style>
 </head>
 <body>
@@ -58,7 +71,7 @@
     <div class="container">
 
         @if ($eventbasic->image)
-                <img src="{{ asset('storage/' . $eventbasic->image) }}" alt="イベント画像" style="max-width: 100%; height: auto;">
+                <img src="{{ Storage::url($eventbasic->image) }}" alt="イベント画像" style="max-width: 100%; height: auto;">
         @endif
 
         <h1>{{ $eventbasic->title }}</h1>
@@ -98,7 +111,7 @@
 
             @foreach ($eventDates as $eventDate)
                 <li>
-                    {{ $eventDate->date }}: {{ $eventDate->starttime }} - {{ $eventDate->endtime }}
+                    {{ $eventDate->date }}: {{ \Carbon\Carbon::parse($eventDate->starttime)->format('H:i') }} - {{ \Carbon\Carbon::parse($eventDate->endtime)->format('H:i') }}
                 </li>
             @endforeach
         </ul>
