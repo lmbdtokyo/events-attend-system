@@ -181,7 +181,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="<?php echo e(url('/')); ?>">
+                            <a class="nav-link" href="<?php echo e(url('/events/' . $event->id . '/totals')); ?>">
                                 <p>申込・来場者一覧</p>
                             </a>
                         </li>

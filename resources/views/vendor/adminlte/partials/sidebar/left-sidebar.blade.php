@@ -181,7 +181,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/') }}">
+                            <a class="nav-link" href="{{ url('/events/' . $event->id . '/totals') }}">
                                 <p>申込・来場者一覧</p>
                             </a>
                         </li>
