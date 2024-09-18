@@ -13,6 +13,16 @@ use App\Models\Eventrecord;
 
 class EventScanController extends Controller
 {
+
+    public function scan($event, $exitentry)
+    {
+        if (Auth::check()) {
+            return view('events.scan', ['event' => $event, 'exitentry' => $exitentry]);
+        } else {
+            return redirect()->route('eventuser.login');
+        }
+    }
+
     public function userqr($eventId, $qrid , $exitentry , Eventrecord $eventrecord)
     {
 
@@ -73,8 +83,14 @@ class EventScanController extends Controller
         $user = Auth::user();
         $event = Event::find($eventId);
 
-        if (!$user || !$event || $user->organization !== $event->organization) {
-            return response()->json(['error' => 'アクセス権限がありません。'], 403);
+        if (!$user) {
+            return response()->json(['error' => 'ユーザーが認証されていません。'], 403);
+        }
+        if (!$event) {
+            return response()->json(['error' => 'イベントが見つかりません。'], 403);
+        }
+        if ($user->organization !== $event->organization) {
+            return response()->json(['error' => 'アクセス権限がありません。ユーザーの組織が一致しません。'], 403);
         }
 
         $eventnonuser = Eventqr::where('event_id', $eventId)->where('qr_id', $qrid)->first();

@@ -43,9 +43,11 @@
     
     <?php if(config('adminlte.livewire')): ?>
         <?php if(intval(app()->version()) >= 7): ?>
-            @livewireStyles
+            <?php echo \Livewire\Mechanisms\FrontendAssets\FrontendAssets::styles(); ?>
+
         <?php else: ?>
-            <livewire:styles />
+            <?php echo \Livewire\Mechanisms\FrontendAssets\FrontendAssets::styles(); ?>
+
         <?php endif; ?>
     <?php endif; ?>
 
@@ -102,9 +104,11 @@
     
     <?php if(config('adminlte.livewire')): ?>
         <?php if(intval(app()->version()) >= 7): ?>
-            @livewireScripts
+            <?php echo \Livewire\Mechanisms\FrontendAssets\FrontendAssets::scripts(); ?>
+
         <?php else: ?>
-            <livewire:scripts />
+            <?php echo \Livewire\Mechanisms\FrontendAssets\FrontendAssets::scripts(); ?>
+
         <?php endif; ?>
     <?php endif; ?>
 

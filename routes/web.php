@@ -100,6 +100,9 @@ Route::post('/events/{event}/logout', [App\Http\Controllers\EventUserController:
 Route::get('/events/{event}/qr/user/{qrid}/{exitentry}', [App\Http\Controllers\EventScanController::class, 'userqr'])->name('qr.user');
 Route::get('/events/{event}/qr/nonuser/{qrid}/{exitentry}', [App\Http\Controllers\EventScanController::class, 'nonuserqr'])->name('qr.nonuser');
 
+//QRスキャン画面
+Route::get('/events/{event}/scan/{exitentry}', [App\Http\Controllers\EventScanController::class, 'scan'])->name('event.scan');
+
 Route::get('/pdf', [App\Http\Controllers\PdfController::class, 'show'])->name('pdf.index');
 
 Route::middleware('auth')->group(function () {

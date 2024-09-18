@@ -167,6 +167,19 @@
                         <p>各種機能 <i class="fas fa-angle-left right"></i></p>
                     </a>
                     <ul class="nav nav-treeview">
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/events/' . $event->id . '/scan/1') }}">
+                                <p>入場時スキャン</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/events/' . $event->id . '/scan/2') }}">
+                                <p>退場時スキャン</p>
+                            </a>
+                        </li>
+
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/') }}">
                                 <p>申込・来場者一覧</p>
