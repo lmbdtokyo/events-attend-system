@@ -29,8 +29,8 @@
                 const canvasElement = document.getElementById('canvas');
                 const canvas = canvasElement.getContext('2d');
 
-                const userAgent = 'CustomUserAgent/1.0; UserID=' + {{ Auth::user()->id }};
-                alert(userAgent);
+                // const userAgent = 'CustomUserAgent/1.0; UserID=' + {{ Auth::user()->id }};
+                // alert(userAgent);
     
                 let lastCodeData = '';
     

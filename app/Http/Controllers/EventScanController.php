@@ -83,17 +83,14 @@ class EventScanController extends Controller
             return response()->json(['error' => '無効なリクエスト形式です。'], 400);
         }
 
-        $user = Auth::user();
-        $event = Event::find($eventId);
+        //ユーザーエージェントでユーザーを引き継ぐ
+        $userAgent = request()->header('User-Agent');
+        $userId = null;
 
-        if (!$user) {
-            return response()->json(['error' => 'ユーザーが認証されていません。'], 403);
-        }
-        if (!$event) {
-            return response()->json(['error' => 'イベントが見つかりません。'], 403);
-        }
-        if ($user->organization !== $event->organization) {
-            return response()->json(['error' => 'アクセス権限がありません。ユーザーの組織が一致しません。'], 403);
+        if (preg_match('/CustomUserAgent\/1\.0; UserID=(\d+)/', $userAgent, $matches)) {
+            $userId = $matches[1];
+        }else{
+            return response()->json(['error' => 'ユーザーエージェントの形式が違います。'], 400);
         }
 
         $eventnonuser = Eventqr::where('event_id', $eventId)->where('qr_id', $qrid)->first();
