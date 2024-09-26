@@ -28,6 +28,9 @@
                 document.body.append(video);
                 const canvasElement = document.getElementById('canvas');
                 const canvas = canvasElement.getContext('2d');
+
+                const userAgent = 'CustomUserAgent/1.0; UserID=' + {{ Auth::user()->id }};
+                alert(userAgent);
     
                 let lastCodeData = '';
     
@@ -57,6 +60,7 @@
                         const code = jsQR(imageData.data, imageData.width, imageData.height, {
                             inversionAttempts: 'dontInvert',
                         });
+                        
                         
     
                         if (code && code.data !== lastCodeData) {
