@@ -15,12 +15,27 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\Eventpdfimage;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Eventmypagebasic;
+use App\Models\Eventprogress;
+
+use App\Models\Eventfinish;
 
 
 
 
 class EventUserController extends Controller
 {
+
+    public function finish(Event $event)
+    {
+        // eventfinishの内容を取得
+        $eventfinish = Eventfinish::where('event_id', $event->id)->first();
+
+        // approvalに応じてdraft_textまたはfinish_textを渡す
+        $text = $eventfinish && $eventfinish->approval == 1 ? $eventfinish->draft_text : $eventfinish->finish_text;
+
+        // 申込完了画面の表示
+        return view('events.user.finish', compact('event', 'text'));
+    }
 
     public function showLoginForm(Event $event)
     {
@@ -58,11 +73,37 @@ class EventUserController extends Controller
     public function form(Event $event)
     {
 
+        $eventprogress = Eventprogress::where('event_id', $event->id)->get();
+
         $eventsetting = Eventsetting::where('event_id', $event->id)->first();
         $eventbasic = Eventbasic::where('event_id', $event->id)->first();
 
         $eventsections = Eventsection::where('event_id', $event->id)->get();
+
         
+        
+        $requiredFlags = [
+            'form_basic_flg',
+            'form_setting_flg',
+            'mypage_basic_flg',
+            'finish_flg',
+            'finish_mail_flg',
+            'entry_mail_flg',
+            'exit_mail_flg'
+        ];
+
+        $allFlagsSet = true;
+        foreach ($requiredFlags as $flag) {
+            if ($eventprogress->where($flag, 1)->isEmpty()) {
+                $allFlagsSet = false;
+                break;
+            }
+        }
+
+        if (!$allFlagsSet) {
+            return back()->withErrors(['message' => '必要な設定が完了していません。以下の未設定の項目を設定してください。']);
+        }
+
         return view('events.user.form', compact('eventsetting','eventbasic','event','eventsections'));
 
         
@@ -163,7 +204,7 @@ class EventUserController extends Controller
         $eventuser->pdf_name = $pdfPath;
         $eventuser->save();
 
-        return redirect()->route('eventform.form', ['event' => $event->id])->with('success', '登録が完了しました。');
+        return redirect()->route('eventform.finish', ['event' => $event->id])->with('success', '登録が完了しました。');
     }
 
 

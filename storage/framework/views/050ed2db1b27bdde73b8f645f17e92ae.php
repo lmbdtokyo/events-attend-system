@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>マイページ</title>
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    @vite('resources/css/style.css')
+    <link rel="stylesheet" href="<?php echo e(asset('css/app.css')); ?>">
+    <?php echo app('Illuminate\Foundation\Vite')('resources/css/style.css'); ?>
     <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
         body {
@@ -82,43 +82,44 @@
 <body>
     <div class="container">
 
-        @if ($eventmypagebasic->image)
+        <?php if($eventmypagebasic->image): ?>
             <div class="event-image">
-                <img src="{{ Storage::url($eventmypagebasic->image) }}" alt="イベント画像" style="width: 100%; height: auto;">
+                <img src="<?php echo e(Storage::url($eventmypagebasic->image)); ?>" alt="イベント画像" style="width: 100%; height: auto;">
             </div>
-        @endif
+        <?php endif; ?>
 
-        <h1>{{ $event->name }}マイページ</h1>
-        <p>ようこそ、{{ $user->name }}さん</p>
+        <h1><?php echo e($event->name); ?>マイページ</h1>
+        <p>ようこそ、<?php echo e($user->name); ?>さん</p>
 
-        <h2>{{$eventmypagebasic->title}}</h2>
+        <h2><?php echo e($eventmypagebasic->title); ?></h2>
 
-        <p>{!! $eventmypagebasic->text !!}</p>
+        <p><?php echo $eventmypagebasic->text; ?></p>
 
 
         <h2>イベント情報</h2>
         <table>
             <tr>
                 <th>イベント名</th>
-                <td>{{ $event->name }}</td>
+                <td><?php echo e($event->name); ?></td>
             </tr>
             <tr>
                 <th>開催場所</th>
-                <td>{{ $event->place }}</td>
+                <td><?php echo e($event->place); ?></td>
             </tr>
             <tr>
                 <th>開催日</th>
                 <td>
                     <ul>
-                        @php
+                        <?php
                             $eventDates = json_decode($event->event_date);
-                        @endphp
+                        ?>
             
-                        @foreach ($eventDates as $eventDate)
+                        <?php $__currentLoopData = $eventDates; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $eventDate): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <li>
-                                {{ $eventDate->date }}: {{ \Carbon\Carbon::parse($eventDate->starttime)->format('H:i') }} - {{ \Carbon\Carbon::parse($eventDate->endtime)->format('H:i') }}
+                                <?php echo e($eventDate->date); ?>: <?php echo e(\Carbon\Carbon::parse($eventDate->starttime)->format('H:i')); ?> - <?php echo e(\Carbon\Carbon::parse($eventDate->endtime)->format('H:i')); ?>
+
                             </li>
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </ul>
                 </td>
             </tr>
@@ -127,55 +128,56 @@
         <table>
             <tr>
                 <th>名前</th>
-                <td>{{ $user->name }}</td>
+                <td><?php echo e($user->name); ?></td>
             </tr>
             <tr>
                 <th>ふりがな</th>
-                <td>{{ $user->furigana }}</td>
+                <td><?php echo e($user->furigana); ?></td>
             </tr>
             <tr>
                 <th>会社名</th>
-                <td>{{ $user->company }}</td>
+                <td><?php echo e($user->company); ?></td>
             </tr>
             <tr>
                 <th>部署</th>
-                <td>{{ $user->division }}</td>
+                <td><?php echo e($user->division); ?></td>
             </tr>
             <tr>
                 <th>役職</th>
-                <td>{{ $user->post }}</td>
+                <td><?php echo e($user->post); ?></td>
             </tr>
             <tr>
                 <th>メールアドレス</th>
-                <td>{{ $user->mail }}</td>
+                <td><?php echo e($user->mail); ?></td>
             </tr>
             <tr>
                 <th>電話番号</th>
-                <td>{{ $user->tel }}</td>
+                <td><?php echo e($user->tel); ?></td>
             </tr>
             <tr>
                 <th>住所</th>
-                <td>{{ $user->address1 }} {{ $user->address2 }} {{ $user->address3 }}</td>
+                <td><?php echo e($user->address1); ?> <?php echo e($user->address2); ?> <?php echo e($user->address3); ?></td>
             </tr>
             <tr>
                 <th>生年月日</th>
-                <td>{{ $user->birth }}</td>
+                <td><?php echo e($user->birth); ?></td>
             </tr>
             <tr>
                 <th>PDF</th>
-                <td><a href="{{ Storage::url($user->pdf_name) }}" target="_blank" class="btn btn-primary">PDFを表示</a></td>
+                <td><a href="<?php echo e(Storage::url($user->pdf_name)); ?>" target="_blank" class="btn btn-primary">PDFを表示</a></td>
             </tr>
         </table>
 
         <h2>来場用QRコード</h2>
         <div class="qr-code">
             
-            <img src="data:image/png;base64,{{ base64_encode(QrCode::format('png')->size(200)->generate(config('app.url') . '/events/' . $event->id . '/qr/user/' . $user->qr)) }}" alt="QRコード">
+            <img src="data:image/png;base64,<?php echo e(base64_encode(QrCode::format('png')->size(200)->generate(config('app.url') . '/events/' . $event->id . '/qr/user/' . $user->qr))); ?>" alt="QRコード">
         </div>
-        <a href="{{ route('eventuser.logout', ['event' => $event->id]) }}" class="logout-button" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">ログアウト</a>
-        <form id="logout-form" action="{{ route('eventuser.logout',['event' => $event->id]) }}" method="POST" style="display: none;">
-            @csrf
+        <a href="<?php echo e(route('eventuser.logout', ['event' => $event->id])); ?>" class="logout-button" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">ログアウト</a>
+        <form id="logout-form" action="<?php echo e(route('eventuser.logout',['event' => $event->id])); ?>" method="POST" style="display: none;">
+            <?php echo csrf_field(); ?>
         </form>
     </div>
 </body>
 </html>
+<?php /**PATH /data/resources/views/events/user/mypage.blade.php ENDPATH**/ ?>

@@ -26,15 +26,18 @@ class EventScanController extends Controller
     public function userqr($eventId, $qrid , $exitentry , Eventrecord $eventrecord)
     {
 
-        if ($exitentry != 1 && $exitentry != 2) {
-            return response()->json(['error' => '無効なリクエスト形式です。'], 400);
+        //ユーザーエージェントでユーザーを引き継ぐ
+        $userAgent = request()->header('User-Agent');
+        $userId = null;
+
+        if (preg_match('/CustomUserAgent\/1\.0; UserID=(\d+)/', $userAgent, $matches)) {
+            $userId = $matches[1];
+        }else{
+            return response()->json(['error' => 'ユーザーエージェントの形式が違います。'], 400);
         }
 
-        $user = Auth::user();
-        $event = Event::find($eventId);
-
-        if (!$user || !$event || $user->organization !== $event->organization) {
-            return response()->json(['error' => 'アクセス権限がありません。'], 403);
+        if ($exitentry != 1 && $exitentry != 2) {
+            return response()->json(['error' => '無効なリクエスト形式です。'], 400);
         }
 
         $eventuser = Eventuser::where('event_id', $eventId)->where('qr', $qrid)->first();
@@ -57,7 +60,7 @@ class EventScanController extends Controller
         $eventrecord->applicant_id = $eventuser->id;
         $eventrecord->nonuser_id = null;
         $eventrecord->entry_exit = $exitentry;
-        $eventrecord->user_id = $user->id;
+        $eventrecord->user_id = $userId;
         $eventrecord->save();
 
         if ($exitentry == 1) {

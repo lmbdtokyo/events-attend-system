@@ -13,6 +13,16 @@
         </div>
         <div class="card-body">
 
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <h2 class="text-lg font-medium text-gray-900">事前設定進捗</h2>
             
             <div class="row">
@@ -42,7 +52,7 @@
                                 </td>
                                 <td style="width: 65%; vertical-align: middle;">申込フォーム項目設定</th>
                                 <td style="width: 20%; text-align: center;">
-                                    <a href="" class="btn btn-primary">編集</a>
+                                    <a href="{{ route('eventform.edit', $event->id) }}" class="btn btn-primary">編集</a>
                                 </td>
                             </tr>
                             <tr>
@@ -55,7 +65,7 @@
                                 </td>
                                 <td style="width: 65%; vertical-align: middle;">マイページ基本設定</th>
                                 <td style="width: 20%; text-align: center;">
-                                    <a href="" class="btn btn-primary">編集</a>
+                                    <a href="{{ route('eventmypagebasic.edit', $event->id) }}" class="btn btn-primary">編集</a>
                                 </td>
                             </tr>
                             <tr>
@@ -68,7 +78,7 @@
                                 </td>
                                 <td style="width: 65%; vertical-align: middle;">申込完了ページ設定</th>
                                 <td style="width: 20%; text-align: center;">
-                                    <a href="" class="btn btn-primary">編集</a>
+                                    <a href="{{ route('eventfinish.edit', $event->id) }}" class="btn btn-primary">編集</a>
                                 </td>
                             </tr>
                         </tbody>
@@ -87,7 +97,7 @@
                                 </td>
                                 <td style="width: 65%; vertical-align: middle;">申込完了メール</th>
                                 <td style="width: 20%; text-align: center;">
-                                    <a href="" class="btn btn-primary">編集</a>
+                                    <a href="{{ route('eventfinishmail.edit', $event->id) }}" class="btn btn-primary">編集</a>
                                 </td>
                             </tr>
                             <tr>
@@ -100,7 +110,7 @@
                                 </td>
                                 <td style="width: 65%; vertical-align: middle;">入場時本人メール設定</th>
                                 <td style="width: 20%; text-align: center;">
-                                    <a href="" class="btn btn-primary">編集</a>
+                                    <a href="{{ route('evententrymail.edit', $event->id) }}" class="btn btn-primary">編集</a>
                                 </td>
                             </tr>
                             <tr>
@@ -113,7 +123,7 @@
                                 </td>
                                 <td style="width: 65%; vertical-align: middle;">退場時本人メール設定</th>
                                 <td style="width: 20%; text-align: center;">
-                                    <a href="" class="btn btn-primary">編集</a>
+                                    <a href="{{ route('eventexitmail.edit', $event->id) }}" class="btn btn-primary">編集</a>
                                 </td>
                             </tr>
                         </tbody>

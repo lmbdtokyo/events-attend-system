@@ -7,7 +7,11 @@
 @endsection
 
 @section('content')
-    <form action="{{ route('evententrymail.update', $event->id) }}" method="POST">
+
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
+    <form id="form" action="{{ route('evententrymail.update', $event->id) }}" method="POST">
         @csrf
         @method('PATCH')
 
@@ -51,7 +55,10 @@
                     </tr>
                     <tr>
                         <td><label for="text">メール本文</label></td>
-                        <td><textarea id="text" name="text" class="form-control">{{ $evententrymail->text }}</textarea></td>
+                        <td>
+                            <div id="text_editor" style="height: 300px;"></div>
+                            <input type="hidden" name="text" id="text">
+                        </td>
                     </tr>
                 </table>
 
@@ -61,4 +68,28 @@
             </div>
         </div>
     </form>
+
+    <script>
+        var quillText = new Quill('#text_editor', {
+            theme: 'snow',
+            modules: {
+                toolbar: [
+                    [{ 'header': [1, 2, 3, false] }],
+                    ['bold', 'italic', 'underline'],
+                    ['link'],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    ['clean']
+                ]
+            }
+        });
+
+        @if(isset($evententrymail) && $evententrymail->text)
+            quillText.root.innerHTML = `{!! addslashes($evententrymail->text) !!}`;
+        @endif
+
+        document.querySelector('#form').onsubmit = function() {
+            var textContent = document.querySelector('#text');
+            textContent.value = quillText.root.innerHTML;
+        };
+    </script>
 @endsection

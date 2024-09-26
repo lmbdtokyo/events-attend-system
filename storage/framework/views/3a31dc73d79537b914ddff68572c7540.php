@@ -9,14 +9,23 @@
 </head>
 <body>
     <div>
+
+        <div>
+            <?php if(Auth::check()): ?>
+                <p>ログインしています: <?php echo e(Auth::user()->name); ?></p>
+            <?php else: ?>
+                <p>ログインしていません。</p>
+            <?php endif; ?>
+        </div>
         
-        <video id="video" style="width: 100vw; height: 100vh; border: 1px solid gray;"></video>
+        <video id="video" style="position:absolute;opacity:0;top:0;left:0;z-index:-1000;" autoplay playsinline muted></video>
         <canvas id="canvas" hidden></canvas>
     
         <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
         <script>
                 
                 const video = document.getElementById('video');
+                document.body.append(video);
                 const canvasElement = document.getElementById('canvas');
                 const canvas = canvasElement.getContext('2d');
     
@@ -54,7 +63,12 @@
                             lastCodeData = code.data;
                             const modifiedUrl = code.data + '/<?php echo e($exitentry); ?>';
     
-                            axios.get(modifiedUrl)
+                            axios.get(modifiedUrl, {
+                                headers: {
+                                    'User-Agent': 'CustomUserAgent/1.0; UserID=' + <?php echo e(Auth::user()->id); ?>
+
+                                }
+                            })
                                 .then(function (response) {
                                     alert('QRコードのURLにアクセスしました: ' + JSON.stringify(response.data));
                                 })

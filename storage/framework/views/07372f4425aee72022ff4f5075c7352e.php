@@ -1,37 +1,35 @@
-@extends('adminlte::page')
+<?php $__env->startSection('title', 'マイページ基本設定 | イベント来場管理システム'); ?>
 
-@section('title', 'マイページ基本設定 | イベント来場管理システム')
-
-@section('content_header')
+<?php $__env->startSection('content_header'); ?>
     <h1>マイページ基本設定</h1>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 
 <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 
-    <form action="{{ route('eventmypagebasic.update', $event->id) }}" method="POST" enctype="multipart/form-data" id="mypageForm">
-        @csrf
-        @method('PATCH')
+    <form action="<?php echo e(route('eventmypagebasic.update', $event->id)); ?>" method="POST" enctype="multipart/form-data" id="mypageForm">
+        <?php echo csrf_field(); ?>
+        <?php echo method_field('PATCH'); ?>
 
         <div class="card">
             <div class="card-body">
 
-                @if ($errors->any())
+                <?php if($errors->any()): ?>
                     <div class="alert alert-danger">
                         <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
+                            <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <li><?php echo e($error); ?></li>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </ul>
                     </div>
-                @endif
-                @if(session('success'))
+                <?php endif; ?>
+                <?php if(session('success')): ?>
                     <div class="alert alert-success">
-                        <p>{{ session('success') }}</p>
+                        <p><?php echo e(session('success')); ?></p>
                     </div>
-                @endif
+                <?php endif; ?>
 
                 <p>
                     マイページの基本設定を行います。<br>各項目に必要な情報を入力してください。
@@ -44,24 +42,24 @@
                     </tr>
                     <tr>
                         <td><label for="endtime">終了時間</label></td>
-                        <td><input type="datetime-local" id="endtime" name="endtime" class="form-control" value="{{ $eventmypagebasic->endtime }}"></td>
+                        <td><input type="datetime-local" id="endtime" name="endtime" class="form-control" value="<?php echo e($eventmypagebasic->endtime); ?>"></td>
                     </tr>
                     <tr>
                         <td><label for="image">画像</label></td>
                         <td>
-                            @if ($eventmypagebasic->image)
+                            <?php if($eventmypagebasic->image): ?>
                                 <div class="mt-2">
-                                    <img src="{{ Storage::url($eventmypagebasic->image) }}" alt="マイページ画像" style="max-width: 350px; margin:0px 0px 20px 0px;">
+                                    <img src="<?php echo e(Storage::url($eventmypagebasic->image)); ?>" alt="マイページ画像" style="max-width: 350px; margin:0px 0px 20px 0px;">
                                 </div>
-                            @else
-                                <img src="{{ asset('images/no-image.png') }}" style="max-width: 350px; margin:0px 0px 20px 0px;" alt="Logo">
-                            @endif
+                            <?php else: ?>
+                                <img src="<?php echo e(asset('images/no-image.png')); ?>" style="max-width: 350px; margin:0px 0px 20px 0px;" alt="Logo">
+                            <?php endif; ?>
                             <input type="file" id="image" name="image" class="form-control">
                         </td>
                     </tr>
                     <tr>
                         <td><label for="title">お知らせタイトル</label></td>
-                        <td><input type="text" id="title" name="title" class="form-control" value="{{ $eventmypagebasic->title }}"></td>
+                        <td><input type="text" id="title" name="title" class="form-control" value="<?php echo e($eventmypagebasic->title); ?>"></td>
                     </tr>
                     <tr>
                         <td><label for="text">お知らせ内容</label></td>
@@ -93,13 +91,15 @@
             }
         });
 
-        @if(isset($eventmypagebasic) && $eventmypagebasic->text)
-            quill.root.innerHTML = `{!! addslashes($eventmypagebasic->text) !!}`;
-        @endif
+        <?php if(isset($eventmypagebasic) && $eventmypagebasic->text): ?>
+            quill.root.innerHTML = `<?php echo addslashes($eventmypagebasic->text); ?>`;
+        <?php endif; ?>
 
         document.querySelector('#mypageForm').onsubmit = function() {
             var content = document.querySelector('#text');
             content.value = quill.root.innerHTML;
         };
     </script>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('adminlte::page', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /data/resources/views/events/detail/mypagebasic.blade.php ENDPATH**/ ?>

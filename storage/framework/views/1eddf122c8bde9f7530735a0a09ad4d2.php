@@ -1,37 +1,35 @@
-@extends('adminlte::page')
+<?php $__env->startSection('title', '申込完了画面設定 | イベント来場管理システム'); ?>
 
-@section('title', '申込完了画面設定 | イベント来場管理システム')
-
-@section('content_header')
+<?php $__env->startSection('content_header'); ?>
     <h1>申込完了画面設定</h1>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 
 <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 
-    <form id="form" action="{{ route('eventfinish.update', $event->id) }}" method="POST">
-        @csrf
-        @method('PATCH')
+    <form id="form" action="<?php echo e(route('eventfinish.update', $event->id)); ?>" method="POST">
+        <?php echo csrf_field(); ?>
+        <?php echo method_field('PATCH'); ?>
 
         <div class="card">
             <div class="card-body">
 
-                @if ($errors->any())
+                <?php if($errors->any()): ?>
                     <div class="alert alert-danger">
                         <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
+                            <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <li><?php echo e($error); ?></li>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </ul>
                     </div>
-                @endif
-                @if(session('success'))
+                <?php endif; ?>
+                <?php if(session('success')): ?>
                     <div class="alert alert-success">
-                        <p>{{ session('success') }}</p>
+                        <p><?php echo e(session('success')); ?></p>
                     </div>
-                @endif
+                <?php endif; ?>
 
                 <p>
                     申込完了画面の設定を行います。<br>各項目に必要な情報を入力してください。
@@ -92,13 +90,13 @@
             }
         });
 
-        @if(isset($eventfinish) && $eventfinish->draft_text)
-            quillDraft.root.innerHTML = `{!! addslashes($eventfinish->draft_text) !!}`;
-        @endif
+        <?php if(isset($eventfinish) && $eventfinish->draft_text): ?>
+            quillDraft.root.innerHTML = `<?php echo addslashes($eventfinish->draft_text); ?>`;
+        <?php endif; ?>
 
-        @if(isset($eventfinish) && $eventfinish->finish_text)
-            quillFinish.root.innerHTML = `{!! addslashes($eventfinish->finish_text) !!}`;
-        @endif
+        <?php if(isset($eventfinish) && $eventfinish->finish_text): ?>
+            quillFinish.root.innerHTML = `<?php echo addslashes($eventfinish->finish_text); ?>`;
+        <?php endif; ?>
 
         document.querySelector('#form').onsubmit = function() {
             var draftContent = document.querySelector('#draft_text');
@@ -108,4 +106,6 @@
             finishContent.value = quillFinish.root.innerHTML;
         };
     </script>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('adminlte::page', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /data/resources/views/events/detail/finish.blade.php ENDPATH**/ ?>

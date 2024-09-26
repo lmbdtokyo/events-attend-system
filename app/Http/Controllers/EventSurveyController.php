@@ -13,6 +13,11 @@ class EventSurveyController extends Controller
 {
     public function edit(Event $event , Eventsurvey $eventSurvey)
     {
+
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'ログインしてください。');
+        }
+
         if (Auth::user()->type === 'master' || Auth::user()->organization == $event->organization) {
             $eventSurvey = Eventsurvey::where('event_id', $event->id)->first();
             $eventsurveys = json_decode($eventSurvey->qa, true);

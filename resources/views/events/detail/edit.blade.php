@@ -9,7 +9,12 @@
 
 @section('content')
 
-<form method="POST" action="{{ route('eventbasic.update', $eventbasic->id) }}" enctype="multipart/form-data">
+
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
+
+<form id="form" method="POST" action="{{ route('eventbasic.update', $eventbasic->id) }}" enctype="multipart/form-data">
     @csrf
     @method('PATCH')
 
@@ -79,15 +84,24 @@
                 </tr>
                 <tr>
                     <th><label for="overview_text">概要テキスト</label></th>
-                    <td><textarea id="overview_text" name="overview_text" class="form-control">{{ $eventbasic->overview_text ?? '' }}</textarea></td>
+                    <td>
+                        <div id="overview_text_form" style="height: 300px;"></div>
+                        <input type="hidden" name="overview_text" id="overview_text">
+                    </td>
                 </tr>
                 <tr>
                     <th><label for="terms">利用規約</label></th>
-                    <td><textarea id="terms" name="terms" class="form-control">{{ $eventbasic->terms ?? '' }}</textarea></td>
+                    <td>
+                        <div id="terms_form" style="height: 300px;"></div>
+                        <input type="hidden" name="terms" id="terms">
+                    </td>
                 </tr>
                 <tr>
                     <th><label for="privacy">プライバシーポリシー</label></th>
-                    <td><textarea id="privacy" name="privacy" class="form-control">{{ $eventbasic->privacy ?? '' }}</textarea></td>
+                    <td>
+                        <div id="privacy_form" style="height: 300px;"></div>
+                        <input type="hidden" name="privacy" id="privacy">
+                    </td>
                 </tr>
             </table>
 
@@ -100,6 +114,71 @@
     </div>
     
 </form>
+
+
+<script>
+    var quill = new Quill('#overview_text_form', {
+        theme: 'snow', 
+        modules: {
+            toolbar: [
+                [{ 'header': [1, 2, 3 , false] }],
+                ['bold', 'italic', 'underline'],
+                ['link'],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                ['clean'] 
+            ]
+        }
+    });
+
+    var quillTerms = new Quill('#terms_form', {
+                        theme: 'snow', 
+                        modules: {
+                            toolbar: [
+                                [{ 'header': [1, 2, 3 , false] }],
+                                ['bold', 'italic', 'underline'],
+                                ['link'],
+                                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                                ['clean'] 
+                            ]
+                        }
+                    });
+
+
+
+                    var quillPrivacy = new Quill('#privacy_form', {
+                        theme: 'snow', 
+                        modules: {
+                            toolbar: [
+                                [{ 'header': [1, 2, 3 , false] }],
+                                ['bold', 'italic', 'underline'],
+                                ['link'],
+                                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                                ['clean'] 
+                            ]
+                        }
+                    });
+
+    @if(isset($eventbasic) && $eventbasic->overview_text)
+        quill.root.innerHTML = `{!! addslashes($eventbasic->overview_text) !!}`;
+        quillTerms.root.innerHTML = `{!! addslashes($eventbasic->terms) !!}`; 
+        quillPrivacy.root.innerHTML = `{!! addslashes($eventbasic->privacy) !!}`; 
+    @endif
+
+                    document.querySelector('#form').onsubmit = function() {
+                        var content = document.querySelector('#overview_text');
+                        content.value = quill.root.innerHTML;
+
+                        var termsContent = document.querySelector('#terms');
+                        termsContent.value = quillTerms.root.innerHTML;
+
+                        var privacyContent = document.querySelector('#privacy');
+                        privacyContent.value = quillPrivacy.root.innerHTML;
+                    };
+                </script>
+
+
+</script>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

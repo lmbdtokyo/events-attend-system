@@ -14,6 +14,10 @@ class EventPDFViewController extends Controller
     public function edit(Event $event , Eventpdfimage $eventpdfimage)
     {
 
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'ログインしてください。');
+        }
+
         if (Auth::user()->type === 'master' || Auth::user()->organization == $event->organization) {
             $eventpdfimage = Eventpdfimage::where('event_id', $event->id)->first();
             return view('events.detail.pdf', compact('eventpdfimage', 'event'));

@@ -67,7 +67,6 @@
 </head>
 <body>
 
-
     <div class="container">
 
         @if ($eventbasic->image)
@@ -97,7 +96,7 @@
         <h2>{{ $eventbasic->overview_title }}</h2>
 
         <p>
-            {{ $eventbasic->overview_text }} 
+            {!! $eventbasic->overview_text !!} 
         </p>
 
         <h2>開催情報</h2>
@@ -241,6 +240,64 @@
             @else
                 <input type="hidden" name="approval" value="1">
             @endif
+
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label for="terms_agree" style="font-weight: bold;">
+                    <input type="checkbox" id="terms_agree" name="terms_agree" required style="margin-right: 5px; width:auto; padding: 0px; border: none; border-radius: 0px;">
+                    利用規約に同意します <span style="color: red;">*</span> <a href="#" onclick="openPopup(); return false;">[規約を確認]</a>
+                    <script>
+                        function openPopup() {
+                            const popup = document.createElement('div');
+                            popup.style.position = 'fixed';
+                            popup.style.left = '50%';
+                            popup.style.top = '50%';
+                            popup.style.transform = 'translate(-50%, -50%)';
+                            popup.style.backgroundColor = 'white';
+                            popup.style.border = '1px solid #ccc';
+                            popup.style.padding = '20px';
+                            popup.style.zIndex = '1000';
+                            popup.innerHTML = '{!! $eventbasic->terms !!}<button onclick="closePopup()">閉じる</button>';
+                            document.body.appendChild(popup);
+                        }
+
+                        function closePopup() {
+                            const popup = document.querySelector('div[style*="position: fixed"]');
+                            if (popup) {
+                                document.body.removeChild(popup);
+                            }
+                        }
+                    </script>
+                </label>
+            </div>
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label for="privacy_agree" style="font-weight: bold;">
+                    <input type="checkbox" id="privacy_agree" name="privacy_agree" required style="margin-right: 5px; width:auto; padding: 0px; border: none; border-radius: 0px;">
+                    個人情報の取り扱いについて同意します <span style="color: red;">*</span>
+                    <a href="#" onclick="openPrivacyPopup(); return false;">[個人情報の取り扱いを確認]</a>
+                </label>
+            </div>
+            <script>
+                function openPrivacyPopup() {
+                    const popup = document.createElement('div');
+                    popup.style.position = 'fixed';
+                    popup.style.left = '50%';
+                    popup.style.top = '50%';
+                    popup.style.transform = 'translate(-50%, -50%)';
+                    popup.style.backgroundColor = 'white';
+                    popup.style.border = '1px solid #ccc';
+                    popup.style.padding = '20px';
+                    popup.style.zIndex = '1000';
+                    popup.innerHTML = '{!! $eventbasic->privacy !!}<button onclick="closePopup()">閉じる</button>';
+                    document.body.appendChild(popup);
+                }
+
+                function closePopup() {
+                    const popup = document.querySelector('div[style*="position: fixed"]');
+                    if (popup) {
+                        document.body.removeChild(popup);
+                    }
+                }
+            </script>
 
             <button type="submit" class="btn">申込</button>
         </form>

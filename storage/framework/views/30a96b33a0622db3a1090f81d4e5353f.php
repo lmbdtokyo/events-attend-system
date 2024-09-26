@@ -11,6 +11,16 @@
         </div>
         <div class="card-body">
 
+            <?php if($errors->any()): ?>
+                <div class="alert alert-danger">
+                    <ul>
+                        <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <li><?php echo e($error); ?></li>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    </ul>
+                </div>
+            <?php endif; ?>
+
             <h2 class="text-lg font-medium text-gray-900">事前設定進捗</h2>
             
             <div class="row">
@@ -40,7 +50,7 @@
                                 </td>
                                 <td style="width: 65%; vertical-align: middle;">申込フォーム項目設定</th>
                                 <td style="width: 20%; text-align: center;">
-                                    <a href="" class="btn btn-primary">編集</a>
+                                    <a href="<?php echo e(route('eventform.edit', $event->id)); ?>" class="btn btn-primary">編集</a>
                                 </td>
                             </tr>
                             <tr>
@@ -53,7 +63,7 @@
                                 </td>
                                 <td style="width: 65%; vertical-align: middle;">マイページ基本設定</th>
                                 <td style="width: 20%; text-align: center;">
-                                    <a href="" class="btn btn-primary">編集</a>
+                                    <a href="<?php echo e(route('eventmypagebasic.edit', $event->id)); ?>" class="btn btn-primary">編集</a>
                                 </td>
                             </tr>
                             <tr>
@@ -66,7 +76,7 @@
                                 </td>
                                 <td style="width: 65%; vertical-align: middle;">申込完了ページ設定</th>
                                 <td style="width: 20%; text-align: center;">
-                                    <a href="" class="btn btn-primary">編集</a>
+                                    <a href="<?php echo e(route('eventfinish.edit', $event->id)); ?>" class="btn btn-primary">編集</a>
                                 </td>
                             </tr>
                         </tbody>
@@ -85,7 +95,7 @@
                                 </td>
                                 <td style="width: 65%; vertical-align: middle;">申込完了メール</th>
                                 <td style="width: 20%; text-align: center;">
-                                    <a href="" class="btn btn-primary">編集</a>
+                                    <a href="<?php echo e(route('eventfinishmail.edit', $event->id)); ?>" class="btn btn-primary">編集</a>
                                 </td>
                             </tr>
                             <tr>
@@ -98,7 +108,7 @@
                                 </td>
                                 <td style="width: 65%; vertical-align: middle;">入場時本人メール設定</th>
                                 <td style="width: 20%; text-align: center;">
-                                    <a href="" class="btn btn-primary">編集</a>
+                                    <a href="<?php echo e(route('evententrymail.edit', $event->id)); ?>" class="btn btn-primary">編集</a>
                                 </td>
                             </tr>
                             <tr>
@@ -111,7 +121,7 @@
                                 </td>
                                 <td style="width: 65%; vertical-align: middle;">退場時本人メール設定</th>
                                 <td style="width: 20%; text-align: center;">
-                                    <a href="" class="btn btn-primary">編集</a>
+                                    <a href="<?php echo e(route('eventexitmail.edit', $event->id)); ?>" class="btn btn-primary">編集</a>
                                 </td>
                             </tr>
                         </tbody>

@@ -17,22 +17,32 @@ class EventExitMailController extends Controller
 {
     public function edit(Event $event)
     {
-    if (Auth::user()->type === 'master') {
-        $eventexitmail = Eventexitmail::where('event_id', $event->id)->first();
-        return view('events.detail.exitmail', compact('event', 'eventexitmail'));
-    } else {
-        $user = Auth::user();
-        if ($user->organization == $event->organization) {
+
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'ログインしてください。');
+        }
+
+        if (Auth::user()->type === 'master') {
             $eventexitmail = Eventexitmail::where('event_id', $event->id)->first();
             return view('events.detail.exitmail', compact('event', 'eventexitmail'));
         } else {
-            return redirect()->route('events.index')->with('error', '権限がありません。');
+            $user = Auth::user();
+            if ($user->organization == $event->organization) {
+                $eventexitmail = Eventexitmail::where('event_id', $event->id)->first();
+                return view('events.detail.exitmail', compact('event', 'eventexitmail'));
+            } else {
+                return redirect()->route('events.index')->with('error', '権限がありません。');
+            }
         }
-    }
 }
 
 public function update(Request $request, $event)
 {
+
+    if (!Auth::check()) {
+        return redirect()->route('login')->with('error', 'ログインしてください。');
+    }
+
     $events = Event::find($event);
     if (Auth::user()->type === 'master' || Auth::user()->organization == $events->organization) {
         $rules = [

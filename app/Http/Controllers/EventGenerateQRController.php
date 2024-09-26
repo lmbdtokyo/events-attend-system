@@ -20,6 +20,11 @@ class EventGenerateQRController extends Controller
 {
     public function index(Event $event)
     {
+
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'ログインしてください。');
+        }
+
         if (Auth::user()->type === 'master' || Auth::user()->organization == $event->organization) {
             $eventGenerateQRs = Eventgenerateqr::where('event_id', $event->id)->paginate(10);
             return view('events.detail.qrindex', compact('eventGenerateQRs', 'event'));
@@ -38,6 +43,11 @@ class EventGenerateQRController extends Controller
 
     public function create(Event $event)
     {
+
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'ログインしてください。');
+        }
+
         if (Auth::user()->type === 'master' || Auth::user()->organization == $event->organization) {
             return view('events.detail.qrcreate', compact('event'));
         } else {
@@ -55,6 +65,11 @@ class EventGenerateQRController extends Controller
 
     public function store(Request $request , Eventbasic $eventbasic , Event $event , Eventuser $eventuser , Eventqr $eventqr)
     {
+
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'ログインしてください。');
+        }
+
         $request->validate([
             'number' => 'required|integer|min:1|max:50',
         ]);
@@ -107,6 +122,11 @@ class EventGenerateQRController extends Controller
 
     public function show(Event $event, $id)
     {
+
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'ログインしてください。');
+        }
+
         if (Auth::user()->type === 'master' || Auth::user()->organization == $event->organization) {
             $eventGenerateQR = Eventgenerateqr::findOrFail($id);
             return view('events.detail.qrshow', compact('eventGenerateQR', 'event'));

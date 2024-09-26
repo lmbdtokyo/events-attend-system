@@ -17,6 +17,9 @@ class EventFormController extends Controller
     public function edit(Event $event)
     {
 
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'ログインしてください。');
+        }
 
         if (Auth::user()->type === 'master') {
 
@@ -41,6 +44,10 @@ class EventFormController extends Controller
 
     public function update(Request $request, $event)
     {
+
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'ログインしてください。');
+        }
 
         $events = Event::find($event);
         if (Auth::user()->type === 'master' || Auth::user()->organization == $events->organization) {

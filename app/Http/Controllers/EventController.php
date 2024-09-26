@@ -25,10 +25,14 @@ class EventController extends Controller
 {
     public function index()
     {
-        if (Auth::user()->type === 'master') {
-            $events = Event::orderBy('created_at', 'desc')->paginate(10);
+        if (Auth::check()) {
+            if (Auth::user()->type === 'master') {
+                $events = Event::orderBy('created_at', 'desc')->paginate(10);
+            } else {
+                $events = Event::where('organization', Auth::user()->organization)->orderBy('created_at', 'desc')->paginate(10);
+            }
         } else {
-            $events = Event::where('organization', Auth::user()->organization)->orderBy('created_at', 'desc')->paginate(10);
+            return redirect()->route('login');
         }
         return view('events.index', compact('events'));
     }
@@ -247,6 +251,10 @@ class EventController extends Controller
 
         $eventProgressData = Eventprogress::where('event_id', $event->id)->get();
 
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'ログインしてください。');
+        }
+
         if (Auth::user()->type === 'master') {
             return view('events.show', compact('event','eventProgressData'));
         } else {
@@ -261,6 +269,11 @@ class EventController extends Controller
 
     public function edit(Event $event)
     {
+
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'ログインしてください。');
+        }
+
         if (Auth::user()->type === 'master') {
             return view('events.edit', compact('event'));
         } else {
