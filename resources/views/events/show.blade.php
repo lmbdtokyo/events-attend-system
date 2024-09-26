@@ -68,19 +68,7 @@
                                     <a href="{{ route('eventmypagebasic.edit', $event->id) }}" class="btn btn-primary">編集</a>
                                 </td>
                             </tr>
-                            <tr>
-                                <td style="width: 15%; vertical-align: middle; text-align:center;">
-                                    @if($eventProgressData[0]->finish_flg == 0)
-                                        <b class="redText">未設定</b>
-                                    @else
-                                        <b class="greenText">設定済</b>
-                                    @endif
-                                </td>
-                                <td style="width: 65%; vertical-align: middle;">申込完了ページ設定</th>
-                                <td style="width: 20%; text-align: center;">
-                                    <a href="{{ route('eventfinish.edit', $event->id) }}" class="btn btn-primary">編集</a>
-                                </td>
-                            </tr>
+                            
                         </tbody>
                     </table>
                 </div>
@@ -101,6 +89,19 @@
                                 </td>
                             </tr>
                             <tr>
+                                <td style="width: 15%; vertical-align: middle; text-align:center;">
+                                    @if($eventProgressData[0]->finish_flg == 0)
+                                        <b class="redText">未設定</b>
+                                    @else
+                                        <b class="greenText">設定済</b>
+                                    @endif
+                                </td>
+                                <td style="width: 65%; vertical-align: middle;">申込完了ページ設定</th>
+                                <td style="width: 20%; text-align: center;">
+                                    <a href="{{ route('eventfinish.edit', $event->id) }}" class="btn btn-primary">編集</a>
+                                </td>
+                            </tr>
+                            {{-- <tr>
                                 <td style="width: 15%; vertical-align: middle; text-align:center;">
                                     @if($eventProgressData[0]->entry_mail_flg == 0)
                                         <b class="redText">未設定</b>
@@ -125,7 +126,7 @@
                                 <td style="width: 20%; text-align: center;">
                                     <a href="{{ route('eventexitmail.edit', $event->id) }}" class="btn btn-primary">編集</a>
                                 </td>
-                            </tr>
+                            </tr> --}}
                         </tbody>
                     </table>
                 </div>

@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', '申込来場者集計・一覧 | イベント来場管理システム')
+@section('title', '申込来場者集計 | イベント来場管理システム')
 
 @section('content_header')
-    <h1>申込来場者集計・一覧</h1>
+    <h1>申込来場者集</h1>
 @endsection
 
 @section('content')
@@ -111,7 +111,13 @@
                 <tbody>
                     @foreach ($totals as $total)
                         <tr>
-                            <td>{{ $total['user_count'] }}</td>
+                            <td>
+                                @if ($total['user_count'] != 0)
+                                    <a href="{{ url('/events/' . $event->id . '/users') }}">{{ $total['user_count'] }}</a>
+                                @else
+                                    {{ $total['user_count'] }}
+                                @endif
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -195,8 +201,8 @@
                 <tbody>
                     @foreach ($totals as $total)
                         <tr>
-                            <td>{{ $total['entry_count'] }}</td>
-                            <td>{{ $total['exit_count'] }}</td>
+                            <td><a href="{{ route('event.records', ['event' => $event->id, 'exit_entry' => 1]) }}">{{ $total['entry_count'] }}</a></td>
+                            <td><a href="{{ route('event.records', ['event' => $event->id, 'exit_entry' => 2]) }}">{{ $total['exit_count'] }}</a></td>
                         </tr>
                     @endforeach
                 </tbody>

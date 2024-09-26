@@ -18,12 +18,36 @@ use App\Models\Eventmypagebasic;
 use App\Models\Eventprogress;
 
 use App\Models\Eventfinish;
-
-
+use Illuminate\Support\Facades\Mail;
+use App\Mail\RegistrationCompleteMail;
+use App\Models\Eventfinishmail;
+use App\Models\Eventrecord;
 
 
 class EventUserController extends Controller
 {
+
+
+    public function index(Event $event)
+    {
+        $eventUsers = Eventuser::where('event_id', $event->id)->paginate(50);
+        return view('events.detail.user', compact('event', 'eventUsers'));
+    }
+
+    public function records(Event $event,Eventrecord $eventrecords,Eventuser $eventuser,$exit_entry)
+    {
+
+        $eventEntries = null;
+        if ($exit_entry == 1) {
+            $eventEntries = $eventrecords->where('event_id', $event->id)->where('entry_exit', 1)->paginate(50);
+        } else {
+            $eventEntries = $eventrecords->where('event_id', $event->id)->where('entry_exit', 2)->paginate(50);
+        }
+
+        $eventUsers = $eventuser->where('event_id', $event->id)->get();
+
+        return view('events.detail.records', ['event' => $event, 'eventEntries' => $eventEntries, 'eventUsers' => $eventUsers]);
+    }
 
     public function finish(Event $event)
     {
@@ -184,7 +208,7 @@ class EventUserController extends Controller
         $eventuser->mail = $request->input('mail');
         $eventuser->qr = $uuid;
 
-        //登録完了メールを送る（e-mail認証までやりたい）
+        $password = $request->input('password');
 
         //QRを作成してPDFに埋め込みつつできたPDFをstorageに保存する
         $appUrl = config('app.url');
@@ -201,8 +225,17 @@ class EventUserController extends Controller
         $pdfPath = 'public/pdfs/' . $uuid . '.pdf';
         Storage::put($pdfPath, $pdf->output());
 
+        $eventfinishmail = Eventfinishmail::where('event_id', $event->id)->first();
+        if (!$eventfinishmail) {
+            return redirect()->back()->withErrors(['error' => 'イベントのメール設定が見つかりません。']);
+        }
+
+        Mail::to($eventuser->mail)->send(new RegistrationCompleteMail($eventuser, $event , $password , $eventfinishmail));
+
         $eventuser->pdf_name = $pdfPath;
         $eventuser->save();
+
+        
 
         return redirect()->route('eventform.finish', ['event' => $event->id])->with('success', '登録が完了しました。');
     }

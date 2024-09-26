@@ -97,6 +97,12 @@ Route::post('/events/{event}/login', [App\Http\Controllers\EventUserController::
 Route::get('/events/{event}/mypage', [App\Http\Controllers\EventUserController::class, 'showMypage'])->name('eventuser.mypage');
 Route::post('/events/{event}/logout', [App\Http\Controllers\EventUserController::class, 'logout'])->name('eventuser.logout');
 
+//申込者一覧
+Route::get('/events/{event}/users', [App\Http\Controllers\EventUserController::class, 'index'])->name('event.users');
+
+//来場者一覧
+Route::get('/events/{event}/records/{exit_entry}', [App\Http\Controllers\EventUserController::class, 'records'])->name('event.records');
+
 //QR読み込み
 Route::get('/events/{event}/qr/user/{qrid}/{exitentry}', [App\Http\Controllers\EventScanController::class, 'userqr'])->name('qr.user');
 Route::get('/events/{event}/qr/nonuser/{qrid}/{exitentry}', [App\Http\Controllers\EventScanController::class, 'nonuserqr'])->name('qr.nonuser');

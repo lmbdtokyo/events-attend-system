@@ -66,8 +66,8 @@
                                 </td>
                                 <td><?php echo e($event->approval == 0 ? 'なし' : 'あり'); ?></td>
                                 <td>
-                                    <a href="<?php echo e(route('events.edit', $event->id)); ?>" class="btn btn-primary btn-sm event-btn">基本情報編集</a><br>
                                     <a href="<?php echo e(route('events.show', $event->id)); ?>" class="btn btn-info btn-sm event-btn">　全体設定　</a>
+                                    <a href="<?php echo e(route('events.edit', $event->id)); ?>" class="btn btn-primary btn-sm event-btn">基本情報編集</a><br>
                                 </td>
                             </tr>
                         </tbody>

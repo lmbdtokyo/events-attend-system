@@ -161,8 +161,8 @@ class initEventDataSeeder extends Seeder
                 'form_setting_flg' => 0,
                 'mypage_basic_flg' => 0,
                 'finish_mail_flg' => 0,
-                'entry_mail_flg' => 0,
-                'exit_mail_flg' => 0,
+                'entry_mail_flg' => 1,
+                'exit_mail_flg' => 1,
                 'created_at' => new DateTime(),
                 'updated_at' => new DateTime(),
             ]

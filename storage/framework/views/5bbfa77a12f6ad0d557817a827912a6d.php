@@ -1,9 +1,9 @@
 
 
-<?php $__env->startSection('title', '申込来場者集計・一覧 | イベント来場管理システム'); ?>
+<?php $__env->startSection('title', '申込来場者集計 | イベント来場管理システム'); ?>
 
 <?php $__env->startSection('content_header'); ?>
-    <h1>申込来場者集計・一覧</h1>
+    <h1>申込来場者集</h1>
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('content'); ?>
@@ -111,7 +111,14 @@
                 <tbody>
                     <?php $__currentLoopData = $totals; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $total): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <tr>
-                            <td><?php echo e($total['user_count']); ?></td>
+                            <td>
+                                <?php if($total['user_count'] != 0): ?>
+                                    <a href="<?php echo e(url('/events/' . $event->id . '/users')); ?>"><?php echo e($total['user_count']); ?></a>
+                                <?php else: ?>
+                                    <?php echo e($total['user_count']); ?>
+
+                                <?php endif; ?>
+                            </td>
                         </tr>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </tbody>
@@ -195,8 +202,8 @@
                 <tbody>
                     <?php $__currentLoopData = $totals; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $total): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <tr>
-                            <td><?php echo e($total['entry_count']); ?></td>
-                            <td><?php echo e($total['exit_count']); ?></td>
+                            <td><a href="<?php echo e(route('event.records', ['event' => $event->id, 'exit_entry' => 1])); ?>"><?php echo e($total['entry_count']); ?></a></td>
+                            <td><a href="<?php echo e(route('event.records', ['event' => $event->id, 'exit_entry' => 2])); ?>"><?php echo e($total['exit_count']); ?></a></td>
                         </tr>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </tbody>

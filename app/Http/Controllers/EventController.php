@@ -189,7 +189,7 @@ class EventController extends Controller
             [
                 'event_id' => $lastInsertedId,
                 'bcc' => null,
-                'title' => 'メールタイトル',
+                'title' => '来場登録が完了しました',
                 'text' => '本文を入力してください',
                 'created_at' => new DateTime(),
                 'updated_at' => new DateTime(),
@@ -226,8 +226,8 @@ class EventController extends Controller
                 'form_setting_flg' => 0,
                 'mypage_basic_flg' => 0,
                 'finish_mail_flg' => 0,
-                'entry_mail_flg' => 0,
-                'exit_mail_flg' => 0,
+                'entry_mail_flg' => 1,
+                'exit_mail_flg' => 1,
                 'created_at' => new DateTime(),
                 'updated_at' => new DateTime(),
             ]

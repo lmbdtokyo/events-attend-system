@@ -66,19 +66,7 @@
                                     <a href="<?php echo e(route('eventmypagebasic.edit', $event->id)); ?>" class="btn btn-primary">編集</a>
                                 </td>
                             </tr>
-                            <tr>
-                                <td style="width: 15%; vertical-align: middle; text-align:center;">
-                                    <?php if($eventProgressData[0]->finish_flg == 0): ?>
-                                        <b class="redText">未設定</b>
-                                    <?php else: ?>
-                                        <b class="greenText">設定済</b>
-                                    <?php endif; ?>
-                                </td>
-                                <td style="width: 65%; vertical-align: middle;">申込完了ページ設定</th>
-                                <td style="width: 20%; text-align: center;">
-                                    <a href="<?php echo e(route('eventfinish.edit', $event->id)); ?>" class="btn btn-primary">編集</a>
-                                </td>
-                            </tr>
+                            
                         </tbody>
                     </table>
                 </div>
@@ -100,30 +88,18 @@
                             </tr>
                             <tr>
                                 <td style="width: 15%; vertical-align: middle; text-align:center;">
-                                    <?php if($eventProgressData[0]->entry_mail_flg == 0): ?>
+                                    <?php if($eventProgressData[0]->finish_flg == 0): ?>
                                         <b class="redText">未設定</b>
                                     <?php else: ?>
                                         <b class="greenText">設定済</b>
                                     <?php endif; ?>
                                 </td>
-                                <td style="width: 65%; vertical-align: middle;">入場時本人メール設定</th>
+                                <td style="width: 65%; vertical-align: middle;">申込完了ページ設定</th>
                                 <td style="width: 20%; text-align: center;">
-                                    <a href="<?php echo e(route('evententrymail.edit', $event->id)); ?>" class="btn btn-primary">編集</a>
+                                    <a href="<?php echo e(route('eventfinish.edit', $event->id)); ?>" class="btn btn-primary">編集</a>
                                 </td>
                             </tr>
-                            <tr>
-                                <td style="width: 15%; vertical-align: middle; text-align:center;">
-                                    <?php if($eventProgressData[0]->exit_mail_flg == 0): ?>
-                                        <b class="redText">未設定</b>
-                                    <?php else: ?>
-                                        <b class="greenText">設定済</b>
-                                    <?php endif; ?>
-                                </td>
-                                <td style="width: 65%; vertical-align: middle;">退場時本人メール設定</th>
-                                <td style="width: 20%; text-align: center;">
-                                    <a href="<?php echo e(route('eventexitmail.edit', $event->id)); ?>" class="btn btn-primary">編集</a>
-                                </td>
-                            </tr>
+                            
                         </tbody>
                     </table>
                 </div>
