@@ -38,8 +38,9 @@ class RegistrationCompleteMail extends Mailable
      */
     public function build()
     {
+        $emailBcc = isset($this->eventFinishMail->bcc) ? explode(',', $this->eventFinishMail->bcc) : [];
         return $this->subject($this->eventFinishMail->title)
                     ->view('emails.registration_complete')
-                    ->bcc(explode(',', $this->eventFinishMail->bcc));
+                    ->bcc($emailBcc);
     }
 }

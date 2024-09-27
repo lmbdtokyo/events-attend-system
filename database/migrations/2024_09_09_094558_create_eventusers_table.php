@@ -28,7 +28,6 @@ return new class extends Migration
             $table->string('tel')->nullable();
             $table->date('birth')->nullable();
             $table->string('section')->nullable();
-            $table->string('login_id');
             $table->string('password');
             $table->boolean('approval')->default(false);
             $table->string('qr')->nullable();

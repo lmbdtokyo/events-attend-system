@@ -560,3 +560,9 @@ ul.event-info-ul {
 .total-table .table-bordered thead td {
     border-bottom-width: 2px;
 }
+
+#approval0 p,
+#approval1 p,
+#approval2 p {
+    margin: 20px 10px;
+}

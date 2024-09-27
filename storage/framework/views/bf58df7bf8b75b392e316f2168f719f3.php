@@ -197,11 +197,13 @@
                                 <p>アンケート集計</p>
                             </a>
                         </li>
+                        <?php if($event->approval == 1): ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?php echo e(url('/')); ?>">
+                            <a class="nav-link" href="<?php echo e(url('/events/' . $event->id . '/approval')); ?>">
                                 <p>ユーザー承認</p>
                             </a>
                         </li>
+                        <?php endif; ?>
                     </ul>
                 </li>
 

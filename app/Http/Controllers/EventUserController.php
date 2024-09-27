@@ -76,22 +76,37 @@ class EventUserController extends Controller
 
     public function login(Request $request , $event)
     {
+        $credentials = $request->only('mail', 'password');
+        $credentials['event_id'] = $event;
 
-        $credentials = $request->only('login_id', 'password');
-        $event_id = $event;
-
-        $eventuser = Eventuser::where('login_id', $credentials['login_id'])
-                              ->where('event_id', $event_id)
+        $eventuser = Eventuser::where('mail', $credentials['mail']) 
+                              ->where('event_id', $event)
                               ->first();
 
-        if ($eventuser && auth()->guard('eventuser')->attempt($credentials)) {
-            return redirect()->intended("/events/{$event_id}/mypage");
+        if ($eventuser) {
+            
+            if ($eventuser->approval == 0 || $eventuser->approval == 2) {
+                return back()->withErrors([
+                    'error' => 'アクセスが許可されていません。', 
+                ]);
+            }
+
+            if (auth()->guard('eventuser')->attempt($credentials)) {
+                return redirect()->intended("/events/{$event}/mypage");
+            } else {
+                return back()->withErrors([
+                    'error' => 'パスワードが正しくありません。', 
+                ]);
+            }
+
+
+            
+        } else {
+            
+            return back()->withErrors([
+                'error' => 'メールアドレスが存在しません。', 
+            ]);
         }
-
-        return back()->withErrors([
-            'login_id' => 'ログインIDまたはパスワードが正しくありません。',
-        ]);
-
     }
     
     public function form(Event $event)
@@ -166,16 +181,6 @@ class EventUserController extends Controller
                     }
                 }
             ],
-            'login_id' => [
-                'required', 
-                'string', 
-                'max:255', 
-                function ($attribute, $value, $fail) use ($event) {
-                    if (Eventuser::where('event_id', $event->id)->where('login_id', $value)->exists()) {
-                        $fail('このログインIDは既に使用されています。');
-                    }
-                }
-            ],
             'password' => 'required|string|min:8',
             'approval' => 'required|boolean',
         ];
@@ -202,7 +207,6 @@ class EventUserController extends Controller
         $eventuser->tel = $request->input('tel');
         $eventuser->birth = $request->input('birth');
         $eventuser->section = $request->input('section');
-        $eventuser->login_id = $request->input('login_id');
         $eventuser->password = bcrypt($request->input('password'));
         $eventuser->approval = $request->input('approval');
         $eventuser->mail = $request->input('mail');
@@ -230,24 +234,36 @@ class EventUserController extends Controller
             return redirect()->back()->withErrors(['error' => 'イベントのメール設定が見つかりません。']);
         }
 
-        Mail::to($eventuser->mail)->send(new RegistrationCompleteMail($eventuser, $event , $password , $eventfinishmail));
+        $email = trim($eventuser->mail); // 空白をトリミング
+
+        if (isset($email) && !empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            Mail::to($email)->send(new RegistrationCompleteMail($eventuser, $event, $password, $eventfinishmail));
+        } else {
+            \Log::info('無効なメールアドレス:', ['mail' => $email]); // ログに記録
+            return redirect()->back()->withErrors(['error' => '無効なメールアドレスです。']);
+        }
 
         $eventuser->pdf_name = $pdfPath;
         $eventuser->save();
 
-        
 
         return redirect()->route('eventform.finish', ['event' => $event->id])->with('success', '登録が完了しました。');
     }
 
 
-    public function showMypage(Request $request, $eventId, Eventmypagebasic $eventmypagebasic)
+    public function showMypage(Request $request, $eventId, Eventmypagebasic $eventmypagebasic ,Eventuser $eventuser)
     {
+
+        $eventuser = Auth::guard('eventuser')->user();
 
         $eventmypagebasic = Eventmypagebasic::where('event_id', $eventId)->first();
 
-        if (!auth()->guard('eventuser')->check() || Auth::guard('eventuser')->user()->event_id != $eventId) {
-            return redirect()->route('eventuser.login', ['event' => $eventId]);
+        if (!auth()->guard('eventuser')->check()) {
+            return redirect()->route('eventuser.login', ['event' => $eventId])->withErrors(['error' => 'ログインが必要です。']);
+        }
+
+        if($eventuser->event_id != $eventId){
+            return redirect()->route('eventuser.login', ['event' => $eventId])->withErrors(['error' => '登録したイベントのログインが必要です。']);
         }
 
         $user = Auth::guard('eventuser')->user();

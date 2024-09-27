@@ -70,18 +70,6 @@
 <body>
     <div class="container">
         <h2><?php echo e($event->name); ?><br>ログイン</h2>
-        <form method="POST" action="<?php echo e(route('eventuser.login', ['event' => $event])); ?>">
-            <?php echo csrf_field(); ?>
-            <div class="form-group">
-                <label for="login_id">ログインID</label>
-                <input type="text" class="form-control" id="login_id" name="login_id" required>
-            </div>
-            <div class="form-group">
-                <label for="password">パスワード</label>
-                <input type="password" class="form-control" id="password" name="password" required>
-            </div>
-            <button type="submit" class="btn btn-primary">ログイン</button>
-        </form>
         <?php if($errors->any()): ?>
             <div class="alert alert-danger mt-3">
                 <ul>
@@ -91,6 +79,19 @@
                 </ul>
             </div>
         <?php endif; ?>
+        <form method="POST" action="<?php echo e(route('eventuser.login', ['event' => $event])); ?>">
+            <?php echo csrf_field(); ?>
+            <div class="form-group">
+                <label for="mail">メールアドレス</label>
+                <input type="email" class="form-control" id="mail" name="mail" required>
+            </div>
+            <div class="form-group">
+                <label for="password">パスワード</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">ログイン</button>
+        </form>
+        
     </div>
 </body>
 </html>

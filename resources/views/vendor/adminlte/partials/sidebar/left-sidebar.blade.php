@@ -197,11 +197,13 @@
                                 <p>アンケート集計</p>
                             </a>
                         </li>
+                        @if($event->approval == 1)
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/') }}">
+                            <a class="nav-link" href="{{ url('/events/' . $event->id . '/approval') }}">
                                 <p>ユーザー承認</p>
                             </a>
                         </li>
+                        @endif
                     </ul>
                 </li>
 

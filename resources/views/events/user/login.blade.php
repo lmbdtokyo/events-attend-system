@@ -70,18 +70,6 @@
 <body>
     <div class="container">
         <h2>{{ $event->name }}<br>ログイン</h2>
-        <form method="POST" action="{{ route('eventuser.login', ['event' => $event]) }}">
-            @csrf
-            <div class="form-group">
-                <label for="login_id">ログインID</label>
-                <input type="text" class="form-control" id="login_id" name="login_id" required>
-            </div>
-            <div class="form-group">
-                <label for="password">パスワード</label>
-                <input type="password" class="form-control" id="password" name="password" required>
-            </div>
-            <button type="submit" class="btn btn-primary">ログイン</button>
-        </form>
         @if ($errors->any())
             <div class="alert alert-danger mt-3">
                 <ul>
@@ -91,6 +79,19 @@
                 </ul>
             </div>
         @endif
+        <form method="POST" action="{{ route('eventuser.login', ['event' => $event]) }}">
+            @csrf
+            <div class="form-group">
+                <label for="mail">メールアドレス</label>
+                <input type="email" class="form-control" id="mail" name="mail" required>
+            </div>
+            <div class="form-group">
+                <label for="password">パスワード</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">ログイン</button>
+        </form>
+        
     </div>
 </body>
 </html>

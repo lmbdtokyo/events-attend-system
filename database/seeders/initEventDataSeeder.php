@@ -92,8 +92,8 @@ class initEventDataSeeder extends Seeder
         DB::table('eventfinish')->insert([
             [
             'event_id' => 1,
-            'draft_text' => '承認をありにした場合の仮登録完了画面に表示する文言を設定します。',
-            'finish_text' => '承認をなしにした場合の申込受付完了画面に表示する文言を設定します。',
+            'draft_text' => '来場申込が完了しました。<br>24時間以内に運営者より承認された場合は登録完了メールが届きますので、その後マイページからログイン頂き来場証をダウンロードくださいませ。<br>不明点は事務局までご連絡くださいませ。',
+            'finish_text' => '来場登録が完了しました。<br>以下マイページからログイン頂き来場証をダウンロードくださいませ。<br>不明点は事務局までご連絡くださいませ。',
             'created_at' => new DateTime(),
             'updated_at' => new DateTime(),
             ]
@@ -105,7 +105,7 @@ class initEventDataSeeder extends Seeder
                 'endtime' => null,
                 'image' => null,
                 'title' => 'お知らせ',
-                'text' => 'こちらはイベントマイページの基本情報です。',
+                'text' => 'こちらは来場登録情報です。以下来場PDFをダウンロード、印刷して会場へお持ちください。',
                 'created_at' => new DateTime(),
                 'updated_at' => new DateTime(),
             ]
@@ -124,8 +124,8 @@ class initEventDataSeeder extends Seeder
             [
                 'event_id' => 1,
                 'bcc' => null,
-                'title' => 'メールタイトル',
-                'text' => '本文を入力してください',
+                'title' => '来場申込が完了しました',
+                'text' => '来場申込が完了しました。<br>24時間以内に運営者より承認された場合は登録完了メールが届きますので、その後マイページからログイン頂き来場証をダウンロードくださいませ。<br>不明点は事務局までご連絡くださいませ。',
                 'created_at' => new DateTime(),
                 'updated_at' => new DateTime(),
             ]

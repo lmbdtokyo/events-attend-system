@@ -99,6 +99,9 @@ Route::post('/events/{event}/logout', [App\Http\Controllers\EventUserController:
 
 //申込者一覧
 Route::get('/events/{event}/users', [App\Http\Controllers\EventUserController::class, 'index'])->name('event.users');
+Route::get('/events/{event}/approval', [App\Http\Controllers\EventApprovalController::class, 'index'])->name('event.approval');
+Route::patch('/events/{event}/approval/{eventuser}/update', [App\Http\Controllers\EventApprovalController::class, 'update'])->name('event.approval.update');
+
 
 //来場者一覧
 Route::get('/events/{event}/records/{exit_entry}', [App\Http\Controllers\EventUserController::class, 'records'])->name('event.records');

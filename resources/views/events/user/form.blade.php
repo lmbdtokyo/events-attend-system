@@ -225,12 +225,6 @@
             </div>
 
             <div class="form-group">
-                <label for="login_id">ログインID <span style="color: red;">*</span></label>
-                <input type="text" id="login_id" name="login_id" class="form-control" placeholder="ログインIDを入力してください" value="{{ old('login_id') }}" required>
-            </div>
-
-
-            <div class="form-group">
                 <label for="password">パスワード <span style="color: red;">*</span></label>
                 <input type="password" id="password" name="password" class="form-control" placeholder="パスワードを入力してください" required>
             </div>

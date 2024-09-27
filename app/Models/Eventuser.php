@@ -26,7 +26,6 @@ class Eventuser extends Authenticatable
         'tel',
         'birth',
         'section',
-        'login_id',
         'password',
         'approval',
         'entry_flg',
