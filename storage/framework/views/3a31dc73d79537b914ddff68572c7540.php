@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QRスキャン画面</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js']); ?>
 
     <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 
@@ -40,9 +40,9 @@
 <body>
 
         <div class="titlebox">
-        <h2>{{ $exitentry == 1 ? '入場スキャン画面' : '退場スキャン画面' }}</h2>
+        <h2><?php echo e($exitentry == 1 ? '入場スキャン画面' : '退場スキャン画面'); ?></h2>
         </div>
-        {{-- <div id="qr-reader" style="width: 100vw; height: 100vh;"></div> --}}
+        
         <video id="video" style="position:absolute;opacity:0;top:0;left:0;z-index:-1000;" autoplay playsinline muted></video>
         <canvas id="canvas" hidden></canvas>
     
@@ -54,7 +54,7 @@
                 const canvasElement = document.getElementById('canvas');
                 const canvas = canvasElement.getContext('2d');
 
-                // const userAgent = 'CustomUserAgent/1.0; UserID=' + {{ Auth::user()->id }};
+                // const userAgent = 'CustomUserAgent/1.0; UserID=' + <?php echo e(Auth::user()->id); ?>;
                 // alert(userAgent);
     
                 let lastCodeData = '';
@@ -90,11 +90,12 @@
     
                         if (code && code.data !== lastCodeData) {
                             lastCodeData = code.data;
-                            const modifiedUrl = code.data + '/{{ $exitentry }}';
+                            const modifiedUrl = code.data + '/<?php echo e($exitentry); ?>';
     
                             axios.get(modifiedUrl, {
                                 headers: {
-                                    'User-Agent': 'CustomUserAgent/1.0; UserID=' + {{ Auth::user()->id }}
+                                    'User-Agent': 'CustomUserAgent/1.0; UserID=' + <?php echo e(Auth::user()->id); ?>
+
                                 }
                             })
                                 .then(function (response) {
@@ -113,4 +114,4 @@
                 startCamera();
         </script>
 </body>
-</html>
+</html><?php /**PATH /data/resources/views/events/scan.blade.php ENDPATH**/ ?>
