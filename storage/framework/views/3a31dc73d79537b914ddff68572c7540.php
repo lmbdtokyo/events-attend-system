@@ -39,6 +39,12 @@
 </head>
 <body>
 
+        <div style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+            <button onclick="location.reload();" style="padding: 10px 15px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                更新
+            </button>
+        </div>
+
         <div class="titlebox">
         <h2><?php echo e($exitentry == 1 ? '入場スキャン画面' : '退場スキャン画面'); ?></h2>
         </div>
@@ -91,6 +97,12 @@
                         if (code && code.data !== lastCodeData) {
                             lastCodeData = code.data;
                             const modifiedUrl = code.data + '/<?php echo e($exitentry); ?>';
+
+                            //URLチェックを行う
+                            if (!/^https?:\/\/[^\/]+\/events\/[^\/]+\/qr\//.test(code.data)) {
+                                console.warn('無効なURLです: ' + code.data);
+                                return;
+                            }
     
                             axios.get(modifiedUrl, {
                                 headers: {
@@ -99,10 +111,10 @@
                                 }
                             })
                                 .then(function (response) {
-                                    alert('QRコードのURLにアクセスしました: ' + JSON.stringify(response.data));
+                                    alert('QRコードのURLにアクセスしました: ' + modifiedUrl + JSON.stringify(response.data));
                                 })
                                 .catch(function (error) {
-                                    alert('QRコードのURLへのアクセスに失敗しました: ' + JSON.stringify(error.response.data));
+                                    alert('QRコードのURLへのアクセスに失敗しました: ' + modifiedUrl + JSON.stringify(error.response.data));
                                 });
     
                             //Livewire.emit('handleQrUrl', code.data);

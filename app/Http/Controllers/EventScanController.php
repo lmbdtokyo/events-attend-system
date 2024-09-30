@@ -79,9 +79,6 @@ class EventScanController extends Controller
     public function nonuserqr($eventId, $qrid , $exitentry , Eventrecord $eventrecord)
     {
 
-        if ($exitentry != 1 && $exitentry != 2) {
-            return response()->json(['error' => '無効なリクエスト形式です。'], 400);
-        }
 
         //ユーザーエージェントでユーザーを引き継ぐ
         $userAgent = request()->header('User-Agent');
@@ -92,6 +89,12 @@ class EventScanController extends Controller
         }else{
             return response()->json(['error' => 'ユーザーエージェントの形式が違います。'], 400);
         }
+
+
+        if ($exitentry != 1 && $exitentry != 2) {
+            return response()->json(['error' => '無効なリクエスト形式です。'], 400);
+        }
+
 
         $eventnonuser = Eventqr::where('event_id', $eventId)->where('qr_id', $qrid)->first();
 
@@ -112,7 +115,7 @@ class EventScanController extends Controller
         $eventrecord->applicant_id = null;
         $eventrecord->nonuser_id = $eventnonuser->id;
         $eventrecord->entry_exit = $exitentry;
-        $eventrecord->user_id = $user->id;
+        $eventrecord->user_id = $userId;
         $eventrecord->save();
 
         if ($exitentry == 1) {
