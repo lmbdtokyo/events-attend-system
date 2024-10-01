@@ -70,11 +70,13 @@ class EventSectionController extends Controller
                 }
             
                 // 既存のeventsectionの更新
-                foreach ($request->eventsections as $id => $data) {
-                    if (is_numeric($id)) {
-                        $eventsection = Eventsection::find($id);
-                        if ($eventsection) {
-                            $eventsection->update($data);
+                if (isset($request->eventsections) && is_array($request->eventsections)) {
+                    foreach ($request->eventsections as $id => $data) {
+                        if (is_numeric($id)) {
+                            $eventsection = Eventsection::find($id);
+                            if ($eventsection) {
+                                $eventsection->update($data);
+                            }
                         }
                     }
                 }

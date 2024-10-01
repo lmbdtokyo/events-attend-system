@@ -80,7 +80,7 @@ Route::patch('/events/{event}/exitmail', [App\Http\Controllers\EventExitMailCont
 //ユーザー申込画面
 Route::get('/events/{event}/form', [App\Http\Controllers\EventUserController::class, 'form'])->name('eventform.form');
 Route::patch('/events/{event}/form', [App\Http\Controllers\EventUserController::class, 'store'])->name('eventform.store');
-Route::get('/events/{event}/form/finish', [App\Http\Controllers\EventUserController::class, 'finish'])->name('eventform.finish');
+Route::get('/events/{event}/form/{eventuser}/finish', [App\Http\Controllers\EventUserController::class, 'finish'])->name('eventform.finish');
 
 //ユーザー申込画面
 Route::get('/events/{event}/pdf', [App\Http\Controllers\EventPDFViewController::class, 'edit'])->name('eventpdf.edit');

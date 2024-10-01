@@ -566,3 +566,20 @@ ul.event-info-ul {
 #approval2 p {
     margin: 20px 10px;
 }
+
+select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    background-color: #fff;
+    color: #495057;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+select:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}

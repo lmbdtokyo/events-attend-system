@@ -49,13 +49,13 @@ class EventUserController extends Controller
         return view('events.detail.records', ['event' => $event, 'eventEntries' => $eventEntries, 'eventUsers' => $eventUsers]);
     }
 
-    public function finish(Event $event)
+    public function finish(Event $event , Eventuser $eventu , $eventuser)
     {
         // eventfinishの内容を取得
         $eventfinish = Eventfinish::where('event_id', $event->id)->first();
+        $eventu = Eventuser::findOrFail($eventuser);
 
-        // approvalに応じてdraft_textまたはfinish_textを渡す
-        $text = $eventfinish && $eventfinish->approval == 1 ? $eventfinish->draft_text : $eventfinish->finish_text;
+        $text = $eventfinish && $eventu->approval == 0 ? $eventfinish->draft_text : $eventfinish->finish_text;
 
         // 申込完了画面の表示
         return view('events.user.finish', compact('event', 'text'));
@@ -224,8 +224,17 @@ class EventUserController extends Controller
             $eventpdfimage_data = base64_encode(Storage::get($eventpdfimage->image));
         }
 
+        
+        $eventsection = Eventsection::where('id', $eventuser->section)->first();
+        if (is_null($eventsection)) {
+            // nullの場合の処理
+            $eventsection = new Eventsection(); 
+            $eventsection->name = 'QRコード';
+            $eventsection->color = '#FF0000';
+        }
+
         $qrCode = \SimpleSoftwareIO\QrCode\Facades\QrCode::format('png')->size(200)->generate($qrCodeUrl);
-        $pdf = PDF::loadView('pdf.pdf', ['qrCode' => $qrCode, 'eventuser' => $eventuser , 'eventpdfimage' => $eventpdfimage_data])->setPaper('a4');
+        $pdf = PDF::loadView('pdf.pdf', ['qrCode' => $qrCode, 'eventuser' => $eventuser , 'eventpdfimage' => $eventpdfimage_data , 'eventsection' => $eventsection])->setPaper('a4');
         $pdfPath = 'public/pdfs/' . $uuid . '.pdf';
         Storage::put($pdfPath, $pdf->output());
 
@@ -246,8 +255,7 @@ class EventUserController extends Controller
         $eventuser->pdf_name = $pdfPath;
         $eventuser->save();
 
-
-        return redirect()->route('eventform.finish', ['event' => $event->id])->with('success', '登録が完了しました。');
+        return redirect()->route('eventform.finish', ['event' => $event->id, 'eventuser' => $eventuser->id])->with('success', '登録が完了しました。');
     }
 
 
