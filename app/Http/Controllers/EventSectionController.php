@@ -40,14 +40,14 @@ class EventSectionController extends Controller
         
     }
 
-    public function update(Request $request, $event)
+    public function update(Request $request, $id)
     {
 
         if (!Auth::check()) {
             return redirect()->route('login')->with('error', 'ログインしてください。');
         }
 
-        $events = Event::find($event);
+        $event = Event::findOrFail($id);
         if (Auth::user()->type === 'master' || Auth::user()->organization == $events->organization) {
 
                 $rules = [
@@ -69,28 +69,27 @@ class EventSectionController extends Controller
                     return redirect()->back()->withErrors($validator)->withInput();
                 }
             
-                // 既存のeventsectionの更新
-                if (isset($request->eventsections) && is_array($request->eventsections)) {
-                    foreach ($request->eventsections as $id => $data) {
-                        if (is_numeric($id)) {
-                            $eventsection = Eventsection::find($id);
-                            if ($eventsection) {
+                // 既存の区分の更新
+                foreach ($request->eventsections as $id => $data) {
+                    if (is_numeric($id)) {
+                        $eventsection = Eventsection::find($id);
+                        if ($eventsection) {
+                            if (isset($data['delete']) && $data['delete'] == '1') {
+                                $eventsection->delete();
+                            } else {
                                 $eventsection->update($data);
                             }
                         }
                     }
                 }
-            
-                // 新規追加されたeventsectionの保存
+
+                // 新しい区分の追加
                 if (isset($request->eventsections['new'])) {
-                    $names = $request->eventsections['new']['name'];
-                    $colors = $request->eventsections['new']['color'];
-                
-                    foreach ($names as $key => $name) {
+                    foreach ($request->eventsections['new']['name'] as $index => $name) {
                         Eventsection::create([
-                            'event_id' => $event,
+                            'event_id' => $event->id,
                             'name' => $name,
-                            'color' => $colors[$key],
+                            'color' => $request->eventsections['new']['color'][$index],
                         ]);
                     }
                 }

@@ -207,7 +207,7 @@
                 </div>
             @endif
 
-            @if ($eventsetting->section_flg)
+            @if ($eventsetting->section_flg && $eventsections->isNotEmpty())
                 <div class="form-group">
                     <label for="section">{{ $eventsetting->section_display_name }} @if($eventsetting->section_required_flg) <span style="color: red;">*</span> @endif</label>
                     <select id="section" name="section" class="form-control" @if($eventsetting->section_required_flg) required @endif>

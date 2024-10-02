@@ -208,7 +208,7 @@
                 </div>
             <?php endif; ?>
 
-            <?php if($eventsetting->section_flg): ?>
+            <?php if($eventsetting->section_flg && $eventsections->isNotEmpty()): ?>
                 <div class="form-group">
                     <label for="section"><?php echo e($eventsetting->section_display_name); ?> <?php if($eventsetting->section_required_flg): ?> <span style="color: red;">*</span> <?php endif; ?></label>
                     <select id="section" name="section" class="form-control" <?php if($eventsetting->section_required_flg): ?> required <?php endif; ?>>
