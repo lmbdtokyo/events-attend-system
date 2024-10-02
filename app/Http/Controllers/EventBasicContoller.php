@@ -8,6 +8,8 @@ use App\Models\Event;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Eventprogress;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+
 
 class EventBasicContoller extends Controller
 {
