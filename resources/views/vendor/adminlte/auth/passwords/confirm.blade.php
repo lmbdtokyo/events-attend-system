@@ -24,7 +24,7 @@
         <div class="lockscreen-logo">
             <a href="{{ $dashboard_url }}">
                 <img src="{{ asset(config('adminlte.logo_img')) }}" height="50">
-                {!! config('adminlte.logo', '<b>Admin</b>LTE') !!}
+                <b>@if (request()->getHost() === 'ken-pass.com')KEN@elseRAKU@endif</b>-PASS
             </a>
         </div>
 

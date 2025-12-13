@@ -41,7 +41,7 @@
                 @endif
 
                 {{-- Logo Label --}}
-                {!! config('adminlte.logo', '<b>Admin</b>LTE') !!}
+                <b>@if (request()->getHost() === 'ken-pass.com')KEN@elseRAKU@endif</b>-PASS
 
             </a>
         </div>
