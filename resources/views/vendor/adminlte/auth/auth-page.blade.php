@@ -42,7 +42,7 @@
                 @endif
 
                 {{-- Logo Label --}}
-                <b>@if (request()->getHost() === 'ken-pass.com')KEN@elseRAKU@endif</b>-PASS
+                <b>@if (request()->getHost() === 'ken-pass.com') KEN @else RAKU @endif</b>-PASS
 
             </a>
         </div>
