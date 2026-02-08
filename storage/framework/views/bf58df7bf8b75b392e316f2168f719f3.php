@@ -1,7 +1,15 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <a href="<?php echo e(url('/dashboard')); ?>" class="brand-link">
         <img src="<?php echo e(asset('images/raku-pass-logo.png')); ?>" alt="Admin Logo" class="brand-image img-circle elevation-3" style="opacity:.8">
-        <span class="brand-text font-weight-light"><b>RAKU</b>-PASS</span>
+        <span class="brand-text font-weight-light">
+            <b>
+                <?php if(request()->getHost() === 'ken-pass.com'): ?>
+                    KEN
+                <?php else: ?>
+                    RAKU
+                <?php endif; ?>
+            </b>-PASS
+        </span>
     </a>
     <div class="sidebar">
         <nav class="pt-2">

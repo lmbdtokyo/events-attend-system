@@ -32,15 +32,15 @@
                          <?php endif; ?>
                          <?php if(config('adminlte.auth_logo.img.height', null)): ?>
                             height="<?php echo e(config('adminlte.auth_logo.img.height')); ?>"
-                         <?php endif; ?>>
+                         <?php endif; ?>
+                    >
                 <?php else: ?>
                     <img src="<?php echo e(asset(config('adminlte.logo_img'))); ?>"
                          alt="<?php echo e(config('adminlte.logo_img_alt')); ?>" height="50">
                 <?php endif; ?>
 
                 
-                <?php echo config('adminlte.logo', '<b>Admin</b>LTE'); ?>
-
+                <b><?php if(request()->getHost() === 'ken-pass.com'): ?> KEN <?php else: ?> RAKU <?php endif; ?></b>-PASS
 
             </a>
         </div>

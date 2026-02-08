@@ -48,7 +48,7 @@ class EventSectionController extends Controller
         }
 
         $event = Event::findOrFail($id);
-        if (Auth::user()->type === 'master' || Auth::user()->organization == $events->organization) {
+        if (Auth::user()->type === 'master' || Auth::user()->organization == $event->organization) {
 
                 $rules = [
                     'eventsections.*.name' => 'required|string|max:255',

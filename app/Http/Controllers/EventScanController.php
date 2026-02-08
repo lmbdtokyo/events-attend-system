@@ -26,14 +26,11 @@ class EventScanController extends Controller
     public function userqr($eventId, $qrid , $exitentry , Eventrecord $eventrecord)
     {
 
-        //ユーザーエージェントでユーザーを引き継ぐ
-        $userAgent = request()->header('User-Agent');
-        $userId = null;
+        //カスタムヘッダーからユーザーIDを取得
+        $userId = request()->header('X-User-ID');
 
-        if (preg_match('/CustomUserAgent\/1\.0; UserID=(\d+)/', $userAgent, $matches)) {
-            $userId = $matches[1];
-        }else{
-            return response()->json(['error' => 'ユーザーエージェントの形式が違います。'], 400);
+        if (!$userId) {
+            return response()->json(['error' => 'ユーザーIDが送信されていません。'], 400);
         }
 
         if ($exitentry != 1 && $exitentry != 2) {
@@ -80,14 +77,11 @@ class EventScanController extends Controller
     {
 
 
-        //ユーザーエージェントでユーザーを引き継ぐ
-        $userAgent = request()->header('User-Agent');
-        $userId = null;
+        //カスタムヘッダーからユーザーIDを取得
+        $userId = request()->header('X-User-ID');
 
-        if (preg_match('/CustomUserAgent\/1\.0; UserID=(\d+)/', $userAgent, $matches)) {
-            $userId = $matches[1];
-        }else{
-            return response()->json(['error' => 'ユーザーエージェントの形式が違います。'], 400);
+        if (!$userId) {
+            return response()->json(['error' => 'ユーザーIDが送信されていません。'], 400);
         }
 
 

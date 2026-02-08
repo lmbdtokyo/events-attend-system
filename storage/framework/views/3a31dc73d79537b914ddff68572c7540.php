@@ -59,9 +59,6 @@
                 document.body.append(video);
                 const canvasElement = document.getElementById('canvas');
                 const canvas = canvasElement.getContext('2d');
-
-                // const userAgent = 'CustomUserAgent/1.0; UserID=' + <?php echo e(Auth::user()->id); ?>;
-                // alert(userAgent);
     
                 let lastCodeData = '';
     
@@ -106,7 +103,7 @@
     
                             axios.get(modifiedUrl, {
                                 headers: {
-                                    'User-Agent': 'CustomUserAgent/1.0; UserID=' + <?php echo e(Auth::user()->id); ?>
+                                    'X-User-ID': <?php echo e(Auth::user()->id); ?>
 
                                 }
                             })
