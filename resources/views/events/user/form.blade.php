@@ -16,6 +16,20 @@
             box-sizing: border-box;
 
         }
+
+        /* タブレット向け */
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 40px;
+            }
+        }
+
+        /* スマートフォン向け */
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px 15px;
+            }
+        }
         h1 {
             text-align: center;
             color: #333;
