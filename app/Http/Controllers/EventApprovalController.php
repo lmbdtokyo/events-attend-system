@@ -30,7 +30,10 @@ class EventApprovalController extends Controller
         $eventUser->approval = $request->input('approval');
         $eventUser->save();
 
-        Mail::to($eventUser->mail)->send(new ApprovalStatusChangedMail($eventUser));
+        // イベント情報を取得
+        $eventData = Event::findOrFail($eventUser->event_id);
+
+        Mail::to($eventUser->mail)->send(new ApprovalStatusChangedMail($eventUser, $eventData));
 
         return redirect()->route('event.approval', $eventUser->event_id)->with('success', '申込者の承認状況が更新されました');
     }
