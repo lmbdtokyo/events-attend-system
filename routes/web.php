@@ -96,9 +96,21 @@ Route::get('/events/{event}/login', [App\Http\Controllers\EventUserController::c
 Route::post('/events/{event}/login', [App\Http\Controllers\EventUserController::class, 'login']);
 Route::get('/events/{event}/mypage', [App\Http\Controllers\EventUserController::class, 'showMypage'])->name('eventuser.mypage');
 Route::post('/events/{event}/logout', [App\Http\Controllers\EventUserController::class, 'logout'])->name('eventuser.logout');
+Route::get('/events/{event}/mypage/edit', [App\Http\Controllers\EventUserController::class, 'showMypageEdit'])->name('eventuser.mypage.edit');
+Route::patch('/events/{event}/mypage', [App\Http\Controllers\EventUserController::class, 'mypageUpdate'])->name('eventuser.mypage.update');
+//パスワード再設定
+Route::get('/events/{event}/password/forgot', [App\Http\Controllers\EventUserController::class, 'showForgotPasswordForm'])->name('eventuser.password.forgot');
+Route::post('/events/{event}/password/forgot', [App\Http\Controllers\EventUserController::class, 'sendPasswordResetLink'])->name('eventuser.password.forgot.send');
+Route::get('/events/{event}/password/reset/{token}', [App\Http\Controllers\EventUserController::class, 'showResetPasswordForm'])->name('eventuser.password.reset.form');
+Route::post('/events/{event}/password/reset/{token}', [App\Http\Controllers\EventUserController::class, 'resetPassword'])->name('eventuser.password.reset');
 
 //申込者一覧
 Route::get('/events/{event}/users', [App\Http\Controllers\EventUserController::class, 'index'])->name('event.users');
+Route::get('/events/{event}/users/export', [App\Http\Controllers\EventUserController::class, 'exportCsv'])->name('event.users.export');
+Route::middleware('auth')->group(function () {
+    Route::get('/events/{event}/users/{eventuser}/edit', [App\Http\Controllers\EventUserController::class, 'edit'])->name('event.users.edit');
+    Route::patch('/events/{event}/users/{eventuser}', [App\Http\Controllers\EventUserController::class, 'update'])->name('event.users.update');
+});
 Route::get('/events/{event}/approval', [App\Http\Controllers\EventApprovalController::class, 'index'])->name('event.approval');
 Route::patch('/events/{event}/approval/{eventuser}/update', [App\Http\Controllers\EventApprovalController::class, 'update'])->name('event.approval.update');
 

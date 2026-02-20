@@ -125,6 +125,10 @@
             </tr>
         </table>
         <h2>登録情報</h2>
+        <?php if(session('success')): ?>
+            <p style="color: #28a745;"><?php echo e(session('success')); ?></p>
+        <?php endif; ?>
+        <p><a href="<?php echo e(route('eventuser.mypage.edit', ['event' => $event->id])); ?>" class="btn btn-primary" style="display: inline-block; padding: 8px 16px; margin-bottom: 15px;">情報を編集</a></p>
         <table>
             <tr>
                 <th>名前</th>
@@ -132,19 +136,19 @@
             </tr>
             <tr>
                 <th>ふりがな</th>
-                <td><?php echo e($user->furigana); ?></td>
+                <td><?php echo e($user->furigana ?? '-'); ?></td>
             </tr>
             <tr>
                 <th>会社名</th>
-                <td><?php echo e($user->company); ?></td>
+                <td><?php echo e($user->company ?? '-'); ?></td>
             </tr>
             <tr>
                 <th>部署</th>
-                <td><?php echo e($user->division); ?></td>
+                <td><?php echo e($user->division ?? '-'); ?></td>
             </tr>
             <tr>
                 <th>役職</th>
-                <td><?php echo e($user->post); ?></td>
+                <td><?php echo e($user->post ?? '-'); ?></td>
             </tr>
             <tr>
                 <th>メールアドレス</th>
@@ -152,19 +156,40 @@
             </tr>
             <tr>
                 <th>電話番号</th>
-                <td><?php echo e($user->tel); ?></td>
+                <td><?php echo e($user->tel ?? '-'); ?></td>
+            </tr>
+            <tr>
+                <th>郵便番号</th>
+                <td><?php echo e($user->postal_code ?? '-'); ?></td>
             </tr>
             <tr>
                 <th>住所</th>
-                <td><?php echo e($user->address1); ?> <?php echo e($user->address2); ?> <?php echo e($user->address3); ?></td>
+                <td><?php echo e(trim(implode(' ', array_filter([$user->address1 ?? '', $user->address2 ?? '', $user->address3 ?? '']))) ?: '-'); ?></td>
             </tr>
             <tr>
                 <th>生年月日</th>
-                <td><?php echo e($user->birth); ?></td>
+                <td><?php echo e($user->birth ?? '-'); ?></td>
+            </tr>
+            <tr>
+                <th>受付区分</th>
+                <td>
+                    <?php if(isset($eventSections[$user->section])): ?>
+                        <?php echo e($eventSections[$user->section]->name); ?>
+
+                    <?php else: ?>
+                        -
+                    <?php endif; ?>
+                </td>
             </tr>
             <tr>
                 <th>PDF</th>
-                <td><a href="<?php echo e(Storage::url($user->pdf_name)); ?>" target="_blank" class="btn btn-primary">PDFを表示</a></td>
+                <td>
+                    <?php if($user->pdf_name && $user->qr): ?>
+                        <a href="<?php echo e(asset('storage/pdfs/' . $user->qr . '.pdf')); ?>" target="_blank" class="btn btn-primary">PDFを表示</a>
+                    <?php else: ?>
+                        -
+                    <?php endif; ?>
+                </td>
             </tr>
         </table>
 

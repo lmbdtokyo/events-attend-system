@@ -91,7 +91,12 @@
             </div>
             <button type="submit" class="btn btn-primary">ログイン</button>
         </form>
-        
+        <p style="margin-top: 15px; text-align: center;">
+            <a href="<?php echo e(route('eventuser.password.forgot', ['event' => $event])); ?>">パスワードを忘れた方</a>
+        </p>
+        <?php if(session('success')): ?>
+            <p style="color: #28a745; margin-top: 10px;"><?php echo e(session('success')); ?></p>
+        <?php endif; ?>
     </div>
 </body>
 </html>

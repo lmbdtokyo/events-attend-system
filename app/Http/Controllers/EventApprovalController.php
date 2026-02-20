@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Event;
 use App\Models\Eventuser;
+use App\Models\Eventsection;
 use Illuminate\Support\Facades\Auth;
 use App\Mail\ApprovalStatusChangedMail;
 use Illuminate\Support\Facades\Mail;
@@ -18,7 +19,8 @@ class EventApprovalController extends Controller
         $user = Auth::user();
         if ($user->organization_id === $event->organization_id) {
             $eventUsers = Eventuser::where('event_id', $event->id)->paginate(50);
-            return view('events.user.approval', compact('eventUsers','event'));
+            $eventSections = Eventsection::where('event_id', $event->id)->get()->keyBy('id');
+            return view('events.user.approval', compact('eventUsers','event','eventSections'));
         } else {
             return redirect()->route('events.index')->with('error', '権限がありません');
         }

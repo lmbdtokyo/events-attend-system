@@ -254,28 +254,6 @@
                 <label for="terms_agree" style="font-weight: bold;">
                     <input type="checkbox" id="terms_agree" name="terms_agree" required style="margin-right: 5px; width:auto; padding: 0px; border: none; border-radius: 0px;">
                     利用規約に同意します <span style="color: red;">*</span> <a href="#" onclick="openPopup(); return false;">[規約を確認]</a>
-                    <script>
-                        function openPopup() {
-                            const popup = document.createElement('div');
-                            popup.style.position = 'fixed';
-                            popup.style.left = '50%';
-                            popup.style.top = '50%';
-                            popup.style.transform = 'translate(-50%, -50%)';
-                            popup.style.backgroundColor = 'white';
-                            popup.style.border = '1px solid #ccc';
-                            popup.style.padding = '20px';
-                            popup.style.zIndex = '1000';
-                            popup.innerHTML = '{!! $eventbasic->terms !!}<button onclick="closePopup()">閉じる</button>';
-                            document.body.appendChild(popup);
-                        }
-
-                        function closePopup() {
-                            const popup = document.querySelector('div[style*="position: fixed"]');
-                            if (popup) {
-                                document.body.removeChild(popup);
-                            }
-                        }
-                    </script>
                 </label>
             </div>
             <div class="form-group" style="margin-bottom: 15px;">
@@ -285,26 +263,119 @@
                     <a href="#" onclick="openPrivacyPopup(); return false;">[個人情報の取り扱いを確認]</a>
                 </label>
             </div>
-            <script>
-                function openPrivacyPopup() {
-                    const popup = document.createElement('div');
-                    popup.style.position = 'fixed';
-                    popup.style.left = '50%';
-                    popup.style.top = '50%';
-                    popup.style.transform = 'translate(-50%, -50%)';
-                    popup.style.backgroundColor = 'white';
-                    popup.style.border = '1px solid #ccc';
-                    popup.style.padding = '20px';
-                    popup.style.zIndex = '1000';
-                    popup.innerHTML = '{!! $eventbasic->privacy !!}<button onclick="closePopup()">閉じる</button>';
-                    document.body.appendChild(popup);
+            <div id="terms-content" style="display:none;">{!! $eventbasic->terms !!}</div>
+            <div id="privacy-content" style="display:none;">{!! $eventbasic->privacy !!}</div>
+            <style>
+                .modal-overlay {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.5);
+                    z-index: 999;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 10px;
+                    box-sizing: border-box;
                 }
-
-                function closePopup() {
-                    const popup = document.querySelector('div[style*="position: fixed"]');
-                    if (popup) {
-                        document.body.removeChild(popup);
-                    }
+                .modal-box {
+                    display: flex;
+                    flex-direction: column;
+                    width: 100%;
+                    max-width: 600px;
+                    max-height: calc(100vh - 40px);
+                    background: white;
+                    border: 1px solid #ccc;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+                    z-index: 1000;
+                    overflow: hidden;
+                }
+                .modal-header {
+                    flex-shrink: 0;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 12px 16px;
+                    background: #f5f5f5;
+                    border-bottom: 1px solid #ccc;
+                }
+                .modal-header-title {
+                    font-weight: bold;
+                    font-size: 1rem;
+                }
+                .modal-close-btn {
+                    flex-shrink: 0;
+                    width: 36px;
+                    height: 36px;
+                    padding: 0;
+                    border: none;
+                    background: transparent;
+                    font-size: 24px;
+                    line-height: 1;
+                    cursor: pointer;
+                    color: #333;
+                    border-radius: 4px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+                .modal-close-btn:hover {
+                    background: #e0e0e0;
+                    color: #000;
+                }
+                .modal-body {
+                    flex: 1;
+                    overflow-y: auto;
+                    padding: 16px;
+                    min-height: 0;
+                    -webkit-overflow-scrolling: touch;
+                }
+                .modal-footer {
+                    flex-shrink: 0;
+                    padding: 12px 16px;
+                    border-top: 1px solid #ccc;
+                    text-align: right;
+                }
+                @media (max-width: 480px) {
+                    .modal-overlay { padding: 16px; }
+                    .modal-box { max-height: calc(100vh - 32px); }
+                    .modal-header, .modal-body { padding: 10px 12px; }
+                }
+            </style>
+            <script>
+                function openPopup() {
+                    showModal('利用規約', document.getElementById('terms-content').innerHTML);
+                }
+                function openPrivacyPopup() {
+                    showModal('個人情報の取り扱い', document.getElementById('privacy-content').innerHTML);
+                }
+                function showModal(title, content) {
+                    const overlay = document.createElement('div');
+                    overlay.className = 'modal-overlay';
+                    overlay.onclick = function(e) {
+                        if (e.target === overlay) closeModal();
+                    };
+                    overlay.innerHTML = `
+                        <div class="modal-box" onclick="event.stopPropagation()">
+                            <div class="modal-header">
+                                <span class="modal-header-title">${title}</span>
+                                <button type="button" class="modal-close-btn" onclick="closeModal()" aria-label="閉じる">&times;</button>
+                            </div>
+                            <div class="modal-body"></div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn" onclick="closeModal()">閉じる</button>
+                            </div>
+                        </div>
+                    `;
+                    overlay.querySelector('.modal-body').innerHTML = content;
+                    document.body.appendChild(overlay);
+                }
+                function closeModal() {
+                    const overlay = document.querySelector('.modal-overlay');
+                    if (overlay) overlay.remove();
                 }
             </script>
 

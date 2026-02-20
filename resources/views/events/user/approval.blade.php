@@ -32,9 +32,6 @@
                     <li class="nav-item">
                         <a class="nav-link" data-toggle="tab" href="#approval1">承認済み</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#approval2">却下</a>
-                    </li>
                 </ul>
 
                 <div class="tab-content">
@@ -49,8 +46,7 @@
                                         <th>名前</th>
                                         <th>フリガナ</th>
                                         <th>会社名</th>
-                                        <th>部署</th>
-                                        <th>役職</th>
+                                        <th>受付区分</th>
                                         <th>メールアドレス</th>
                                         <th>登録日</th>
                                         <th>承認</th>
@@ -63,8 +59,13 @@
                                             <td>{{ $eventUser->name }}</td>
                                             <td>{{ $eventUser->furigana }}</td>
                                             <td>{{ $eventUser->company }}</td>
-                                            <td>{{ $eventUser->division }}</td>
-                                            <td>{{ $eventUser->post }}</td>
+                                            <td>
+                                                @isset($eventSections[$eventUser->section])
+                                                    {{ $eventSections[$eventUser->section]->name }}
+                                                @else
+                                                    -
+                                                @endisset
+                                            </td>
                                             <td>{{ $eventUser->mail }}</td>
                                             <td>{{ \Carbon\Carbon::parse($eventUser->created_at)->format('Y-m-d') }}</td>
                                             <td>
@@ -93,8 +94,7 @@
                                         <th>名前</th>
                                         <th>フリガナ</th>
                                         <th>会社名</th>
-                                        <th>部署</th>
-                                        <th>役職</th>
+                                        <th>受付区分</th>
                                         <th>メールアドレス</th>
                                         <th>登録日</th>
                                     </tr>
@@ -106,42 +106,13 @@
                                             <td>{{ $eventUser->name }}</td>
                                             <td>{{ $eventUser->furigana }}</td>
                                             <td>{{ $eventUser->company }}</td>
-                                            <td>{{ $eventUser->division }}</td>
-                                            <td>{{ $eventUser->post }}</td>
-                                            <td>{{ $eventUser->mail }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($eventUser->created_at)->format('Y-m-d') }}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        @endif
-                    </div>
-                    <div class="tab-pane fade" id="approval2">
-                        @if($eventUsers->where('approval', 2)->isEmpty())
-                            <p>却下された申込者がいません。</p>
-                        @else
-                            <table class="table table-bordered table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>名前</th>
-                                        <th>フリガナ</th>
-                                        <th>会社名</th>
-                                        <th>部署</th>
-                                        <th>役職</th>
-                                        <th>メールアドレス</th>
-                                        <th>登録日</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($eventUsers->where('approval', 2) as $eventUser)
-                                        <tr>
-                                            <td>{{ $eventUser->id }}</td>
-                                            <td>{{ $eventUser->name }}</td>
-                                            <td>{{ $eventUser->furigana }}</td>
-                                            <td>{{ $eventUser->company }}</td>
-                                            <td>{{ $eventUser->division }}</td>
-                                            <td>{{ $eventUser->post }}</td>
+                                            <td>
+                                                @isset($eventSections[$eventUser->section])
+                                                    {{ $eventSections[$eventUser->section]->name }}
+                                                @else
+                                                    -
+                                                @endisset
+                                            </td>
                                             <td>{{ $eventUser->mail }}</td>
                                             <td>{{ \Carbon\Carbon::parse($eventUser->created_at)->format('Y-m-d') }}</td>
                                         </tr>

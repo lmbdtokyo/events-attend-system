@@ -91,7 +91,12 @@
             </div>
             <button type="submit" class="btn btn-primary">ログイン</button>
         </form>
-        
+        <p style="margin-top: 15px; text-align: center;">
+            <a href="{{ route('eventuser.password.forgot', ['event' => $event]) }}">パスワードを忘れた方</a>
+        </p>
+        @if(session('success'))
+            <p style="color: #28a745; margin-top: 10px;">{{ session('success') }}</p>
+        @endif
     </div>
 </body>
 </html>

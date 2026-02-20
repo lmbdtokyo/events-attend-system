@@ -91,7 +91,7 @@
         <h1>{{ $event->name }}マイページ</h1>
         <p>ようこそ、{{ $user->name }}さん</p>
 
-        <h2>{{$eventmypagebasic->title}}</h2>
+        <h2>{{ $eventmypagebasic->title }}</h2>
 
         <p>{!! $eventmypagebasic->text !!}</p>
 
@@ -124,6 +124,10 @@
             </tr>
         </table>
         <h2>登録情報</h2>
+        @if(session('success'))
+            <p style="color: #28a745;">{{ session('success') }}</p>
+        @endif
+        <p><a href="{{ route('eventuser.mypage.edit', ['event' => $event->id]) }}" class="btn btn-primary" style="display: inline-block; padding: 8px 16px; margin-bottom: 15px;">情報を編集</a></p>
         <table>
             <tr>
                 <th>名前</th>
@@ -131,19 +135,19 @@
             </tr>
             <tr>
                 <th>ふりがな</th>
-                <td>{{ $user->furigana }}</td>
+                <td>{{ $user->furigana ?? '-' }}</td>
             </tr>
             <tr>
                 <th>会社名</th>
-                <td>{{ $user->company }}</td>
+                <td>{{ $user->company ?? '-' }}</td>
             </tr>
             <tr>
                 <th>部署</th>
-                <td>{{ $user->division }}</td>
+                <td>{{ $user->division ?? '-' }}</td>
             </tr>
             <tr>
                 <th>役職</th>
-                <td>{{ $user->post }}</td>
+                <td>{{ $user->post ?? '-' }}</td>
             </tr>
             <tr>
                 <th>メールアドレス</th>
@@ -151,19 +155,39 @@
             </tr>
             <tr>
                 <th>電話番号</th>
-                <td>{{ $user->tel }}</td>
+                <td>{{ $user->tel ?? '-' }}</td>
+            </tr>
+            <tr>
+                <th>郵便番号</th>
+                <td>{{ $user->postal_code ?? '-' }}</td>
             </tr>
             <tr>
                 <th>住所</th>
-                <td>{{ $user->address1 }} {{ $user->address2 }} {{ $user->address3 }}</td>
+                <td>{{ trim(implode(' ', array_filter([$user->address1 ?? '', $user->address2 ?? '', $user->address3 ?? '']))) ?: '-' }}</td>
             </tr>
             <tr>
                 <th>生年月日</th>
-                <td>{{ $user->birth }}</td>
+                <td>{{ $user->birth ?? '-' }}</td>
+            </tr>
+            <tr>
+                <th>受付区分</th>
+                <td>
+                    @isset($eventSections[$user->section])
+                        {{ $eventSections[$user->section]->name }}
+                    @else
+                        -
+                    @endisset
+                </td>
             </tr>
             <tr>
                 <th>PDF</th>
-                <td><a href="{{ Storage::url($user->pdf_name) }}" target="_blank" class="btn btn-primary">PDFを表示</a></td>
+                <td>
+                    @if($user->pdf_name && $user->qr)
+                        <a href="{{ asset('storage/pdfs/' . $user->qr . '.pdf') }}" target="_blank" class="btn btn-primary">PDFを表示</a>
+                    @else
+                        -
+                    @endif
+                </td>
             </tr>
         </table>
 
