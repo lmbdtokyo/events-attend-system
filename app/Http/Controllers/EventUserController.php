@@ -207,6 +207,11 @@ class EventUserController extends Controller
         }
         $eventuser->save();
 
+        // ユーザー情報変更に伴いPDFを再生成
+        if ($eventuser->qr) {
+            $this->regeneratePdf($eventuser);
+        }
+
         return redirect()->route('event.users', $event)->with('success', '申込者情報を更新しました。');
     }
 
@@ -524,6 +529,11 @@ class EventUserController extends Controller
         }
         $eventuser->save();
 
+        // ユーザー情報変更に伴いPDFを再生成
+        if ($eventuser->qr) {
+            $this->regeneratePdf($eventuser);
+        }
+
         return redirect()->route('eventuser.mypage', ['event' => $eventId])->with('success', '登録情報を更新しました。');
     }
 
@@ -577,6 +587,44 @@ class EventUserController extends Controller
         $eventuser->save();
         Cache::forget('eventuser_pw_reset_' . $token);
         return redirect()->route('eventuser.login', $event)->with('success', 'パスワードを再設定しました。新しいパスワードでログインしてください。');
+    }
+
+    /**
+     * ユーザー情報に基づきPDFを再生成する
+     */
+    private function regeneratePdf(Eventuser $eventuser): void
+    {
+        $event = Event::findOrFail($eventuser->event_id);
+        $eventpdfimage = Eventpdfimage::where('event_id', $event->id)->first();
+        $eventpdfimage_data = null;
+
+        if ($eventpdfimage && $eventpdfimage->image) {
+            $eventpdfimage_data = base64_encode(Storage::get($eventpdfimage->image));
+        }
+
+        $eventsection = Eventsection::where('id', $eventuser->section)->first();
+        if (is_null($eventsection)) {
+            $eventsection = new Eventsection();
+            $eventsection->name = 'QRコード';
+            $eventsection->color = '#FF0000';
+        }
+
+        $appUrl = config('app.url');
+        $qrCodeUrl = $appUrl . '/events/' . $event->id . '/qr/user/' . $eventuser->qr;
+        $qrCode = \SimpleSoftwareIO\QrCode\Facades\QrCode::format('png')->size(200)->generate($qrCodeUrl);
+
+        $pdf = PDF::loadView('pdf.pdf', [
+            'qrCode' => $qrCode,
+            'eventuser' => $eventuser,
+            'eventpdfimage' => $eventpdfimage_data,
+            'eventsection' => $eventsection
+        ])->setPaper('a4');
+
+        $pdfPath = 'public/pdfs/' . $eventuser->qr . '.pdf';
+        Storage::put($pdfPath, $pdf->output());
+
+        $eventuser->pdf_name = $pdfPath;
+        $eventuser->save();
     }
 
 
