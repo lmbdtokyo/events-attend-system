@@ -2,13 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Livewire</title>
+    <title>RAKU-PASS</title>
     @livewireStyles
 </head>
 <body>
-<h1>Hello Livewire</h1>
-
-<a href="{{ route('login') }}">ログイン</a>
+<h1>RAKU-PASS</h1>
 
     @livewireScripts
 </body>
