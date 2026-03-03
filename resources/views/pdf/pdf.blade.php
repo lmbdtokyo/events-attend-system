@@ -63,7 +63,17 @@
         <p>役職: {{ $eventuser->post }}</p>
     </div>
     <div style="width:45%; float:left; height:40%; margin:10% 0px 0px 5%">
-        <div style="padding:5px 0px 10px 0px; font-size:1.3em; font-family: 'NotoSansJP', sans-serif; font-weight: 700; background:{{ $eventsection->color }}; text-align:center; color:#fff;">{{ $eventsection->name }}</div>
+        @php
+            $nameLength = mb_strlen($eventsection->name ?? '');
+            $fontSize = match(true) {
+                $nameLength <= 8 => '1.3em',
+                $nameLength <= 12 => '1.15em',
+                $nameLength <= 16 => '1em',
+                $nameLength <= 20 => '0.9em',
+                default => '0.8em',
+            };
+        @endphp
+        <div style="padding:5px 0px 10px 0px; font-size:{{ $fontSize }}; font-family: 'NotoSansJP', sans-serif; font-weight: 700; background:{{ $eventsection->color }}; text-align:center; color:#fff; word-wrap:break-word; overflow-wrap:break-word; word-break:break-all; box-sizing:border-box; max-width:100%; line-height:1.3;">{{ $eventsection->name }}</div>
         <p>会社名: {{ $eventuser->company }}</p>
         <p>部署名: {{ $eventuser->division }}</p>
         <p>役職: {{ $eventuser->post }}</p>
