@@ -110,6 +110,7 @@ Route::get('/events/{event}/users/export', [App\Http\Controllers\EventUserContro
 Route::middleware('auth')->group(function () {
     Route::get('/events/{event}/users/{eventuser}/edit', [App\Http\Controllers\EventUserController::class, 'edit'])->name('event.users.edit');
     Route::patch('/events/{event}/users/{eventuser}', [App\Http\Controllers\EventUserController::class, 'update'])->name('event.users.update');
+    Route::delete('/events/{event}/users/{eventuser}', [App\Http\Controllers\EventUserController::class, 'destroy'])->name('event.users.destroy');
 });
 Route::get('/events/{event}/approval', [App\Http\Controllers\EventApprovalController::class, 'index'])->name('event.approval');
 Route::patch('/events/{event}/approval/{eventuser}/update', [App\Http\Controllers\EventApprovalController::class, 'update'])->name('event.approval.update');

@@ -215,6 +215,26 @@ class EventUserController extends Controller
         return redirect()->route('event.users', $event)->with('success', '申込者情報を更新しました。');
     }
 
+    public function destroy(Event $event, Eventuser $eventuser)
+    {
+        $authUser = Auth::guard('web')->user();
+        if (!$authUser || $authUser->type !== 'master') {
+            abort(403, 'この操作はマスター管理者のみ実行できます。');
+        }
+        if ($eventuser->event_id !== (int) $event->id) {
+            abort(404);
+        }
+
+        // PDFファイルを削除
+        if ($eventuser->pdf_name && Storage::exists($eventuser->pdf_name)) {
+            Storage::delete($eventuser->pdf_name);
+        }
+
+        $eventuser->delete();
+
+        return redirect()->route('event.users', $event)->with('success', '申込者を削除しました。');
+    }
+
     public function records(Event $event,Eventrecord $eventrecords,Eventuser $eventuser,$exit_entry)
     {
 

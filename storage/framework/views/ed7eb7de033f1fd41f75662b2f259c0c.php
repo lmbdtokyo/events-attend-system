@@ -2,14 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Livewire</title>
+    <title>RAKU-PASS</title>
     <?php echo \Livewire\Mechanisms\FrontendAssets\FrontendAssets::styles(); ?>
 
 </head>
 <body>
-<h1>Hello Livewire</h1>
-
-<a href="<?php echo e(route('login')); ?>">ログイン</a>
+<h1>RAKU-PASS</h1>
 
     <?php echo \Livewire\Mechanisms\FrontendAssets\FrontendAssets::scripts(); ?>
 

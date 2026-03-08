@@ -241,7 +241,7 @@
             </div>
 
             <div class="form-group">
-                <label for="password">パスワード <span style="color: red;">*</span></label>
+                <label for="password">パスワード（英数字記号8文字以上） <span style="color: red;">*</span></label>
                 <input type="password" id="password" name="password" class="form-control" placeholder="パスワードを入力してください" required>
             </div>
 

@@ -138,8 +138,36 @@
                 <div class="mt-4">
                     <button type="submit" class="btn btn-primary">更新</button>
                     <a href="{{ route('event.users', $event) }}" class="btn btn-secondary">キャンセル</a>
+                    <button type="button" class="btn btn-danger float-right" data-toggle="modal" data-target="#deleteConfirmModal">
+                        削除
+                    </button>
                 </div>
             </form>
+
+            {{-- 削除確認モーダル --}}
+            <div class="modal fade" id="deleteConfirmModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteConfirmModalLabel">削除の確認</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="閉じる">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            この申込者を削除しますか？この操作は取り消せません。
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">キャンセル</button>
+                            <form action="{{ route('event.users.destroy', [$event, $eventuser]) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger">削除する</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 @endsection
