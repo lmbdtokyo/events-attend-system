@@ -127,12 +127,18 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="approval">承認ステータス</label>
-                    <select id="approval" name="approval" class="form-control">
-                        <option value="0" <?php echo e(old('approval', $eventuser->approval) == 0 ? 'selected' : ''); ?>>下書き</option>
-                        <option value="1" <?php echo e(old('approval', $eventuser->approval) == 1 ? 'selected' : ''); ?>>承認済み</option>
-                        <option value="2" <?php echo e(old('approval', $eventuser->approval) == 2 ? 'selected' : ''); ?>>却下</option>
-                    </select>
+                    <label>承認ステータス</label>
+                    <p class="form-control-plaintext mb-0">
+                        <?php if($eventuser->approval == 0): ?>
+                            下書き
+                        <?php elseif($eventuser->approval == 1): ?>
+                            承認済み
+                        <?php elseif($eventuser->approval == 2): ?>
+                            却下
+                        <?php else: ?>
+                            -
+                        <?php endif; ?>
+                    </p>
                 </div>
 
                 <div class="mt-4">

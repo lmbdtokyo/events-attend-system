@@ -180,7 +180,6 @@ class EventUserController extends Controller
                     }
                 }
             ],
-            'approval' => 'required|in:0,1,2',
             'password' => 'nullable|string|min:8',
         ];
         $validator = Validator::make($request->all(), $rules);
@@ -201,7 +200,7 @@ class EventUserController extends Controller
         $eventuser->birth = $request->input('birth');
         $eventuser->section = $request->input('section');
         $eventuser->mail = $request->input('mail');
-        $eventuser->approval = (int) $request->input('approval');
+        // 承認ステータスは申込者編集画面では変更しない（承認画面でのみ変更可能）
         if ($request->filled('password')) {
             $eventuser->password = bcrypt($request->input('password'));
         }

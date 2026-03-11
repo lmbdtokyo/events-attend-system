@@ -1,12 +1,12 @@
-@extends('adminlte::page')
 
-@section('title', '申込来場者集計 | イベント来場管理システム')
 
-@section('content_header')
+<?php $__env->startSection('title', '申込来場者集計 | イベント来場管理システム'); ?>
+
+<?php $__env->startSection('content_header'); ?>
     <h1>申込来場者集計</h1>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
     <div class="card">
         <div class="card-header">
             <h2 class="card-title"><b>申込者集計</b></h2>
@@ -34,13 +34,13 @@
                     const dailyCtx = document.getElementById('dailyChart').getContext('2d');
                     const weeklyCtx = document.getElementById('weeklyChart').getContext('2d');
 
-                    const dailyData = @json($eventUsers->groupBy(function($date) {
+                    const dailyData = <?php echo json_encode($eventUsers->groupBy(function($date) {
                         return \Carbon\Carbon::parse($date->created_at)->format('Y-m-d');
-                    })->map->count());
+                    })->map->count(), 15, 512) ?>;
 
-                    const weeklyData = @json($eventUsers->groupBy(function($date) {
+                    const weeklyData = <?php echo json_encode($eventUsers->groupBy(function($date) {
                         return \Carbon\Carbon::parse($date->created_at)->format('o-W');
-                    })->map->count());
+                    })->map->count(), 15, 512) ?>;
 
                     new Chart(dailyCtx, {
                         type: 'line',
@@ -93,8 +93,8 @@
                     });
 
                     // イベントの期間を表示
-                    const eventStart = @json($eventBasic->start);
-                    const eventEnd = @json($eventBasic->end);
+                    const eventStart = <?php echo json_encode($eventBasic->start, 15, 512) ?>;
+                    const eventEnd = <?php echo json_encode($eventBasic->end, 15, 512) ?>;
 
                     const eventPeriod = document.createElement('p');
                     eventPeriod.textContent = `申込期間: ${eventStart} から ${eventEnd} まで`;
@@ -109,17 +109,18 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($totals as $total)
+                    <?php $__currentLoopData = $totals; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $total): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <tr>
                             <td>
-                                @if ($total['user_count'] != 0)
-                                    <a href="{{ url('/events/' . $event->id . '/users') }}">{{ $total['user_count'] }}</a>
-                                @else
-                                    {{ $total['user_count'] }}
-                                @endif
+                                <?php if($total['user_count'] != 0): ?>
+                                    <a href="<?php echo e(url('/events/' . $event->id . '/users')); ?>"><?php echo e($total['user_count']); ?></a>
+                                <?php else: ?>
+                                    <?php echo e($total['user_count']); ?>
+
+                                <?php endif; ?>
                             </td>
                         </tr>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </tbody>
             </table>
         </div>
@@ -134,7 +135,7 @@
             <canvas id="entryExitChart" width="400" height="200"></canvas>
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
-                    const eventRecords = @json($eventRecords);
+                    const eventRecords = <?php echo json_encode($eventRecords, 15, 512) ?>;
 
                     const entryData = [];
                     const exitData = [];
@@ -199,16 +200,18 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($totals as $total)
+                    <?php $__currentLoopData = $totals; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $total): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <tr>
-                            <td><a href="{{ route('event.records', ['event' => $event->id, 'exit_entry' => 1]) }}">{{ $total['entry_count'] }}</a></td>
-                            <td><a href="{{ route('event.records', ['event' => $event->id, 'exit_entry' => 2]) }}">{{ $total['exit_count'] }}</a></td>
+                            <td><a href="<?php echo e(route('event.records', ['event' => $event->id, 'exit_entry' => 1])); ?>"><?php echo e($total['entry_count']); ?></a></td>
+                            <td><a href="<?php echo e(route('event.records', ['event' => $event->id, 'exit_entry' => 2])); ?>"><?php echo e($total['exit_count']); ?></a></td>
                         </tr>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </tbody>
             </table>
 
         </div>
     </div>
 
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('adminlte::page', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /data/resources/views/events/detail/totals.blade.php ENDPATH**/ ?>

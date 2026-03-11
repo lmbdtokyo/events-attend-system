@@ -30,7 +30,12 @@ class EventExitEntryTotalController extends Controller
 
             $eventBasic = \App\Models\Eventbasic::where('event_id', $event->id)->first();
 
-            $eventUsers = \App\Models\Eventuser::where('event_id', $event->id)->get();
+            // 申込者数は承認済み（approval=1）のみカウント（申込者一覧の表示と合わせる）
+            $eventUsersQuery = \App\Models\Eventuser::where('event_id', $event->id);
+            if ($event->approval == 1) {
+                $eventUsersQuery->where('approval', 1);
+            }
+            $eventUsers = $eventUsersQuery->get();
             $userCount = $eventUsers->count();
 
             $totals[] = [

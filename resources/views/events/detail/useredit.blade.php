@@ -127,12 +127,18 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="approval">承認ステータス</label>
-                    <select id="approval" name="approval" class="form-control">
-                        <option value="0" {{ old('approval', $eventuser->approval) == 0 ? 'selected' : '' }}>下書き</option>
-                        <option value="1" {{ old('approval', $eventuser->approval) == 1 ? 'selected' : '' }}>承認済み</option>
-                        <option value="2" {{ old('approval', $eventuser->approval) == 2 ? 'selected' : '' }}>却下</option>
-                    </select>
+                    <label>承認ステータス</label>
+                    <p class="form-control-plaintext mb-0">
+                        @if($eventuser->approval == 0)
+                            下書き
+                        @elseif($eventuser->approval == 1)
+                            承認済み
+                        @elseif($eventuser->approval == 2)
+                            却下
+                        @else
+                            -
+                        @endif
+                    </p>
                 </div>
 
                 <div class="mt-4">
