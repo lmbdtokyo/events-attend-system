@@ -50,6 +50,7 @@
                                         <th>会社名</th>
                                         <th>受付区分</th>
                                         <th>メールアドレス</th>
+                                        <th>電話番号</th>
                                         <th>登録日</th>
                                         <th>承認</th>
                                     </tr>
@@ -70,6 +71,7 @@
                                                 <?php endif; ?>
                                             </td>
                                             <td><?php echo e($eventUser->mail); ?></td>
+                                            <td><?php echo e($eventUser->tel ?: '-'); ?></td>
                                             <td><?php echo e(\Carbon\Carbon::parse($eventUser->created_at)->format('Y-m-d')); ?></td>
                                             <td>
                                                 <form action="<?php echo e(route('event.approval.update', [$event->id, $eventUser->id])); ?>" method="POST">
@@ -99,6 +101,7 @@
                                         <th>会社名</th>
                                         <th>受付区分</th>
                                         <th>メールアドレス</th>
+                                        <th>電話番号</th>
                                         <th>登録日</th>
                                     </tr>
                                 </thead>
@@ -118,6 +121,7 @@
                                                 <?php endif; ?>
                                             </td>
                                             <td><?php echo e($eventUser->mail); ?></td>
+                                            <td><?php echo e($eventUser->tel ?: '-'); ?></td>
                                             <td><?php echo e(\Carbon\Carbon::parse($eventUser->created_at)->format('Y-m-d')); ?></td>
                                         </tr>
                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>

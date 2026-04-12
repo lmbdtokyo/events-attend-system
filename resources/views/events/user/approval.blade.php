@@ -48,6 +48,7 @@
                                         <th>会社名</th>
                                         <th>受付区分</th>
                                         <th>メールアドレス</th>
+                                        <th>電話番号</th>
                                         <th>登録日</th>
                                         <th>承認</th>
                                     </tr>
@@ -67,6 +68,7 @@
                                                 @endisset
                                             </td>
                                             <td>{{ $eventUser->mail }}</td>
+                                            <td>{{ $eventUser->tel ?: '-' }}</td>
                                             <td>{{ \Carbon\Carbon::parse($eventUser->created_at)->format('Y-m-d') }}</td>
                                             <td>
                                                 <form action="{{ route('event.approval.update', [$event->id, $eventUser->id]) }}" method="POST">
@@ -96,6 +98,7 @@
                                         <th>会社名</th>
                                         <th>受付区分</th>
                                         <th>メールアドレス</th>
+                                        <th>電話番号</th>
                                         <th>登録日</th>
                                     </tr>
                                 </thead>
@@ -114,6 +117,7 @@
                                                 @endisset
                                             </td>
                                             <td>{{ $eventUser->mail }}</td>
+                                            <td>{{ $eventUser->tel ?: '-' }}</td>
                                             <td>{{ \Carbon\Carbon::parse($eventUser->created_at)->format('Y-m-d') }}</td>
                                         </tr>
                                     @endforeach
