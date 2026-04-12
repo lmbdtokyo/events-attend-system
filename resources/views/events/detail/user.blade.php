@@ -49,6 +49,7 @@
                             <th>部署</th>
                             <th>役職</th>
                             <th>メールアドレス</th>
+                            <th>電話番号</th>
                             <th>受付区分</th>
                             <th>登録日</th>
                             <th>PDF</th>
@@ -70,6 +71,7 @@
                                 <td>{{ $eventUser->division }}</td>
                                 <td>{{ $eventUser->post }}</td>
                                 <td>{{ $eventUser->mail }}</td>
+                                <td>{{ $eventUser->tel ?: '-' }}</td>
                                 <td>
                                     @isset($eventSections[$eventUser->section])
                                         {{ $eventSections[$eventUser->section]->name }}
@@ -88,7 +90,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="10" class="text-center">申込者がいません</td>
+                                <td colspan="11" class="text-center">申込者がいません</td>
                             </tr>
                         @endforelse
                     </tbody>

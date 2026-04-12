@@ -50,6 +50,7 @@
                             <th>部署</th>
                             <th>役職</th>
                             <th>メールアドレス</th>
+                            <th>電話番号</th>
                             <th>受付区分</th>
                             <th>登録日</th>
                             <th>PDF</th>
@@ -72,6 +73,7 @@
                                 <td><?php echo e($eventUser->division); ?></td>
                                 <td><?php echo e($eventUser->post); ?></td>
                                 <td><?php echo e($eventUser->mail); ?></td>
+                                <td><?php echo e($eventUser->tel ?: '-'); ?></td>
                                 <td>
                                     <?php if(isset($eventSections[$eventUser->section])): ?>
                                         <?php echo e($eventSections[$eventUser->section]->name); ?>
@@ -91,7 +93,7 @@
                             </tr>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                             <tr>
-                                <td colspan="10" class="text-center">申込者がいません</td>
+                                <td colspan="11" class="text-center">申込者がいません</td>
                             </tr>
                         <?php endif; ?>
                     </tbody>
