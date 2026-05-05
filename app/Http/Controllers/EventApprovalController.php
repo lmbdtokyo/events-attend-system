@@ -14,13 +14,35 @@ use Illuminate\Support\Facades\Storage;
 
 class EventApprovalController extends Controller
 {
+    private const PER_PAGE = 50;
+
     public function index(Event $event)
     {
         $user = Auth::user();
         if ($user->organization_id === $event->organization_id) {
-            $eventUsers = Eventuser::where('event_id', $event->id)->paginate(50);
+            $queryBase = fn () => Eventuser::where('event_id', $event->id)->orderBy('created_at', 'desc');
+
+            $pendingUsers = $queryBase()
+                ->where('approval', 0)
+                ->paginate(self::PER_PAGE, ['*'], 'pending_page')
+                ->withQueryString();
+
+            $approvedUsers = $queryBase()
+                ->where('approval', 1)
+                ->paginate(self::PER_PAGE, ['*'], 'approved_page')
+                ->withQueryString();
+
+            $hasAnyApplicants = Eventuser::where('event_id', $event->id)->exists();
+
             $eventSections = Eventsection::where('event_id', $event->id)->get()->keyBy('id');
-            return view('events.user.approval', compact('eventUsers','event','eventSections'));
+
+            return view('events.user.approval', compact(
+                'pendingUsers',
+                'approvedUsers',
+                'hasAnyApplicants',
+                'event',
+                'eventSections'
+            ));
         } else {
             return redirect()->route('events.index')->with('error', '権限がありません');
         }
@@ -50,9 +72,22 @@ class EventApprovalController extends Controller
             // ユーザーレコードを削除（関連するeventrecordsも自動削除される）
             $eventUser->delete();
 
-            return redirect()->route('event.approval', $eventData->id)->with('success', '申込者を非承認にし、データを削除しました');
+            return $this->redirectToApprovalScreen($eventData->id, $request)
+                ->with('success', '申込者を非承認にし、データを削除しました');
         }
 
-        return redirect()->route('event.approval', $eventUser->event_id)->with('success', '申込者の承認状況が更新されました');
+        return $this->redirectToApprovalScreen($eventUser->event_id, $request)
+            ->with('success', '申込者の承認状況が更新されました');
+    }
+
+    private function redirectToApprovalScreen(int|string $eventId, Request $request)
+    {
+        $baseUrl = route('event.approval', ['event' => $eventId]);
+        $query = array_filter(
+            $request->only(['pending_page', 'approved_page']),
+            fn ($v) => $v !== null && $v !== ''
+        );
+
+        return redirect()->to($query !== [] ? $baseUrl.'?'.http_build_query($query) : $baseUrl);
     }
 }

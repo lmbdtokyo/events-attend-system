@@ -34,13 +34,13 @@
                     const dailyCtx = document.getElementById('dailyChart').getContext('2d');
                     const weeklyCtx = document.getElementById('weeklyChart').getContext('2d');
 
-                    const dailyData = @json($eventUsers->groupBy(function($date) {
+                    const dailyData = @json($eventUsers->groupBy(function ($date) {
                         return \Carbon\Carbon::parse($date->created_at)->format('Y-m-d');
-                    })->map->count());
+                    })->map->count()->sortKeys());
 
-                    const weeklyData = @json($eventUsers->groupBy(function($date) {
+                    const weeklyData = @json($eventUsers->groupBy(function ($date) {
                         return \Carbon\Carbon::parse($date->created_at)->format('o-W');
-                    })->map->count());
+                    })->map->count()->sortKeys());
 
                     new Chart(dailyCtx, {
                         type: 'line',
@@ -157,6 +157,9 @@
                             }
                         }
                     });
+
+                    entryData.sort((a, b) => a.x.localeCompare(b.x));
+                    exitData.sort((a, b) => a.x.localeCompare(b.x));
 
                     const ctx = document.getElementById('entryExitChart').getContext('2d');
                     new Chart(ctx, {
