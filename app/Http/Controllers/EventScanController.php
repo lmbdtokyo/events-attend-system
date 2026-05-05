@@ -48,25 +48,25 @@ class EventScanController extends Controller
         $userId = request()->header('X-User-ID');
 
         if (!$userId) {
-            return $this->jsonScanError('ユーザーIDが送信されていません。', 400);
+            return $this->jsonScanError('操作者IDがありません。', 400);
         }
 
         if ($exitentry != 1 && $exitentry != 2) {
-            return $this->jsonScanError('無効なリクエスト形式です。', 400);
+            return $this->jsonScanError('無効なリクエストです。', 400);
         }
 
         $eventuser = Eventuser::where('event_id', $eventId)->where('qr', $qrid)->first();
 
         if (!$eventuser) {
-            return $this->jsonScanError('QRコードが無効です。', 404);
+            return $this->jsonScanError('無効なQRです。', 404);
         }
 
         if ($exitentry == 1 && $eventuser->entry_flg == 1) {
-            return $this->jsonScanError('このユーザーは入場中です。', 400, $eventuser);
+            return $this->jsonScanError('すでに入場中です。', 400, $eventuser);
         }
 
         if ($exitentry == 2 && $eventuser->entry_flg == 0) {
-            return $this->jsonScanError('このユーザーは退場済みです。', 400, $eventuser);
+            return $this->jsonScanError('すでに退場済みです。', 400, $eventuser);
         }
 
 
@@ -87,9 +87,7 @@ class EventScanController extends Controller
             $eventuser->save();
         }
 
-        $msg = $exitentry == 1
-            ? 'QRコードが有効です。入場を記録しました。'
-            : 'QRコードが有効です。退場を記録しました。';
+        $msg = $exitentry == 1 ? '入場を記録しました。' : '退場を記録しました。';
 
         return $this->jsonScanSuccess($msg, $eventuser, (int) $exitentry);
     }
@@ -102,25 +100,25 @@ class EventScanController extends Controller
         $userId = request()->header('X-User-ID');
 
         if (!$userId) {
-            return $this->jsonScanError('ユーザーIDが送信されていません。', 400);
+            return $this->jsonScanError('操作者IDがありません。', 400);
         }
 
         if ($exitentry != 1 && $exitentry != 2) {
-            return $this->jsonScanError('無効なリクエスト形式です。', 400);
+            return $this->jsonScanError('無効なリクエストです。', 400);
         }
 
         $eventnonuser = Eventqr::where('event_id', $eventId)->where('qr_id', $qrid)->first();
 
         if (!$eventnonuser) {
-            return $this->jsonScanError('QRコードが無効です。', 404);
+            return $this->jsonScanError('無効なQRです。', 404);
         }
 
         if ($exitentry == 1 && $eventnonuser->entry_flg == 1) {
-            return $this->jsonScanError('このユーザーは入場中です。', 400, $eventnonuser);
+            return $this->jsonScanError('すでに入場中です。', 400, $eventnonuser);
         }
 
         if ($exitentry == 2 && $eventnonuser->entry_flg == 0) {
-            return $this->jsonScanError('このユーザーは退場済みです。', 400, $eventnonuser);
+            return $this->jsonScanError('すでに退場済みです。', 400, $eventnonuser);
         }
 
         $eventrecord->event_id = $eventId;
@@ -140,9 +138,7 @@ class EventScanController extends Controller
             $eventnonuser->save();
         }
 
-        $msg = $exitentry == 1
-            ? 'QRコードが有効です。入場を記録しました。'
-            : 'QRコードが有効です。退場を記録しました。';
+        $msg = $exitentry == 1 ? '入場を記録しました。' : '退場を記録しました。';
 
         return $this->jsonScanSuccess($msg, $eventnonuser, (int) $exitentry);
     }
