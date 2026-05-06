@@ -14,6 +14,8 @@ class Eventpdfimage extends Model
     protected $fillable = [
         'event_id',
         'image',
+        'empty_qr_section_label',
+        'empty_qr_section_bg_color',
     ];
 
 }

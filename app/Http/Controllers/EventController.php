@@ -180,6 +180,8 @@ class EventController extends Controller
             [
                 'event_id' => $lastInsertedId,
                 'image' => null,
+                'empty_qr_section_label' => '受付区分名',
+                'empty_qr_section_bg_color' => '#ff0000',
                 'created_at' => new DateTime(),
                 'updated_at' => new DateTime(),
             ]

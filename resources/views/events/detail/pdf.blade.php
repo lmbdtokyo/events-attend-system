@@ -43,10 +43,38 @@
                             <img src="{{ asset('images/no-image-pdf.png') }}" alt="No Image Available" style="width: 500px; height: auto;">
                         </div>
                     @endif
-                    <input type="file" name="image" id="image" class="form-control" required>
+                    <input type="file" name="image" id="image" class="form-control">
                 </div>
-                <p class="small">推奨サイズ1447px x 2046px 最大サイズ：5MB</p>
-                <button type="submit" class="btn btn-primary">アップロード</button>
+                <p class="small">推奨サイズ1447px x 2046px 最大サイズ：5MB（変更する場合のみ選択）</p>
+
+                <hr>
+                <h4 class="mb-3">空QRコードPDFの受付区分表示</h4>
+                <div class="form-group">
+                    <label for="empty_qr_section_label">バナー文言</label>
+                    <input type="text"
+                           name="empty_qr_section_label"
+                           id="empty_qr_section_label"
+                           class="form-control @error('empty_qr_section_label') is-invalid @enderror"
+                           value="{{ old('empty_qr_section_label', $eventpdfimage->empty_qr_section_label ?? '受付区分名') }}"
+                           placeholder="受付区分名"
+                           maxlength="100">
+                    @error('empty_qr_section_label')
+                        <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                    @enderror
+                </div>
+                <div class="form-group">
+                    <label for="empty_qr_section_bg_color">バナー背景色（文字色は白固定）</label>
+                    <input type="color"
+                           name="empty_qr_section_bg_color"
+                           id="empty_qr_section_bg_color"
+                           class="form-control @error('empty_qr_section_bg_color') is-invalid @enderror"
+                           value="{{ old('empty_qr_section_bg_color', $eventpdfimage->empty_qr_section_bg_color ?? '#ff0000') }}">
+                    @error('empty_qr_section_bg_color')
+                        <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <button type="submit" class="btn btn-primary">保存</button>
             </form>
             
         </div>

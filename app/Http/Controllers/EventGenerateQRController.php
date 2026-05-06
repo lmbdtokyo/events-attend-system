@@ -103,12 +103,28 @@ class EventGenerateQRController extends Controller
         $eventpdfimage = Eventpdfimage::where('event_id', $event->id)->first();
 
         $eventpdfimage_data = null;
+        $sectionLabel = '受付区分名';
+        $sectionBgColor = '#ff0000';
 
-        if ($eventpdfimage->image) {
-            $eventpdfimage_data = base64_encode(Storage::get($eventpdfimage->image));
+        if ($eventpdfimage) {
+            if ($eventpdfimage->image) {
+                $eventpdfimage_data = base64_encode(Storage::get($eventpdfimage->image));
+            }
+            if (! empty($eventpdfimage->empty_qr_section_label)) {
+                $sectionLabel = $eventpdfimage->empty_qr_section_label;
+            }
+            if (! empty($eventpdfimage->empty_qr_section_bg_color)
+                && preg_match('/^#[0-9A-Fa-f]{6}$/', $eventpdfimage->empty_qr_section_bg_color)) {
+                $sectionBgColor = $eventpdfimage->empty_qr_section_bg_color;
+            }
         }
 
-        $pdf = PDF::loadView('pdf.generatepdf', ['qrCodes' => $qrCodes, 'eventpdfimage' => $eventpdfimage_data])->setPaper('a4');
+        $pdf = PDF::loadView('pdf.generatepdf', [
+            'qrCodes' => $qrCodes,
+            'eventpdfimage' => $eventpdfimage_data,
+            'sectionLabel' => $sectionLabel,
+            'sectionBgColor' => $sectionBgColor,
+        ])->setPaper('a4');
         $pdfPath = 'pdfs/' . $uuid . '.pdf';
         Storage::disk('public')->put($pdfPath, $pdf->output());
 
