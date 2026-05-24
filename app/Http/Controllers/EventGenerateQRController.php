@@ -26,13 +26,13 @@ class EventGenerateQRController extends Controller
         }
 
         if (Auth::user()->type === 'master' || Auth::user()->organization == $event->organization) {
-            $eventGenerateQRs = Eventgenerateqr::where('event_id', $event->id)->paginate(10);
+            $eventGenerateQRs = Eventgenerateqr::where('event_id', $event->id)->orderBy('id', 'desc')->paginate(10);
             return view('events.detail.qrindex', compact('eventGenerateQRs', 'event'));
         } else {
             $user = Auth::user();
             if ($user->organization == $event->organization) {
 
-                $eventGenerateQRs = Eventgenerateqr::where('event_id', $event->id)->paginate(10);
+                $eventGenerateQRs = Eventgenerateqr::where('event_id', $event->id)->orderBy('id', 'desc')->paginate(10);
                 return view('events.detail.qrindex', compact('eventGenerateQRs', 'event'));
                 
             } else {
@@ -54,7 +54,7 @@ class EventGenerateQRController extends Controller
             $user = Auth::user();
             if ($user->organization == $event->organization) {
 
-                $eventGenerateQRs = Eventgenerateqr::where('event_id', $event->id)->paginate(10);
+                $eventGenerateQRs = Eventgenerateqr::where('event_id', $event->id)->orderBy('id', 'desc')->paginate(10);
                 return view('events.detail.qrcreate', compact('event'));
                 
             } else {

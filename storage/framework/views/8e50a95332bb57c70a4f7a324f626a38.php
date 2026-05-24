@@ -63,7 +63,17 @@
         <p>TEL: </p>
     </div>
     <div style="width:45%; float:left; height:40%; margin:10% 0px 0px 5%">
-        <div style="padding:5px 0px 10px 0px; font-size:1.3em; font-family: 'NotoSansJP', sans-serif; font-weight: 700; background:<?php echo e($sectionBgColor); ?>; text-align:center; color:#ffffff;"><?php echo e($sectionLabel); ?></div>
+        <?php
+            $sectionNameLength = mb_strlen($sectionLabel ?? '');
+            $sectionFontSize = match(true) {
+                $sectionNameLength <= 8 => '1.3em',
+                $sectionNameLength <= 12 => '1.15em',
+                $sectionNameLength <= 16 => '1em',
+                $sectionNameLength <= 20 => '0.9em',
+                default => '0.8em',
+            };
+        ?>
+        <div style="padding:5px 0px 10px 0px; font-size:<?php echo e($sectionFontSize); ?>; font-family: 'NotoSansJP', sans-serif; font-weight: 700; background:<?php echo e($sectionBgColor); ?>; text-align:center; color:#ffffff; word-wrap:break-word; overflow-wrap:break-word; word-break:break-all; box-sizing:border-box; max-width:100%; line-height:1.3;"><?php echo e($sectionLabel); ?></div>
         <p>会社名: </p>
         <p>名前: </p>
         <p>TEL: </p>

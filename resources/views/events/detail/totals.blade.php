@@ -131,49 +131,54 @@
         </div>
         <div class="card-body">
 
+            <div class="form-group" style="max-width: 320px;">
+                <label for="dateSelect"><b>日付を選択</b></label>
+                <select id="dateSelect" class="form-control">
+                    @forelse ($availableDates as $d)
+                        <option value="{{ $d }}">{{ $d }}</option>
+                    @empty
+                        <option value="">対象日なし</option>
+                    @endforelse
+                </select>
+            </div>
+
             <canvas id="entryExitChart" width="400" height="200"></canvas>
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
                     const eventRecords = @json($eventRecords);
+                    const availableDates = @json($availableDates);
 
-                    const entryData = [];
-                    const exitData = [];
-
+                    // 日付ごとに時間別（0〜23時）の入退場件数を集計
+                    const emptyHours = () => ({ entry: new Array(24).fill(0), exit: new Array(24).fill(0) });
+                    const hourlyByDate = {};
+                    availableDates.forEach(d => { hourlyByDate[d] = emptyHours(); });
                     eventRecords.forEach(record => {
-                        const date = moment(record.created_at).format('YYYY-MM-DD');
-                        if (record.entry_exit === 1) {
-                            const existingEntry = entryData.find(data => data.x === date);
-                            if (existingEntry) {
-                                existingEntry.y += 1;
-                            } else {
-                                entryData.push({ x: date, y: 1 });
-                            }
-                        } else if (record.entry_exit === 2) {
-                            const existingExit = exitData.find(data => data.x === date);
-                            if (existingExit) {
-                                existingExit.y += 1;
-                            } else {
-                                exitData.push({ x: date, y: 1 });
-                            }
-                        }
+                        const m = moment(record.created_at);
+                        const date = m.format('YYYY-MM-DD');
+                        const hour = m.hour();
+                        if (!hourlyByDate[date]) hourlyByDate[date] = emptyHours();
+                        if (record.entry_exit === 1) hourlyByDate[date].entry[hour] += 1;
+                        else if (record.entry_exit === 2) hourlyByDate[date].exit[hour] += 1;
                     });
 
-                    entryData.sort((a, b) => a.x.localeCompare(b.x));
-                    exitData.sort((a, b) => a.x.localeCompare(b.x));
+                    const labels = Array.from({ length: 24 }, (_, i) => i + '時');
+                    const initialDate = availableDates[0] || null;
+                    const initial = initialDate ? hourlyByDate[initialDate] : emptyHours();
 
                     const ctx = document.getElementById('entryExitChart').getContext('2d');
-                    new Chart(ctx, {
+                    const chart = new Chart(ctx, {
                         type: 'line',
                         data: {
+                            labels: labels,
                             datasets: [{
                                 label: '入場者数',
-                                data: entryData,
+                                data: initial.entry,
                                 borderColor: 'rgba(75, 192, 192, 1)',
                                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                                 fill: true,
                             }, {
                                 label: '退場者数',
-                                data: exitData,
+                                data: initial.exit,
                                 borderColor: 'rgba(255, 99, 132, 1)',
                                 backgroundColor: 'rgba(255, 99, 132, 0.2)',
                                 fill: true,
@@ -181,16 +186,21 @@
                         },
                         options: {
                             scales: {
-                                x: {
-                                    type: 'time',
-                                    time: {
-                                        unit: 'day',
-                                        parser: 'YYYY-MM-DD'
-                                    }
-                                }
+                                x: { title: { display: true, text: '時間帯' } },
+                                y: { beginAtZero: true, ticks: { precision: 0 } }
                             }
                         }
                     });
+
+                    const select = document.getElementById('dateSelect');
+                    if (select) {
+                        select.addEventListener('change', function () {
+                            const data = hourlyByDate[this.value] || emptyHours();
+                            chart.data.datasets[0].data = data.entry;
+                            chart.data.datasets[1].data = data.exit;
+                            chart.update();
+                        });
+                    }
                 });
             </script>
 

@@ -18,8 +18,27 @@
             <form method="GET" action="{{ route('event.users', $event) }}" class="mb-4">
                 <div class="row g-2 align-items-end">
                     <div class="col-md-8">
-                        <label class="form-label">検索（名前・会社名・メールアドレス）</label>
-                        <input type="text" name="search" class="form-control" placeholder="名前、会社名、メールアドレスで検索" value="{{ request('search') }}">
+                        @php
+                            $searchLabels = [];
+                            $searchLabels[] = ($eventsetting && !empty($eventsetting->name_display_name)) ? $eventsetting->name_display_name : '名前';
+                            if (!$eventsetting || $eventsetting->furigana_flg) {
+                                $searchLabels[] = ($eventsetting && !empty($eventsetting->furigana_display_name)) ? $eventsetting->furigana_display_name : 'フリガナ';
+                            }
+                            if (!$eventsetting || $eventsetting->company_flg) {
+                                $searchLabels[] = ($eventsetting && !empty($eventsetting->company_display_name)) ? $eventsetting->company_display_name : '会社名';
+                            }
+                            if (!$eventsetting || $eventsetting->division_flg) {
+                                $searchLabels[] = ($eventsetting && !empty($eventsetting->division_display_name)) ? $eventsetting->division_display_name : '部署名';
+                            }
+                            if (!$eventsetting || $eventsetting->tel_flg) {
+                                $searchLabels[] = ($eventsetting && !empty($eventsetting->tel_display_name)) ? $eventsetting->tel_display_name : '電話番号';
+                            }
+                            $searchLabels[] = 'メールアドレス';
+                            $searchLabelText = implode('・', $searchLabels);
+                            $searchPlaceholder = implode('、', $searchLabels) . 'で検索';
+                        @endphp
+                        <label class="form-label">検索（{{ $searchLabelText }}）</label>
+                        <input type="text" name="search" class="form-control" placeholder="{{ $searchPlaceholder }}" value="{{ request('search') }}">
                     </div>
                     <div class="col-md-4">
                         <button type="submit" class="btn btn-primary">検索</button>

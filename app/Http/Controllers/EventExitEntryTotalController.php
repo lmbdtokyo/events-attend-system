@@ -44,7 +44,20 @@ class EventExitEntryTotalController extends Controller
                 'user_count' => $userCount,
             ];
 
-            return view('events.detail.totals', ['event' => $event , 'totals' => $totals , 'eventUsers' => $eventUsers , 'eventBasic' => $eventBasic , 'eventRecords' => $eventRecords]);
+            // 時間別グラフ用：開催日（event_date JSON）と入退場記録に存在する日付の和集合
+            $availableDates = collect();
+            $eventDateJson = json_decode($event->event_date, true) ?: [];
+            foreach ($eventDateJson as $d) {
+                if (!empty($d['date'])) {
+                    $availableDates->push(\Carbon\Carbon::parse($d['date'])->format('Y-m-d'));
+                }
+            }
+            foreach ($eventRecords as $record) {
+                $availableDates->push(\Carbon\Carbon::parse($record->created_at)->format('Y-m-d'));
+            }
+            $availableDates = $availableDates->unique()->sort()->values()->all();
+
+            return view('events.detail.totals', ['event' => $event , 'totals' => $totals , 'eventUsers' => $eventUsers , 'eventBasic' => $eventBasic , 'eventRecords' => $eventRecords , 'availableDates' => $availableDates]);
 
 
         } else {

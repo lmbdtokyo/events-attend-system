@@ -41,9 +41,15 @@ class EventUserController extends Controller
 
         if ($request->filled('search') && trim($request->search) !== '') {
             $search = trim($request->search);
-            $query->where(function ($q) use ($search) {
+            // 電話番号の表記揺れ吸収用：検索語からハイフンを除去
+            $searchTelNormalized = str_replace(['-', '−', 'ー'], '', $search);
+            $query->where(function ($q) use ($search, $searchTelNormalized) {
                 $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('furigana', 'like', "%{$search}%")
                   ->orWhere('company', 'like', "%{$search}%")
+                  ->orWhere('division', 'like', "%{$search}%")
+                  ->orWhere('tel', 'like', "%{$search}%")
+                  ->orWhereRaw("REPLACE(REPLACE(REPLACE(tel, '-', ''), '−', ''), 'ー', '') LIKE ?", ["%{$searchTelNormalized}%"])
                   ->orWhere('mail', 'like', "%{$search}%");
             });
         }
@@ -52,8 +58,9 @@ class EventUserController extends Controller
         $eventUsers = $query->orderBy('created_at', 'desc')->paginate(20)->withQueryString();
         $eventSections = Eventsection::where('event_id', $event->id)->get()->keyBy('id');
         $authUser = Auth::guard('web')->user();
+        $eventsetting = Eventsetting::where('event_id', $event->id)->first();
 
-        return view('events.detail.user', compact('event', 'eventUsers', 'eventSections', 'totalCount', 'authUser'));
+        return view('events.detail.user', compact('event', 'eventUsers', 'eventSections', 'totalCount', 'authUser', 'eventsetting'));
     }
 
     public function exportCsv(Request $request, Event $event)
@@ -67,9 +74,15 @@ class EventUserController extends Controller
 
         if ($request->filled('search') && trim($request->search) !== '') {
             $search = trim($request->search);
-            $query->where(function ($q) use ($search) {
+            // 電話番号の表記揺れ吸収用：検索語からハイフンを除去
+            $searchTelNormalized = str_replace(['-', '−', 'ー'], '', $search);
+            $query->where(function ($q) use ($search, $searchTelNormalized) {
                 $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('furigana', 'like', "%{$search}%")
                   ->orWhere('company', 'like', "%{$search}%")
+                  ->orWhere('division', 'like', "%{$search}%")
+                  ->orWhere('tel', 'like', "%{$search}%")
+                  ->orWhereRaw("REPLACE(REPLACE(REPLACE(tel, '-', ''), '−', ''), 'ー', '') LIKE ?", ["%{$searchTelNormalized}%"])
                   ->orWhere('mail', 'like', "%{$search}%");
             });
         }
@@ -77,11 +90,23 @@ class EventUserController extends Controller
         $eventUsers = $query->orderBy('created_at', 'desc')->get();
         $eventSections = Eventsection::where('event_id', $event->id)->get()->keyBy('id');
 
+        // 入退場記録を申込者ごとに集計（入場回数／退場回数／最初の入場日時／最後の退場日時）
+        $recordStats = \App\Models\Eventrecord::where('event_id', $event->id)
+            ->whereNotNull('applicant_id')
+            ->selectRaw('applicant_id,
+                SUM(CASE WHEN entry_exit = 1 THEN 1 ELSE 0 END) AS entry_count,
+                SUM(CASE WHEN entry_exit = 2 THEN 1 ELSE 0 END) AS exit_count,
+                MIN(CASE WHEN entry_exit = 1 THEN created_at END) AS first_entry_at,
+                MAX(CASE WHEN entry_exit = 2 THEN created_at END) AS last_exit_at')
+            ->groupBy('applicant_id')
+            ->get()
+            ->keyBy('applicant_id');
+
         $filename = 'event_users_' . $event->id . '_' . date('YmdHis') . '.csv';
 
         $approvalLabels = [0 => '下書き', 1 => '承認済み', 2 => '却下'];
 
-        return response()->streamDownload(function () use ($eventUsers, $eventSections, $approvalLabels) {
+        return response()->streamDownload(function () use ($eventUsers, $eventSections, $approvalLabels, $recordStats) {
             $stream = fopen('php://output', 'w');
 
             // UTF-8 BOM（Excel等で日本語が正しく表示されるように）
@@ -91,6 +116,7 @@ class EventUserController extends Controller
                 'ID', '名前', 'フリガナ', '会社名', '部署', '役職', '郵便番号',
                 '住所1', '住所2', '住所3', '電話番号', '生年月日',
                 'メールアドレス', '受付区分', '承認ステータス', '入場フラグ',
+                '入場回数', '退場回数', '最初の入場日時', '最後の退場日時',
                 'QRコード', '登録日', '更新日'
             ];
             fputcsv($stream, $headers);
@@ -100,6 +126,15 @@ class EventUserController extends Controller
                     ? $eventSections[$eventUser->section]->name
                     : '-';
                 $approvalLabel = $approvalLabels[$eventUser->approval] ?? '-';
+                $stat = $recordStats[$eventUser->id] ?? null;
+                $entryCount = $stat ? (int) $stat->entry_count : 0;
+                $exitCount  = $stat ? (int) $stat->exit_count  : 0;
+                $firstEntryAt = ($stat && $stat->first_entry_at)
+                    ? \Carbon\Carbon::parse($stat->first_entry_at)->format('Y-m-d H:i:s')
+                    : '';
+                $lastExitAt = ($stat && $stat->last_exit_at)
+                    ? \Carbon\Carbon::parse($stat->last_exit_at)->format('Y-m-d H:i:s')
+                    : '';
                 $row = [
                     $eventUser->id,
                     $eventUser->name,
@@ -117,6 +152,10 @@ class EventUserController extends Controller
                     $sectionName,
                     $approvalLabel,
                     $eventUser->entry_flg ?? '',
+                    $entryCount,
+                    $exitCount,
+                    $firstEntryAt,
+                    $lastExitAt,
                     $eventUser->qr ?? '',
                     \Carbon\Carbon::parse($eventUser->created_at)->format('Y-m-d H:i:s'),
                     \Carbon\Carbon::parse($eventUser->updated_at)->format('Y-m-d H:i:s'),

@@ -56,12 +56,28 @@
             border-radius: 12px;
             max-width: 420px;
             width: 100%;
-            max-height: 85vh;
-            overflow: auto;
-            padding: 20px 18px 16px;
+            max-height: min(85vh, 100dvh - 32px);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
             box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
             font-size: 15px;
             line-height: 1.45;
+        }
+
+        .scan-result-body {
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+            padding: 18px 16px 8px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .scan-result-footer {
+            flex-shrink: 0;
+            padding: 12px 16px 14px;
+            border-top: 1px solid #eee;
+            background: #fff;
         }
 
         .scan-result-badge {
@@ -84,7 +100,7 @@
         }
 
         .scan-result-message {
-            margin: 0 0 14px;
+            margin: 0 0 10px;
             font-weight: 600;
             word-break: break-word;
         }
@@ -114,23 +130,24 @@
         }
 
         .scan-result-url {
-            margin: 14px 0 10px;
-            font-size: 12px;
+            margin: 10px 0 0;
+            font-size: 11px;
             color: #555;
             word-break: break-all;
         }
 
         .scan-result-close {
             display: block;
-            margin-left: auto;
-            margin-top: 8px;
-            padding: 10px 18px;
+            width: 100%;
+            margin: 0;
+            padding: 12px 18px;
             border: none;
             border-radius: 8px;
             background: #007bff;
             color: #fff;
             font-weight: 600;
             cursor: pointer;
+            font-size: 16px;
         }
     </style>
 
@@ -152,14 +169,18 @@
 
         <div id="scan-result-overlay" class="scan-result-overlay" aria-hidden="true">
             <div class="scan-result-dialog" role="dialog" aria-modal="true">
-                <div id="scan-result-badge" class="scan-result-badge"></div>
-                <p id="scan-result-message" class="scan-result-message"></p>
-                <div id="scan-result-user-wrap" class="scan-result-user-wrap" style="display: none;">
-                    <h3 id="scan-result-user-heading" class="scan-result-subheading">読み取り情報</h3>
-                    <dl id="scan-result-user-dl" class="scan-result-dl"></dl>
+                <div class="scan-result-body">
+                    <div id="scan-result-badge" class="scan-result-badge"></div>
+                    <p id="scan-result-message" class="scan-result-message"></p>
+                    <div id="scan-result-user-wrap" class="scan-result-user-wrap" style="display: none;">
+                        <h3 id="scan-result-user-heading" class="scan-result-subheading">読み取り情報</h3>
+                        <dl id="scan-result-user-dl" class="scan-result-dl"></dl>
+                    </div>
+                    <p id="scan-result-url" class="scan-result-url"></p>
                 </div>
-                <p id="scan-result-url" class="scan-result-url"></p>
-                <button type="button" id="scan-result-close" class="scan-result-close">閉じる</button>
+                <div class="scan-result-footer">
+                    <button type="button" id="scan-result-close" class="scan-result-close">閉じる</button>
+                </div>
             </div>
         </div>
 
@@ -182,15 +203,6 @@
                 const scanUrlEl = document.getElementById('scan-result-url');
                 const scanCloseBtn = document.getElementById('scan-result-close');
 
-                function escapeHtml(s) {
-                    if (s === null || s === undefined) return '';
-                    return String(s)
-                        .replace(/&/g, '&amp;')
-                        .replace(/</g, '&lt;')
-                        .replace(/>/g, '&gt;')
-                        .replace(/"/g, '&quot;');
-                }
-
                 function entryFlgLabel(v) {
                     if (v === 1 || v === '1') return '入場中';
                     if (v === 0 || v === '0') return '退場済み';
@@ -200,7 +212,7 @@
                 function participantRows(p) {
                     if (!p || typeof p !== 'object') return [];
                     const rows = [];
-                    const isGuestQr = p.qr_id != null && p.name === undefined;
+                    const isGuestQr = Object.prototype.hasOwnProperty.call(p, 'qr_id');
 
                     if (!isGuestQr) {
                         if (p.id != null) rows.push(['ID', p.id]);
@@ -239,7 +251,7 @@
                     scanBadge.textContent = isSuccess ? '成功' : 'エラー';
                     scanBadge.classList.toggle('is-success', isSuccess);
                     scanBadge.classList.toggle('is-error', !isSuccess);
-                    scanMessage.textContent = messageText || (isSuccess ? '処理が完了しました。' : 'エラーが発生しました。');
+                    scanMessage.textContent = messageText || (isSuccess ? '完了しました。' : 'エラーです。');
 
                     scanUserHeading.textContent = isSuccess ? '読み取り情報' : '対象者情報';
                     const rows = participantRows(participant);
@@ -250,7 +262,15 @@
                         scanUserWrap.style.display = 'none';
                     }
 
-                    scanUrlEl.textContent = scannedUrl ? 'アクセスしたURL: ' + scannedUrl : '';
+                    if (scannedUrl) {
+                        const max = 52;
+                        const short = scannedUrl.length > max ? scannedUrl.slice(0, max) + '…' : scannedUrl;
+                        scanUrlEl.textContent = 'URL ' + short;
+                        scanUrlEl.setAttribute('title', scannedUrl);
+                    } else {
+                        scanUrlEl.textContent = '';
+                        scanUrlEl.removeAttribute('title');
+                    }
                     scanOverlay.classList.add('is-open');
                     scanOverlay.setAttribute('aria-hidden', 'false');
                 }
@@ -265,7 +285,7 @@
 
                 function normalizeScanPayload(data) {
                     if (!data || typeof data !== 'object') {
-                        return { ok: false, message: 'レスポンスを解析できませんでした。', user: null };
+                        return { ok: false, message: '応答エラー', user: null };
                     }
                     if (typeof data.message === 'string') {
                         return { ok: !!data.ok, message: data.message, user: data.user ?? null };
@@ -273,7 +293,7 @@
                     if (typeof data.error === 'string') {
                         return { ok: false, message: data.error, user: data.user ?? null };
                     }
-                    return { ok: false, message: 'エラーが発生しました。', user: null };
+                    return { ok: false, message: 'エラーです。', user: null };
                 }
     
                 function startCamera() {
@@ -335,7 +355,7 @@
                                     const payload = normalizeScanPayload(data);
                                     let msg = payload.message;
                                     if (!error.response) {
-                                        msg = '通信に失敗しました。ネットワークを確認してください。';
+                                        msg = '通信エラー';
                                     }
                                     openScanResult(false, msg, payload.user, modifiedUrl);
                                 });
