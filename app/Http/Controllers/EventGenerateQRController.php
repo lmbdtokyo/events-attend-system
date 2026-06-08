@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Eventpdfimage;
+use App\Models\Eventsetting;
 
 
 class EventGenerateQRController extends Controller
@@ -119,11 +120,14 @@ class EventGenerateQRController extends Controller
             }
         }
 
+        $eventsetting = Eventsetting::where('event_id', $event->id)->first();
+
         $pdf = PDF::loadView('pdf.generatepdf', [
             'qrCodes' => $qrCodes,
             'eventpdfimage' => $eventpdfimage_data,
             'sectionLabel' => $sectionLabel,
             'sectionBgColor' => $sectionBgColor,
+            'eventsetting' => $eventsetting,
         ])->setPaper('a4');
         $pdfPath = 'pdfs/' . $uuid . '.pdf';
         Storage::disk('public')->put($pdfPath, $pdf->output());

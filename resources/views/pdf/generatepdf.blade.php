@@ -56,11 +56,21 @@
     <div style="page-break-after: always">
     <div style="width:45%; float:left; height:40%; margin:10% 5% 0px 0px ">
         <div class="box">お客様情報</div>
-        <p>名前: </p>
-        <p>フリガナ: </p>
-        <p>会社名: </p>
-        <p>会社名（カナ）: </p>
-        <p>TEL: </p>
+        @if (!$eventsetting || $eventsetting->company_flg)
+        <p>{{ $eventsetting->company_display_name ?? '会社名' }}: </p>
+        @endif
+        @if (!$eventsetting || $eventsetting->division_flg)
+        <p>{{ $eventsetting->division_display_name ?? '部署名' }}: </p>
+        @endif
+        @if (!$eventsetting || $eventsetting->name_flg)
+        <p>{{ $eventsetting->name_display_name ?? '名前' }}: </p>
+        @endif
+        @if (!$eventsetting || $eventsetting->furigana_flg)
+        <p>{{ $eventsetting->furigana_display_name ?? 'フリガナ' }}: </p>
+        @endif
+        @if (!$eventsetting || $eventsetting->tel_flg)
+        <p>{{ $eventsetting->tel_display_name ?? 'TEL' }}: </p>
+        @endif
     </div>
     <div style="width:45%; float:left; height:40%; margin:10% 0px 0px 5%">
         @php
@@ -74,9 +84,6 @@
             };
         @endphp
         <div style="padding:5px 0px 10px 0px; font-size:{{ $sectionFontSize }}; font-family: 'NotoSansJP', sans-serif; font-weight: 700; background:{{ $sectionBgColor }}; text-align:center; color:#ffffff; word-wrap:break-word; overflow-wrap:break-word; word-break:break-all; box-sizing:border-box; max-width:100%; line-height:1.3;">{{ $sectionLabel }}</div>
-        <p>会社名: </p>
-        <p>名前: </p>
-        <p>TEL: </p>
     <div style="text-align: center; margin-top: 20px;">
         <img src="data:image/png;base64,{{ base64_encode($qrCode) }}" alt="QR Code">
     </div>
