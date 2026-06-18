@@ -24,6 +24,7 @@ use App\Mail\RegistrationCompleteMail;
 use App\Mail\EventuserPasswordResetMail;
 use App\Models\Eventfinishmail;
 use App\Models\Eventrecord;
+use App\Models\Eventqr;
 
 
 class EventUserController extends Controller
@@ -273,19 +274,193 @@ class EventUserController extends Controller
         return redirect()->route('event.users', $event)->with('success', '申込者を削除しました。');
     }
 
-    public function records(Event $event,Eventrecord $eventrecords,Eventuser $eventuser,$exit_entry)
+    public function records(Request $request, Event $event, $exit_entry)
     {
-
-        $eventEntries = null;
-        if ($exit_entry == 1) {
-            $eventEntries = $eventrecords->where('event_id', $event->id)->where('entry_exit', 1)->paginate(50);
-        } else {
-            $eventEntries = $eventrecords->where('event_id', $event->id)->where('entry_exit', 2)->paginate(50);
+        // 権限チェック（master または同一組織のみ）
+        if (!Auth::check() || !(Auth::user()->type === 'master' || Auth::user()->organization == $event->organization)) {
+            return redirect()->route('events.index')->with('error', '権限がありません。');
         }
 
-        $eventUsers = $eventuser->where('event_id', $event->id)->get();
+        $entryExit = $exit_entry == 1 ? 1 : 2;
 
-        return view('events.detail.records', ['event' => $event, 'eventEntries' => $eventEntries, 'eventUsers' => $eventUsers]);
+        // 選択可能な日付（開催日 + 記録が存在する日付の和集合）
+        $availableDates = $this->buildAvailableDates($event);
+
+        // 絞り込み対象の日付（指定がなければ全件表示）
+        $selectedDate = $request->input('date');
+        if ($selectedDate && !in_array($selectedDate, $availableDates, true)) {
+            $selectedDate = null;
+        }
+
+        $query = Eventrecord::where('event_id', $event->id)
+            ->where('entry_exit', $entryExit);
+
+        if ($selectedDate) {
+            $query->whereDate('created_at', $selectedDate);
+        }
+
+        // 検索（ID・名前・フリガナ）：該当する申込者の applicant_id に絞り込む
+        $search = trim((string) $request->input('search'));
+        if ($search !== '') {
+            $matchedIds = Eventuser::where('event_id', $event->id)
+                ->where(function ($q) use ($search) {
+                    if (ctype_digit($search)) {
+                        $q->orWhere('id', $search);
+                    }
+                    $q->orWhere('name', 'like', "%{$search}%")
+                      ->orWhere('furigana', 'like', "%{$search}%");
+                })
+                ->pluck('id')
+                ->all();
+            // 該当者がいなければ結果0件になるよう、ありえないIDを入れる
+            $query->whereIn('applicant_id', $matchedIds ?: [-1]);
+        }
+
+        $eventEntries = $query->orderBy('created_at', 'desc')->paginate(50)->withQueryString();
+        $eventUsers = Eventuser::where('event_id', $event->id)->get();
+
+        return view('events.detail.records', [
+            'event' => $event,
+            'eventEntries' => $eventEntries,
+            'eventUsers' => $eventUsers,
+            'availableDates' => $availableDates,
+            'selectedDate' => $selectedDate,
+            'search' => $search,
+            'exitEntry' => $entryExit,
+        ]);
+    }
+
+    /**
+     * 現在会場にいるユーザー一覧（入場中 = entry_flg が立っている）
+     */
+    public function inVenue(Request $request, Event $event)
+    {
+        // 権限チェック（master または同一組織のみ）
+        if (!Auth::check() || !(Auth::user()->type === 'master' || Auth::user()->organization == $event->organization)) {
+            return redirect()->route('events.index')->with('error', '権限がありません。');
+        }
+
+        // 登録ユーザーの入場中（entry_flg = 1）
+        $usersQuery = Eventuser::where('event_id', $event->id)->where('entry_flg', 1);
+
+        $search = trim((string) $request->input('search'));
+        if ($search !== '') {
+            $usersQuery->where(function ($q) use ($search) {
+                if (ctype_digit($search)) {
+                    $q->orWhere('id', $search);
+                }
+                $q->orWhere('name', 'like', "%{$search}%")
+                  ->orWhere('furigana', 'like', "%{$search}%");
+            });
+        }
+        $inVenueUsers = $usersQuery->orderBy('furigana')->get();
+
+        // 各ユーザーの最終入場時刻
+        $lastEntryByUser = Eventrecord::where('event_id', $event->id)
+            ->where('entry_exit', 1)
+            ->whereIn('applicant_id', $inVenueUsers->pluck('id'))
+            ->selectRaw('applicant_id, MAX(created_at) as last_entry_at')
+            ->groupBy('applicant_id')
+            ->pluck('last_entry_at', 'applicant_id');
+
+        // QRユーザー（未登録）の入場中。検索時は名前を持たないため非表示。
+        $inVenueQrs = $search === ''
+            ? Eventqr::where('event_id', $event->id)->where('entry_flg', 1)->orderBy('qr_id')->get()
+            : collect();
+
+        // 全体の入場中人数（検索に関係なく実数を出す）
+        $registeredCount = Eventuser::where('event_id', $event->id)->where('entry_flg', 1)->count();
+        $qrCount = Eventqr::where('event_id', $event->id)->where('entry_flg', 1)->count();
+
+        return view('events.detail.in_venue', compact(
+            'event', 'inVenueUsers', 'lastEntryByUser', 'inVenueQrs', 'registeredCount', 'qrCount', 'search'
+        ));
+    }
+
+    /**
+     * 現在会場にいる登録ユーザーを手動で退場させる
+     */
+    public function exitUser(Request $request, Event $event, Eventuser $eventuser)
+    {
+        if (!Auth::check() || !(Auth::user()->type === 'master' || Auth::user()->organization == $event->organization)) {
+            return redirect()->route('events.index')->with('error', '権限がありません。');
+        }
+
+        if ($eventuser->event_id != $event->id) {
+            return redirect()->route('event.in_venue', $event->id)->with('error', '対象のユーザーが見つかりません。');
+        }
+
+        if ($eventuser->entry_flg == 0) {
+            return redirect()->route('event.in_venue', $event->id)->with('error', 'このユーザーはすでに退場済みです。');
+        }
+
+        $record = new Eventrecord();
+        $record->event_id = $event->id;
+        $record->applicant_id = $eventuser->id;
+        $record->nonuser_id = null;
+        $record->entry_exit = 2;
+        $record->user_id = Auth::id();
+        $record->save();
+
+        $eventuser->entry_flg = 0;
+        $eventuser->save();
+
+        return redirect()->route('event.in_venue', $event->id)->with('success', $eventuser->name . ' さんを退場にしました。');
+    }
+
+    /**
+     * 現在会場にいるQRユーザーを手動で退場させる
+     */
+    public function exitQr(Request $request, Event $event, Eventqr $eventqr)
+    {
+        if (!Auth::check() || !(Auth::user()->type === 'master' || Auth::user()->organization == $event->organization)) {
+            return redirect()->route('events.index')->with('error', '権限がありません。');
+        }
+
+        if ($eventqr->event_id != $event->id) {
+            return redirect()->route('event.in_venue', $event->id)->with('error', '対象のQRが見つかりません。');
+        }
+
+        if ($eventqr->entry_flg == 0) {
+            return redirect()->route('event.in_venue', $event->id)->with('error', 'このQRはすでに退場済みです。');
+        }
+
+        $record = new Eventrecord();
+        $record->event_id = $event->id;
+        $record->applicant_id = null;
+        $record->nonuser_id = $eventqr->id;
+        $record->entry_exit = 2;
+        $record->user_id = Auth::id();
+        $record->save();
+
+        $eventqr->entry_flg = 0;
+        $eventqr->save();
+
+        return redirect()->route('event.in_venue', $event->id)->with('success', 'QR（' . $eventqr->qr_id . '）を退場にしました。');
+    }
+
+    /**
+     * 選択可能な日付（開催日 JSON + 入退場記録の日付）の和集合を返す
+     */
+    private function buildAvailableDates(Event $event): array
+    {
+        $dates = collect();
+
+        $eventDateJson = json_decode($event->event_date, true) ?: [];
+        foreach ($eventDateJson as $d) {
+            if (!empty($d['date'])) {
+                $dates->push(\Carbon\Carbon::parse($d['date'])->format('Y-m-d'));
+            }
+        }
+
+        Eventrecord::where('event_id', $event->id)
+            ->orderBy('created_at')
+            ->pluck('created_at')
+            ->each(function ($createdAt) use ($dates) {
+                $dates->push(\Carbon\Carbon::parse($createdAt)->format('Y-m-d'));
+            });
+
+        return $dates->unique()->sort()->values()->all();
     }
 
     public function finish(Event $event , Eventuser $eventu , $eventuser)

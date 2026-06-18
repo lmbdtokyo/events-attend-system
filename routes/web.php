@@ -119,6 +119,15 @@ Route::patch('/events/{event}/approval/{eventuser}/update', [App\Http\Controller
 //来場者一覧
 Route::get('/events/{event}/records/{exit_entry}', [App\Http\Controllers\EventUserController::class, 'records'])->name('event.records');
 
+//現在会場にいるユーザー一覧
+Route::get('/events/{event}/in-venue', [App\Http\Controllers\EventUserController::class, 'inVenue'])->name('event.in_venue');
+
+//現在会場にいるユーザーを手動で退場させる
+Route::middleware('auth')->group(function () {
+    Route::post('/events/{event}/in-venue/{eventuser}/exit', [App\Http\Controllers\EventUserController::class, 'exitUser'])->name('event.in_venue.exit_user');
+    Route::post('/events/{event}/in-venue/qr/{eventqr}/exit', [App\Http\Controllers\EventUserController::class, 'exitQr'])->name('event.in_venue.exit_qr');
+});
+
 //QR読み込み
 Route::get('/events/{event}/qr/user/{qrid}/{exitentry}', [App\Http\Controllers\EventScanController::class, 'userqr'])->name('qr.user');
 Route::get('/events/{event}/qr/nonuser/{qrid}/{exitentry}', [App\Http\Controllers\EventScanController::class, 'nonuserqr'])->name('qr.nonuser');
