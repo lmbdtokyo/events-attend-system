@@ -13,6 +13,7 @@
 
 @section('content')
 <div class="mb-3">
+    <a href="{{ route('event.users', $event->id) }}" class="btn btn-sm btn-outline-dark">全申込者一覧</a>
     <a href="{{ route('event.records', ['event' => $event->id, 'exit_entry' => 1]) }}"
        class="btn btn-sm {{ $isEntry ? 'btn-primary' : 'btn-outline-primary' }}">入場記録</a>
     <a href="{{ route('event.records', ['event' => $event->id, 'exit_entry' => 2]) }}"
@@ -51,8 +52,9 @@
 
         <p class="mb-3">
             <strong>{{ $isEntry ? '入場' : '退場' }}件数: {{ number_format($eventEntries->total()) }}件</strong>
+            <span class="text-muted ml-2">（登録ユーザー: {{ number_format($registeredCount ?? 0) }}件 ／ QRユーザー: {{ number_format($qrCount ?? 0) }}件）</span>
             @if(($search ?? '') !== '' || !empty($selectedDate))
-                <span class="text-muted">（絞り込み結果）</span>
+                <span class="text-muted">※絞り込み結果</span>
             @endif
         </p>
 
@@ -60,21 +62,33 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
+                        <th style="width: 110px;">区分</th>
                         <th style="width: 100px;">ID</th>
                         <th>名前</th>
+                        <th>会社名</th>
                         <th style="width: 220px;">{{ $isEntry ? '入場時間' : '退場時間' }}</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($eventEntries as $record)
+                        @php $recordUser = $eventUsers->find($record->applicant_id); @endphp
+                        @php $isRegistered = !is_null($record->applicant_id); @endphp
                         <tr>
-                            <td>{{ optional($eventUsers->find($record->applicant_id))->id ?? '' }}</td>
-                            <td>{{ optional($eventUsers->find($record->applicant_id))->name ?? 'QRユーザー' }}</td>
+                            <td>
+                                @if($isRegistered)
+                                    <span class="badge badge-primary">登録ユーザー</span>
+                                @else
+                                    <span class="badge badge-secondary">QRユーザー</span>
+                                @endif
+                            </td>
+                            <td>{{ optional($recordUser)->id ?? '' }}</td>
+                            <td>{{ optional($recordUser)->name ?? 'QRユーザー' }}</td>
+                            <td>{{ optional($recordUser)->company ?? '' }}</td>
                             <td>{{ \Carbon\Carbon::parse($record->created_at)->format('Y-m-d H:i:s') }}</td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="3" class="text-center text-muted">該当する記録はありません。</td>
+                            <td colspan="5" class="text-center text-muted">該当する記録はありません。</td>
                         </tr>
                     @endforelse
                 </tbody>

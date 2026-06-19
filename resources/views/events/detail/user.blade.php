@@ -14,9 +14,10 @@
     @endif
 
     <div class="mb-3">
+        <a href="{{ route('event.users', $event->id) }}" class="btn btn-sm btn-dark">全申込者一覧</a>
         <a href="{{ route('event.records', ['event' => $event->id, 'exit_entry' => 1]) }}" class="btn btn-sm btn-outline-primary">入場記録</a>
         <a href="{{ route('event.records', ['event' => $event->id, 'exit_entry' => 2]) }}" class="btn btn-sm btn-outline-primary">退場記録</a>
-        <a href="{{ route('event.in_venue', $event->id) }}" class="btn btn-sm btn-info">現在会場にいる人</a>
+        <a href="{{ route('event.in_venue', $event->id) }}" class="btn btn-sm btn-outline-info">現在会場にいる人</a>
         <a href="{{ route('events.exit_entry_totals', $event->id) }}" class="btn btn-sm btn-outline-secondary">集計</a>
     </div>
 

@@ -15,6 +15,7 @@
 @endif
 
 <div class="mb-3">
+    <a href="{{ route('event.users', $event->id) }}" class="btn btn-sm btn-outline-dark">全申込者一覧</a>
     <a href="{{ route('event.records', ['event' => $event->id, 'exit_entry' => 1]) }}" class="btn btn-sm btn-outline-primary">入場記録</a>
     <a href="{{ route('event.records', ['event' => $event->id, 'exit_entry' => 2]) }}" class="btn btn-sm btn-outline-primary">退場記録</a>
     <a href="{{ route('event.in_venue', $event->id) }}" class="btn btn-sm btn-info">現在会場にいる人</a>
@@ -61,6 +62,7 @@
                         <th style="width: 100px;">ID</th>
                         <th>名前</th>
                         <th>フリガナ</th>
+                        <th>会社名</th>
                         <th style="width: 220px;">最終入場時間</th>
                         <th style="width: 120px;">操作</th>
                     </tr>
@@ -71,6 +73,7 @@
                             <td>{{ $user->id }}</td>
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->furigana }}</td>
+                            <td>{{ $user->company }}</td>
                             <td>
                                 @if(isset($lastEntryByUser[$user->id]))
                                     {{ \Carbon\Carbon::parse($lastEntryByUser[$user->id])->format('Y-m-d H:i:s') }}
@@ -88,7 +91,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="text-center text-muted">
+                            <td colspan="6" class="text-center text-muted">
                                 {{ ($search ?? '') !== '' ? '該当するユーザーはいません。' : '現在会場にいる登録ユーザーはいません。' }}
                             </td>
                         </tr>

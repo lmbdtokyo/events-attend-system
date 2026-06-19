@@ -26,6 +26,16 @@ class EventExitEntryTotalController extends Controller
             $entryCount = \App\Models\Eventrecord::where('event_id', $event->id)->where('entry_exit', 1)->count();
             $exitCount = \App\Models\Eventrecord::where('event_id', $event->id)->where('entry_exit', 2)->count();
 
+            // 登録ユーザー（applicant_id あり）／QRユーザー（applicant_id なし）別の内訳
+            $registeredEntryCount = \App\Models\Eventrecord::where('event_id', $event->id)->where('entry_exit', 1)->whereNotNull('applicant_id')->count();
+            $registeredExitCount  = \App\Models\Eventrecord::where('event_id', $event->id)->where('entry_exit', 2)->whereNotNull('applicant_id')->count();
+            $qrEntryCount = \App\Models\Eventrecord::where('event_id', $event->id)->where('entry_exit', 1)->whereNull('applicant_id')->count();
+            $qrExitCount  = \App\Models\Eventrecord::where('event_id', $event->id)->where('entry_exit', 2)->whereNull('applicant_id')->count();
+
+            // 現在会場にいる人数（entry_flg = 1）の内訳
+            $inVenueRegistered = \App\Models\Eventuser::where('event_id', $event->id)->where('entry_flg', 1)->count();
+            $inVenueQr = \App\Models\Eventqr::where('event_id', $event->id)->where('entry_flg', 1)->count();
+
             $eventRecords = \App\Models\Eventrecord::where('event_id', $event->id)->get();
 
             $eventBasic = \App\Models\Eventbasic::where('event_id', $event->id)->first();
@@ -42,6 +52,12 @@ class EventExitEntryTotalController extends Controller
                 'entry_count' => $entryCount,
                 'exit_count' => $exitCount,
                 'user_count' => $userCount,
+                'registered_entry_count' => $registeredEntryCount,
+                'registered_exit_count' => $registeredExitCount,
+                'qr_entry_count' => $qrEntryCount,
+                'qr_exit_count' => $qrExitCount,
+                'in_venue_registered' => $inVenueRegistered,
+                'in_venue_qr' => $inVenueQr,
             ];
 
             // 時間別グラフ用：開催日（event_date JSON）と入退場記録に存在する日付の和集合

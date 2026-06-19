@@ -290,6 +290,10 @@ class EventUserController extends Controller
             $query->whereIn('applicant_id', $matchedIds ?: [-1]);
         }
 
+        // 現在の絞り込み条件での内訳件数（登録ユーザー／QRユーザー）
+        $registeredCount = (clone $query)->whereNotNull('applicant_id')->count();
+        $qrCount = (clone $query)->whereNull('applicant_id')->count();
+
         $eventEntries = $query->orderBy('created_at', 'desc')->paginate(50)->withQueryString();
         $eventUsers = Eventuser::where('event_id', $event->id)->get();
 
@@ -301,6 +305,8 @@ class EventUserController extends Controller
             'selectedDate' => $selectedDate,
             'search' => $search,
             'exitEntry' => $entryExit,
+            'registeredCount' => $registeredCount,
+            'qrCount' => $qrCount,
         ]);
     }
 

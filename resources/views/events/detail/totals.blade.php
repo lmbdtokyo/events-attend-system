@@ -221,6 +221,40 @@
                 </tbody>
             </table>
 
+            {{-- 登録ユーザー／QRユーザー別の内訳 --}}
+            @php $total = $totals[0] ?? []; @endphp
+            <h3 style="margin-top:30px; font-size:1.1rem;">入退場の内訳（登録ユーザー／QRユーザー）</h3>
+            <table class="total-table table table-bordered" style="margin-top:10px;">
+                <thead>
+                    <tr>
+                        <th>区分</th>
+                        <th>入場数</th>
+                        <th>退場数</th>
+                        <th>現在会場にいる人数</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>登録ユーザー</td>
+                        <td>{{ number_format($total['registered_entry_count'] ?? 0) }}</td>
+                        <td>{{ number_format($total['registered_exit_count'] ?? 0) }}</td>
+                        <td>{{ number_format($total['in_venue_registered'] ?? 0) }}</td>
+                    </tr>
+                    <tr>
+                        <td>QRユーザー</td>
+                        <td>{{ number_format($total['qr_entry_count'] ?? 0) }}</td>
+                        <td>{{ number_format($total['qr_exit_count'] ?? 0) }}</td>
+                        <td>{{ number_format($total['in_venue_qr'] ?? 0) }}</td>
+                    </tr>
+                    <tr style="font-weight:bold;">
+                        <td>合計</td>
+                        <td>{{ number_format($total['entry_count'] ?? 0) }}</td>
+                        <td>{{ number_format($total['exit_count'] ?? 0) }}</td>
+                        <td>{{ number_format(($total['in_venue_registered'] ?? 0) + ($total['in_venue_qr'] ?? 0)) }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
         </div>
     </div>
 
