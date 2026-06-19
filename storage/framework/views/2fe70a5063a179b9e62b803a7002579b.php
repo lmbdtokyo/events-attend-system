@@ -39,8 +39,9 @@
         <form method="GET" action="<?php echo e(route('event.in_venue', $event->id)); ?>" class="mb-4">
             <div class="row g-2 align-items-end">
                 <div class="col-md-8">
-                    <label class="form-label">検索（ID・名前・フリガナ）</label>
-                    <input type="text" name="search" class="form-control" placeholder="ID、名前、フリガナで検索" value="<?php echo e($search ?? ''); ?>">
+                    <?php $labelText = implode('・', $searchLabels ?? ['ID','名前','フリガナ','会社名']); ?>
+                    <label class="form-label">検索（<?php echo e($labelText); ?>）</label>
+                    <input type="text" name="search" class="form-control" placeholder="スペース区切りで複合検索ができます（例：山田 <?php echo e(($eventsetting && !empty($eventsetting->company_display_name)) ? $eventsetting->company_display_name : '会社名'); ?>）" value="<?php echo e($search ?? ''); ?>">
                 </div>
                 <div class="col-md-4">
                     <button type="submit" class="btn btn-primary">検索</button>
@@ -57,10 +58,15 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
+                        <?php
+                            $nameLabel = ($eventsetting && !empty($eventsetting->name_display_name)) ? $eventsetting->name_display_name : '名前';
+                            $furiganaLabel = ($eventsetting && !empty($eventsetting->furigana_display_name)) ? $eventsetting->furigana_display_name : 'フリガナ';
+                            $companyLabel = ($eventsetting && !empty($eventsetting->company_display_name)) ? $eventsetting->company_display_name : '会社名';
+                        ?>
                         <th style="width: 100px;">ID</th>
-                        <th>名前</th>
-                        <th>フリガナ</th>
-                        <th>会社名</th>
+                        <th><?php echo e($nameLabel); ?></th>
+                        <th><?php echo e($furiganaLabel); ?></th>
+                        <th><?php echo e($companyLabel); ?></th>
                         <th style="width: 220px;">最終入場時間</th>
                         <th style="width: 120px;">操作</th>
                     </tr>

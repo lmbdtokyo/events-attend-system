@@ -273,19 +273,13 @@ class EventUserController extends Controller
             $query->whereDate('created_at', $selectedDate);
         }
 
-        // 検索（ID・名前・フリガナ）：該当する申込者の applicant_id に絞り込む
+        // 検索（スペース区切りの複合検索：ID・名前・フリガナ・会社名・部署・電話）
+        // 該当する申込者を絞り込み、その applicant_id で記録を絞る
         $search = trim((string) $request->input('search'));
         if ($search !== '') {
-            $matchedIds = Eventuser::where('event_id', $event->id)
-                ->where(function ($q) use ($search) {
-                    if (ctype_digit($search)) {
-                        $q->orWhere('id', $search);
-                    }
-                    $q->orWhere('name', 'like', "%{$search}%")
-                      ->orWhere('furigana', 'like', "%{$search}%");
-                })
-                ->pluck('id')
-                ->all();
+            $matchedQuery = Eventuser::where('event_id', $event->id);
+            $this->applyUserSearch($matchedQuery, $search);
+            $matchedIds = $matchedQuery->pluck('id')->all();
             // 該当者がいなければ結果0件になるよう、ありえないIDを入れる
             $query->whereIn('applicant_id', $matchedIds ?: [-1]);
         }
@@ -296,6 +290,8 @@ class EventUserController extends Controller
 
         $eventEntries = $query->orderBy('created_at', 'desc')->paginate(50)->withQueryString();
         $eventUsers = Eventuser::where('event_id', $event->id)->get();
+        $eventsetting = Eventsetting::where('event_id', $event->id)->first();
+        $searchLabels = $this->userSearchLabels($eventsetting);
 
         return view('events.detail.records', [
             'event' => $event,
@@ -307,6 +303,8 @@ class EventUserController extends Controller
             'exitEntry' => $entryExit,
             'registeredCount' => $registeredCount,
             'qrCount' => $qrCount,
+            'eventsetting' => $eventsetting,
+            'searchLabels' => $searchLabels,
         ]);
     }
 
@@ -323,16 +321,9 @@ class EventUserController extends Controller
         // 登録ユーザーの入場中（entry_flg = 1）
         $usersQuery = Eventuser::where('event_id', $event->id)->where('entry_flg', 1);
 
+        // 検索（スペース区切りの複合検索：ID・名前・フリガナ・会社名・部署・電話）
         $search = trim((string) $request->input('search'));
-        if ($search !== '') {
-            $usersQuery->where(function ($q) use ($search) {
-                if (ctype_digit($search)) {
-                    $q->orWhere('id', $search);
-                }
-                $q->orWhere('name', 'like', "%{$search}%")
-                  ->orWhere('furigana', 'like', "%{$search}%");
-            });
-        }
+        $this->applyUserSearch($usersQuery, $search);
         $inVenueUsers = $usersQuery->orderBy('furigana')->get();
 
         // 各ユーザーの最終入場時刻
@@ -352,8 +343,12 @@ class EventUserController extends Controller
         $registeredCount = Eventuser::where('event_id', $event->id)->where('entry_flg', 1)->count();
         $qrCount = Eventqr::where('event_id', $event->id)->where('entry_flg', 1)->count();
 
+        $eventsetting = Eventsetting::where('event_id', $event->id)->first();
+        $searchLabels = $this->userSearchLabels($eventsetting);
+
         return view('events.detail.in_venue', compact(
-            'event', 'inVenueUsers', 'lastEntryByUser', 'inVenueQrs', 'registeredCount', 'qrCount', 'search'
+            'event', 'inVenueUsers', 'lastEntryByUser', 'inVenueQrs', 'registeredCount', 'qrCount', 'search',
+            'eventsetting', 'searchLabels'
         ));
     }
 
@@ -441,7 +436,10 @@ class EventUserController extends Controller
             // 電話番号の表記揺れ吸収用：検索語からハイフン類を除去
             $telNormalized = str_replace(['-', '−', 'ー'], '', $term);
             $query->where(function ($q) use ($term, $telNormalized) {
-                $q->where('name', 'like', "%{$term}%")
+                if (ctype_digit($term)) {
+                    $q->orWhere('id', $term);
+                }
+                $q->orWhere('name', 'like', "%{$term}%")
                   ->orWhere('furigana', 'like', "%{$term}%")
                   ->orWhere('company', 'like', "%{$term}%")
                   ->orWhere('division', 'like', "%{$term}%")
@@ -449,6 +447,29 @@ class EventUserController extends Controller
                   ->orWhereRaw("REPLACE(REPLACE(REPLACE(tel, '-', ''), '−', ''), 'ー', '') LIKE ?", ["%{$telNormalized}%"]);
             });
         }
+    }
+
+    /**
+     * 申込者検索の対象項目ラベル（イベント設定の表示名を反映）を返す。
+     * 記録・会場リスト画面の検索欄ラベル表示に使う。
+     */
+    private function userSearchLabels($eventsetting): array
+    {
+        $labels = ['ID'];
+        $labels[] = ($eventsetting && !empty($eventsetting->name_display_name)) ? $eventsetting->name_display_name : '名前';
+        if (!$eventsetting || $eventsetting->furigana_flg) {
+            $labels[] = ($eventsetting && !empty($eventsetting->furigana_display_name)) ? $eventsetting->furigana_display_name : 'フリガナ';
+        }
+        if (!$eventsetting || $eventsetting->company_flg) {
+            $labels[] = ($eventsetting && !empty($eventsetting->company_display_name)) ? $eventsetting->company_display_name : '会社名';
+        }
+        if (!$eventsetting || $eventsetting->division_flg) {
+            $labels[] = ($eventsetting && !empty($eventsetting->division_display_name)) ? $eventsetting->division_display_name : '部署名';
+        }
+        if (!$eventsetting || $eventsetting->tel_flg) {
+            $labels[] = ($eventsetting && !empty($eventsetting->tel_display_name)) ? $eventsetting->tel_display_name : '電話番号';
+        }
+        return $labels;
     }
 
     /**
