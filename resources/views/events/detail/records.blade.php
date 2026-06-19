@@ -67,7 +67,6 @@
                             $nameLabel = ($eventsetting && !empty($eventsetting->name_display_name)) ? $eventsetting->name_display_name : '名前';
                             $companyLabel = ($eventsetting && !empty($eventsetting->company_display_name)) ? $eventsetting->company_display_name : '会社名';
                         @endphp
-                        <th style="width: 110px;">区分</th>
                         <th style="width: 100px;">ID</th>
                         <th>{{ $nameLabel }}</th>
                         <th>{{ $companyLabel }}</th>
@@ -77,15 +76,7 @@
                 <tbody>
                     @forelse($eventEntries as $record)
                         @php $recordUser = $eventUsers->find($record->applicant_id); @endphp
-                        @php $isRegistered = !is_null($record->applicant_id); @endphp
                         <tr>
-                            <td>
-                                @if($isRegistered)
-                                    <span class="badge badge-primary">登録ユーザー</span>
-                                @else
-                                    <span class="badge badge-secondary">QRユーザー</span>
-                                @endif
-                            </td>
                             <td>{{ optional($recordUser)->id ?? '' }}</td>
                             <td>{{ optional($recordUser)->name ?? 'QRユーザー' }}</td>
                             <td>{{ optional($recordUser)->company ?? '' }}</td>
@@ -93,7 +84,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="text-center text-muted">該当する記録はありません。</td>
+                            <td colspan="4" class="text-center text-muted">該当する記録はありません。</td>
                         </tr>
                     @endforelse
                 </tbody>

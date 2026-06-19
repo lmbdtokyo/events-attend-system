@@ -65,7 +65,6 @@
                             $nameLabel = ($eventsetting && !empty($eventsetting->name_display_name)) ? $eventsetting->name_display_name : '名前';
                             $companyLabel = ($eventsetting && !empty($eventsetting->company_display_name)) ? $eventsetting->company_display_name : '会社名';
                         ?>
-                        <th style="width: 110px;">区分</th>
                         <th style="width: 100px;">ID</th>
                         <th><?php echo e($nameLabel); ?></th>
                         <th><?php echo e($companyLabel); ?></th>
@@ -75,15 +74,7 @@
                 <tbody>
                     <?php $__empty_1 = true; $__currentLoopData = $eventEntries; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $record): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                         <?php $recordUser = $eventUsers->find($record->applicant_id); ?>
-                        <?php $isRegistered = !is_null($record->applicant_id); ?>
                         <tr>
-                            <td>
-                                <?php if($isRegistered): ?>
-                                    <span class="badge badge-primary">登録ユーザー</span>
-                                <?php else: ?>
-                                    <span class="badge badge-secondary">QRユーザー</span>
-                                <?php endif; ?>
-                            </td>
                             <td><?php echo e(optional($recordUser)->id ?? ''); ?></td>
                             <td><?php echo e(optional($recordUser)->name ?? 'QRユーザー'); ?></td>
                             <td><?php echo e(optional($recordUser)->company ?? ''); ?></td>
@@ -91,7 +82,7 @@
                         </tr>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                         <tr>
-                            <td colspan="5" class="text-center text-muted">該当する記録はありません。</td>
+                            <td colspan="4" class="text-center text-muted">該当する記録はありません。</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
