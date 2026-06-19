@@ -40,9 +40,8 @@
                             if (!$eventsetting || $eventsetting->tel_flg) {
                                 $searchLabels[] = ($eventsetting && !empty($eventsetting->tel_display_name)) ? $eventsetting->tel_display_name : '電話番号';
                             }
-                            $searchLabels[] = 'メールアドレス';
                             $searchLabelText = implode('・', $searchLabels);
-                            $searchPlaceholder = implode('、', $searchLabels) . 'で検索';
+                            $searchPlaceholder = 'スペース区切りで複数条件の絞り込み検索ができます（例：山田 営業部）';
                         @endphp
                         <label class="form-label">検索（{{ $searchLabelText }}）</label>
                         <input type="text" name="search" class="form-control" placeholder="{{ $searchPlaceholder }}" value="{{ request('search') }}">

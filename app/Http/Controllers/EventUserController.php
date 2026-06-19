@@ -40,20 +40,7 @@ class EventUserController extends Controller
             $query->where('approval', 1);
         }
 
-        if ($request->filled('search') && trim($request->search) !== '') {
-            $search = trim($request->search);
-            // 電話番号の表記揺れ吸収用：検索語からハイフンを除去
-            $searchTelNormalized = str_replace(['-', '−', 'ー'], '', $search);
-            $query->where(function ($q) use ($search, $searchTelNormalized) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('furigana', 'like', "%{$search}%")
-                  ->orWhere('company', 'like', "%{$search}%")
-                  ->orWhere('division', 'like', "%{$search}%")
-                  ->orWhere('tel', 'like', "%{$search}%")
-                  ->orWhereRaw("REPLACE(REPLACE(REPLACE(tel, '-', ''), '−', ''), 'ー', '') LIKE ?", ["%{$searchTelNormalized}%"])
-                  ->orWhere('mail', 'like', "%{$search}%");
-            });
-        }
+        $this->applyUserSearch($query, $request->input('search'));
 
         $totalCount = (clone $query)->count();
         $eventUsers = $query->orderBy('created_at', 'desc')->paginate(20)->withQueryString();
@@ -73,20 +60,7 @@ class EventUserController extends Controller
             $query->where('approval', 1);
         }
 
-        if ($request->filled('search') && trim($request->search) !== '') {
-            $search = trim($request->search);
-            // 電話番号の表記揺れ吸収用：検索語からハイフンを除去
-            $searchTelNormalized = str_replace(['-', '−', 'ー'], '', $search);
-            $query->where(function ($q) use ($search, $searchTelNormalized) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('furigana', 'like', "%{$search}%")
-                  ->orWhere('company', 'like', "%{$search}%")
-                  ->orWhere('division', 'like', "%{$search}%")
-                  ->orWhere('tel', 'like', "%{$search}%")
-                  ->orWhereRaw("REPLACE(REPLACE(REPLACE(tel, '-', ''), '−', ''), 'ー', '') LIKE ?", ["%{$searchTelNormalized}%"])
-                  ->orWhere('mail', 'like', "%{$search}%");
-            });
-        }
+        $this->applyUserSearch($query, $request->input('search'));
 
         $eventUsers = $query->orderBy('created_at', 'desc')->get();
         $eventSections = Eventsection::where('event_id', $event->id)->get()->keyBy('id');
@@ -437,6 +411,38 @@ class EventUserController extends Controller
         $eventqr->save();
 
         return redirect()->route('event.in_venue', $event->id)->with('success', 'QR（' . $eventqr->qr_id . '）を退場にしました。');
+    }
+
+    /**
+     * 申込者検索をクエリに適用する。
+     * 検索語を半角・全角スペースで単語に分割し、
+     *  - 単語ごとに AND（すべての単語がどこかにヒットする人だけ）
+     *  - 1単語の中は対象項目を OR（名前・フリガナ・会社・部署・電話のいずれか）
+     * で絞り込む。メールアドレスは検索対象に含めない。
+     */
+    private function applyUserSearch($query, ?string $search): void
+    {
+        $search = trim((string) $search);
+        if ($search === '') {
+            return;
+        }
+
+        // 半角・全角スペースで分割（空要素は除去）。暴発防止に最大10語まで。
+        $terms = preg_split('/[\s　]+/u', $search, -1, PREG_SPLIT_NO_EMPTY) ?: [];
+        $terms = array_slice($terms, 0, 10);
+
+        foreach ($terms as $term) {
+            // 電話番号の表記揺れ吸収用：検索語からハイフン類を除去
+            $telNormalized = str_replace(['-', '−', 'ー'], '', $term);
+            $query->where(function ($q) use ($term, $telNormalized) {
+                $q->where('name', 'like', "%{$term}%")
+                  ->orWhere('furigana', 'like', "%{$term}%")
+                  ->orWhere('company', 'like', "%{$term}%")
+                  ->orWhere('division', 'like', "%{$term}%")
+                  ->orWhere('tel', 'like', "%{$term}%")
+                  ->orWhereRaw("REPLACE(REPLACE(REPLACE(tel, '-', ''), '−', ''), 'ー', '') LIKE ?", ["%{$telNormalized}%"]);
+            });
+        }
     }
 
     /**
